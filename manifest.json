@@ -1,0 +1,22 @@
+{
+  "name": "4K POS Dashboard",
+  "short_name": "4K POS",
+  "description": "Dashboard de ventas 4K POS",
+  "start_url": "/4kpos-dashboard/4kpos-dashboard.html",
+  "display": "standalone",
+  "background_color": "#0f0f13",
+  "theme_color": "#0f0f13",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/4kpos/4kpos-dashboard/main/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/4kpos/4kpos-dashboard/main/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
