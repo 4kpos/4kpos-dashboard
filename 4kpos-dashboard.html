@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4K POS Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;min-height:100vh;}
+.top{background:linear-gradient(135deg,#1a0533,#2d0a5e);padding:20px 16px 24px;text-align:center;}
+.logo{font-size:1.4rem;font-weight:800;margin-bottom:4px;}
+.biz{font-size:1rem;color:rgba(255,255,255,.7);}
+.upd{font-size:.72rem;color:rgba(255,255,255,.35);margin-top:3px;}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;}
+.card{border-radius:12px;padding:14px;}
+.card.gn{background:rgba(52,211,153,.08);border:1.5px solid rgba(52,211,153,.3);}
+.card.ac{background:rgba(167,139,250,.08);border:1.5px solid rgba(167,139,250,.3);}
+.card.am{background:rgba(251,191,36,.08);border:1.5px solid rgba(251,191,36,.3);}
+.card.rd{background:rgba(248,113,113,.08);border:1.5px solid rgba(248,113,113,.3);}
+.clbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;}
+.card.gn .clbl{color:#34d399;}.card.ac .clbl{color:#a78bfa;}.card.am .clbl{color:#fbbf24;}.card.rd .clbl{color:#f87171;}
+.cval{font-family:monospace;font-size:1.4rem;font-weight:700;}
+.card.gn .cval{color:#34d399;}.card.ac .cval{color:#a78bfa;}.card.am .cval{color:#fbbf24;}.card.rd .cval{color:#f87171;}
+.csub{font-size:.72rem;opacity:.5;margin-top:3px;}
+.sec{padding:0 16px 16px;}
+.sec-ttl{font-size:.78rem;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.4);margin-bottom:10px;}
+.sale{background:#1a1a22;border:1.5px solid rgba(255,255,255,.09);border-radius:10px;padding:11px 13px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.snum{font-size:.72rem;color:#a78bfa;font-weight:600;margin-bottom:2px;}
+.sitems{font-size:.82rem;color:rgba(255,255,255,.7);}
+.stime{font-size:.7rem;color:rgba(255,255,255,.35);margin-top:2px;}
+.stot{font-family:monospace;font-size:.95rem;font-weight:700;color:#34d399;}
+.bar-row{margin-bottom:8px;}
+.bar-lbl{display:flex;justify-content:space-between;font-size:.74rem;color:rgba(255,255,255,.6);margin-bottom:3px;}
+.bar-track{height:7px;background:rgba(255,255,255,.08);border-radius:4px;}
+.bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#7c3aed,#a78bfa);}
+.low{background:#1a1a22;border:1.5px solid rgba(248,113,113,.3);border-radius:10px;padding:11px 13px;margin-bottom:8px;display:flex;justify-content:space-between;}
+.empty{text-align:center;padding:20px;color:rgba(255,255,255,.3);font-size:.85rem;}
+.rbtn{display:block;width:calc(100% - 32px);margin:0 16px 8px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;border-radius:10px;color:#fff;padding:13px;font-size:.9rem;font-weight:700;cursor:pointer;text-align:center;}
+.key-box{margin:16px;background:#1a1a22;border:1.5px solid rgba(255,255,255,.09);border-radius:12px;padding:14px;}
+.key-box input{width:100%;background:#22222e;border:1.5px solid rgba(255,255,255,.09);border-radius:8px;padding:10px;color:#fff;font-size:.88rem;outline:none;margin-bottom:10px;text-align:center;letter-spacing:1px;text-transform:uppercase;}
+.key-box input:focus{border-color:#a78bfa;}
+.spin{display:inline-block;animation:sp 1s linear infinite;}
+@keyframes sp{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="logo">
+    <span style="color:#1e3a8a">4K</span>
+    <span style="color:#1a7a3a"> P</span><span style="color:#e6b800">O</span><span style="color:#cc1111">S</span>
+  </div>
+  <div class="biz" id="biz">Dashboard</div>
+  <div class="upd" id="upd"></div>
+</div>
+
+<div id="key-section" style="display:none">
+  <div class="key-box">
+    <div style="font-size:.82rem;color:rgba(255,255,255,.6);margin-bottom:10px;text-align:center">Ingresa tu clave de licencia</div>
+    <input type="text" id="key-input" placeholder="4K-XXXX-XXXX-XXXX" maxlength="19" oninput="fmtKey(this)">
+    <button class="rbtn" style="width:100%;margin:0" onclick="goKey()">Ver Dashboard</button>
+  </div>
+</div>
+
+<div id="main" style="display:none">
+  <div class="cards">
+    <div class="card gn"><div class="clbl">Ingresos hoy</div><div class="cval" id="c-inc">$0.00</div><div class="csub" id="c-ords">0 ordenes</div></div>
+    <div class="card ac"><div class="clbl">Ordenes</div><div class="cval" id="c-cnt">0</div><div class="csub" id="c-avg">Promedio $0.00</div></div>
+    <div class="card am"><div class="clbl">Productos</div><div class="cval" id="c-prods">0</div><div class="csub">en catalogo</div></div>
+    <div class="card rd"><div class="clbl">Stock bajo</div><div class="cval" id="c-low">0</div><div class="csub">productos</div></div>
+  </div>
+  <div class="sec" id="sec-prods" style="display:none">
+    <div class="sec-ttl">Ventas por producto</div>
+    <div style="background:#1a1a22;border:1.5px solid rgba(255,255,255,.09);border-radius:12px;padding:14px" id="prod-bars"></div>
+  </div>
+  <div class="sec">
+    <div class="sec-ttl">Ventas de hoy</div>
+    <div id="sales-list"></div>
+  </div>
+  <div class="sec" id="sec-low" style="display:none">
+    <div class="sec-ttl">Stock bajo</div>
+    <div id="low-list"></div>
+  </div>
+  <button class="rbtn" onclick="loadData()">Actualizar</button>
+  <div style="text-align:center;font-size:.7rem;color:rgba(255,255,255,.2);padding:8px 0 20px">4K POS Dashboard</div>
+</div>
+
+<div id="loading" style="text-align:center;padding:60px 20px;color:rgba(255,255,255,.4)">
+  <div class="spin" style="font-size:2rem">⏳</div>
+  <div style="margin-top:10px">Cargando...</div>
+</div>
+
+<script>
+const API = 'https://izalnhluwtyotuxwkqrh.supabase.co/functions/v1/posapi';
+
+function dolr(n){ return '$'+Number(n||0).toFixed(2); }
+function timeAgo(iso){
+  if(!iso) return '';
+  const m = Math.floor((Date.now()-new Date(iso).getTime())/60000);
+  if(m<1) return 'hace un momento';
+  if(m<60) return 'hace '+m+' min';
+  const h = Math.floor(m/60);
+  if(h<24) return 'hace '+h+'h';
+  return 'hace '+Math.floor(h/24)+'d';
+}
+function fmtKey(inp){
+  var v = inp.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  var out = v.substring(0,2);
+  if(v.length>2) out += '-'+v.substring(2,6);
+  if(v.length>6) out += '-'+v.substring(6,10);
+  if(v.length>10) out += '-'+v.substring(10,14);
+  inp.value = out;
+}
+function getKey(){
+  var params = new URLSearchParams(window.location.search);
+  return params.get('key') || localStorage.getItem('4kpos_key') || '';
+}
+function goKey(){
+  var k = document.getElementById('key-input').value.trim();
+  if(!k){ return; }
+  localStorage.setItem('4kpos_key', k);
+  window.location.search = '?key='+k;
+}
+
+async function loadData(){
+  var key = getKey();
+  document.getElementById('loading').style.display='block';
+  document.getElementById('main').style.display='none';
+
+  try{
+    var r = await fetch(API+'?action=load', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({license_key: key})
+    });
+    var j = await r.json();
+
+    if(!j.success){
+      document.getElementById('loading').innerHTML = '<div style="font-size:2rem">❌</div><div style="margin-top:10px">'+j.error+'</div>';
+      return;
+    }
+
+    var d = j.data || {products:[],sales:[],orderNum:1};
+    var today = new Date().toDateString();
+    var ts = (d.sales||[]).filter(function(s){ return new Date(s.date).toDateString()===today && s.status==='active'; });
+    var inc = ts.reduce(function(s,x){ return s+x.total; }, 0);
+    var avg = ts.length > 0 ? inc/ts.length : 0;
+    var lowStock = (d.products||[]).filter(function(p){ return (p.stock||0)<=3; });
+
+    // Update header
+    document.getElementById('biz').textContent = d.cfg && d.cfg.bizName ? d.cfg.bizName : 'Mi Negocio';
+    document.getElementById('upd').textContent = j.updated_at ? timeAgo(j.updated_at) : '';
+
+    // Cards
+    document.getElementById('c-inc').textContent = dolr(inc);
+    document.getElementById('c-ords').textContent = ts.length+' ordenes';
+    document.getElementById('c-cnt').textContent = ts.length;
+    document.getElementById('c-avg').textContent = 'Promedio '+dolr(avg);
+    document.getElementById('c-prods').textContent = (d.products||[]).length;
+    document.getElementById('c-low').textContent = lowStock.length;
+
+    // Product breakdown
+    var prodMap = {};
+    ts.forEach(function(s){
+      (s.items||[]).forEach(function(i){
+        if(!prodMap[i.name]) prodMap[i.name]={qty:0,total:0};
+        prodMap[i.name].qty+=i.qty;
+        prodMap[i.name].total+=i.price*i.qty;
+      });
+    });
+    var prods = Object.entries(prodMap).sort(function(a,b){ return b[1].total-a[1].total; });
+    if(prods.length>0){
+      var maxT = prods[0][1].total;
+      document.getElementById('prod-bars').innerHTML = prods.map(function(e){
+        return '<div class="bar-row"><div class="bar-lbl"><span>'+e[0]+'</span><span>'+dolr(e[1].total)+' ('+e[1].qty+'u)</span></div><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(e[1].total/maxT*100)+'%"></div></div></div>';
+      }).join('');
+      document.getElementById('sec-prods').style.display='block';
+    }
+
+    // Sales list
+    var salesHtml = ts.length===0
+      ? '<div class="empty">Sin ventas hoy todavia</div>'
+      : ts.slice().reverse().map(function(s){
+          var items = (s.items||[]).map(function(i){ return i.name+(i.qty>1?' x'+i.qty:''); }).join(', ');
+          var time = new Date(s.date).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});
+          return '<div class="sale"><div><div class="snum">Orden #'+(s.rnum||s.id)+'</div><div class="sitems">'+items+'</div><div class="stime">'+time+'</div></div><div class="stot">'+dolr(s.total)+'</div></div>';
+        }).join('');
+    document.getElementById('sales-list').innerHTML = salesHtml;
+
+    // Low stock
+    if(lowStock.length>0){
+      document.getElementById('low-list').innerHTML = lowStock.map(function(p){
+        return '<div class="low"><span style="font-size:.84rem;font-weight:600">'+p.name+'</span><span style="color:#f87171;font-weight:600">'+p.stock+' restantes</span></div>';
+      }).join('');
+      document.getElementById('sec-low').style.display='block';
+    }
+
+    document.getElementById('loading').style.display='none';
+    document.getElementById('main').style.display='block';
+
+  }catch(e){
+    document.getElementById('loading').innerHTML = '<div style="font-size:2rem">⚠️</div><div style="margin-top:10px">Error: '+e.message+'</div>';
+  }
+}
+
+// Init
+window.onload = function(){
+  var key = getKey();
+  if(!key){
+    document.getElementById('loading').style.display='none';
+    document.getElementById('key-section').style.display='block';
+  } else {
+    loadData();
+  }
+};
+</script>
+</body>
+</html>
