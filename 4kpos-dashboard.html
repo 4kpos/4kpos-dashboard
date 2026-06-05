@@ -67,6 +67,21 @@ canvas{width:100%;display:block;}
 .spin{display:inline-block;animation:sp 1s linear infinite;}
 @keyframes sp{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .loading{text-align:center;padding:50px 20px;color:rgba(255,255,255,.3);}
+/* === Install PWA Banner === */
+#install-banner{display:none;position:fixed;bottom:80px;left:12px;right:12px;background:linear-gradient(135deg,#1a0533,#2d0a5e);border:1.5px solid rgba(167,139,250,.4);border-radius:14px;padding:14px 16px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:slideUp .3s ease;}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+#install-banner .ib-row{display:flex;align-items:center;gap:12px;}
+#install-banner .ib-icon{width:44px;height:44px;border-radius:10px;flex-shrink:0;overflow:hidden;}
+#install-banner .ib-icon img{width:100%;height:100%;object-fit:cover;}
+#install-banner .ib-text{flex:1;}
+#install-banner .ib-title{font-weight:700;font-size:.88rem;}
+#install-banner .ib-sub{font-size:.72rem;color:rgba(255,255,255,.5);margin-top:2px;}
+#install-banner .ib-actions{display:flex;gap:8px;margin-top:10px;}
+#install-banner .ib-btn{flex:1;padding:9px;border-radius:8px;border:none;font-size:.8rem;font-weight:700;cursor:pointer;}
+#install-banner .ib-btn.primary{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;}
+#install-banner .ib-btn.secondary{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);}
+#ios-instructions{display:none;background:rgba(255,255,255,.05);border-radius:8px;padding:10px;margin-top:10px;font-size:.78rem;color:rgba(255,255,255,.7);line-height:1.6;}
+#ios-instructions strong{color:#a78bfa;}
 </style>
 </head>
 <body>
@@ -83,7 +98,7 @@ canvas{width:100%;display:block;}
     <p style="font-size:.82rem;color:rgba(255,255,255,.5);margin-bottom:16px">Usa la clave que recibiste al activar tu 4K POS</p>
     <input type="text" class="fi" id="key-input" placeholder="4K-XXXX-XXXX-XXXX" maxlength="19" oninput="fmtKey(this)" onkeydown="if(event.key==='Enter')goKey()">
     <button class="btn-p" onclick="goKey()">Ver mi Dashboard</button>
-    <div style="margin-top:12px;text-align:center;font-size:.75rem;color:rgba(255,255,255,.25)">Licencia de prueba: 4K-TEST-0000-0000</div>
+    <div style="margin-top:16px;text-align:center;font-size:1rem;font-weight:800;letter-spacing:.5px"><span style="color:#1e3a8a">4K</span> <span style="color:#e6b800">Solutions</span></div>
   </div>
 </div>
 
@@ -161,6 +176,25 @@ canvas{width:100%;display:block;}
 </div>
 
 <div id="loading" class="loading"><div class="spin" style="font-size:2rem">⏳</div><div style="margin-top:10px">Cargando...</div></div>
+
+<!-- Banner de instalación PWA -->
+<div id="install-banner">
+  <div class="ib-row">
+    <div class="ib-icon"><img src="icon-192.png" alt="4K POS"></div>
+    <div class="ib-text">
+      <div class="ib-title">4K POS Dashboard</div>
+      <div class="ib-sub">Agrega la app a tu pantalla de inicio</div>
+    </div>
+    <button onclick="closeBanner()" style="background:none;border:none;color:rgba(255,255,255,.3);font-size:1.2rem;cursor:pointer;padding:0 0 0 8px;">✕</button>
+  </div>
+  <div id="ios-instructions">
+    📱 En Safari: toca <strong>Compartir</strong> (□↑) → <strong>"Agregar a pantalla de inicio"</strong>
+  </div>
+  <div class="ib-actions">
+    <button class="ib-btn primary" id="install-btn" onclick="installApp()">📲 Instalar app</button>
+    <button class="ib-btn secondary" onclick="closeBanner()">Ahora no</button>
+  </div>
+</div>
 
 <script>
 const API='https://izalnhluwtyotuxwkqrh.supabase.co/functions/v1/posapi';
@@ -310,6 +344,44 @@ async function init(){
 }
 
 window.onload=function(){KEY=getKey();if(!KEY){document.getElementById('loading').style.display='none';document.getElementById('key-screen').style.display='block';}else{init();}};
+
+// === PWA Install Banner ===
+let deferredPrompt = null;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isInStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (!isInStandalone && !localStorage.getItem('install_dismissed')) {
+    setTimeout(function(){ document.getElementById('install-banner').style.display = 'block'; }, 3000);
+  }
+});
+
+if (isIOS && !isInStandalone && !localStorage.getItem('install_dismissed')) {
+  setTimeout(function(){
+    document.getElementById('install-banner').style.display = 'block';
+    document.getElementById('ios-instructions').style.display = 'block';
+    document.getElementById('install-btn').style.display = 'none';
+  }, 3000);
+}
+
+function installApp() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(r) {
+    if (r.outcome === 'accepted') {
+      document.getElementById('install-banner').style.display = 'none';
+      localStorage.setItem('install_dismissed', '1');
+    }
+    deferredPrompt = null;
+  });
+}
+
+function closeBanner() {
+  document.getElementById('install-banner').style.display = 'none';
+  localStorage.setItem('install_dismissed', '1');
+}
 </script>
 </body>
 </html>
