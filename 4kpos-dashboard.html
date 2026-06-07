@@ -109,7 +109,7 @@ canvas{width:100%;display:block;}
       <div class="biz" id="biz-name">Mi Negocio</div>
     </div>
     <div style="text-align:right">
-      <div class="live-badge"><div class="live-dot"></div>En vivo</div>
+      <div class="live-badge"><div class="live-dot"></div>Conectado</div>
       <div class="upd" id="upd-time"></div>
     </div>
   </div>
@@ -229,7 +229,7 @@ async function loadData(showToast){
     DB=j.data||{products:[],sales:[],cfg:{}};
     lastSaleCount=newCount;
     document.getElementById('biz-name').textContent=(DB.cfg&&DB.cfg.bizName)||'Mi Negocio';
-    document.getElementById('upd-time').textContent=j.updated_at?timeAgo(j.updated_at):'';
+   document.getElementById('upd-time').textContent=j.updated_at?'Última sincronización: '+timeAgo(j.updated_at):'';
     renderToday(isNew);
     if(showToast)showNotif('Actualizado');
   }catch(e){console.error(e);}
@@ -339,7 +339,7 @@ async function init(){
     document.getElementById('app').style.display='block';
     document.getElementById('botnav').style.display='flex';
     if(refreshInterval)clearInterval(refreshInterval);
-    refreshInterval=setInterval(function(){loadData(false);},30000);
+    refreshInterval=setInterval(function(){loadData(false);},10000);
   }
 }
 
