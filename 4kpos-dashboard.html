@@ -228,7 +228,7 @@ async function loadData(showToast){
     var isNew=DB&&newCount>lastSaleCount;
     DB=j.data||{products:[],sales:[],cfg:{}};
     lastSaleCount=newCount;
-    document.getElementById('biz-name').textContent=(DB.cfg&&DB.cfg.bizName)||'Mi Negocio';
+    var rawBiz=(DB.cfg&&DB.cfg.bizName)||'';document.getElementById('biz-name').textContent=(rawBiz==='4K Negocio'||!rawBiz)?'4K Solutions':rawBiz;
    document.getElementById('upd-time').textContent=j.updated_at?'Última sincronización: '+timeAgo(j.updated_at):'';
     renderToday(isNew);
     if(showToast)showNotif('Actualizado');
@@ -265,16 +265,16 @@ function renderToday(isNew){
   document.getElementById('h-low').textContent=low>0?low+' stock bajo':'stock ok';
   var diffEl=document.getElementById('h-diff');
   if(yinc>0){var pct=Math.round((inc-yinc)/yinc*100);diffEl.textContent=(pct>=0?'+':'')+pct+'% vs ayer';diffEl.className='cdiff '+(pct>0?'up':pct<0?'dn':'eq');}else diffEl.textContent='';
-  var payMap={cash:0,card:0,transf:0};
-  ts.forEach(function(s){if(payMap[s.payMethod]!==undefined)payMap[s.payMethod]+=s.total;});
+  var payMap={cash:0,card:0,transf:0,credit:0,split:0};
+  ts.forEach(function(s){var m=s.payMethod||'credit';if(payMap[m]!==undefined)payMap[m]+=s.total;else payMap.credit+=s.total;});
   var payTotal=inc||1;
-  var payNames={cash:'Efectivo',card:'Tarjeta',transf:'Transfer'};
-  var payColors={cash:'#34d399',card:'#a78bfa',transf:'#60a5fa'};
-  var payHtml=Object.entries(payMap).filter(function(e){return e[1]>0;}).map(function(e){var pct=Math.round(e[1]/payTotal*100);return '<div class="pay-row"><span style="font-size:.8rem;min-width:70px">'+payNames[e[0]]+'</span><div class="pay-bar"><div class="pay-fill" style="width:'+pct+'%;background:'+payColors[e[0]]+'"></div></div><span style="font-size:.78rem;font-family:monospace;color:'+payColors[e[0]]+'">'+dolr(e[1])+'</span></div>';}).join('');
+  var payNames={cash:'Efectivo',card:'Tarjeta',transf:'Transferencia',credit:'Crédito',split:'Dividido'};
+  var payColors={cash:'#34d399',card:'#a78bfa',transf:'#60a5fa',credit:'#fbbf24',split:'#f87171'};
+  var payHtml=Object.entries(payMap).filter(function(e){return e[1]>0;}).map(function(e){var pct=Math.round(e[1]/payTotal*100);return '<div class="pay-row"><span style="font-size:.8rem;min-width:80px">'+payNames[e[0]]+'</span><div class="pay-bar"><div class="pay-fill" style="width:'+pct+'%;background:'+payColors[e[0]]+'"></div></div><span style="font-size:.78rem;font-family:monospace;color:'+payColors[e[0]]+'">'+dolr(e[1])+'</span></div>';}).join('');
   document.getElementById('pay-rows').innerHTML=payHtml||'<div class="empty">Sin ventas hoy</div>';
   renderProdBars(ts,'prod-bars');
   document.getElementById('sale-count').textContent=ts.length+' ventas';
-  var sHtml=ts.length===0?'<div class="empty">Sin ventas hoy todavia</div>':ts.slice().reverse().map(function(s,i){var items=(s.items||[]).map(function(i){return i.name+(i.qty>1?' x'+i.qty:'');}).join(', ');var time=new Date(s.date).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});var payIcon={cash:'Ef',card:'Tj',transf:'Tr'}[s.payMethod]||'';return '<div class="sale-item'+(isNew&&i===0?' new':'')+'"><div><div class="snum">Orden #'+(s.rnum||s.id)+'</div><div class="sitems">'+items+'</div><div class="stime">'+time+'</div></div><div style="text-align:right"><div class="stot">'+dolr(s.total)+'</div><div class="spay">'+payIcon+'</div></div></div>';}).join('');
+  var sHtml=ts.length===0?'<div class="empty">Sin ventas hoy todavia</div>':ts.slice().reverse().map(function(s,i){var items=(s.items||[]).map(function(i){return i.name+(i.qty>1?' x'+i.qty:'');}).join(', ');var time=new Date(s.date).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});var payLbl=normPayLabel(s);var cashier=s.cashier?(' · '+s.cashier):'';return '<div class="sale-item'+(isNew&&i===0?' new':'')+'"><div><div class="snum">Orden #'+(s.rnum||s.id)+'</div><div class="sitems">'+items+'</div><div class="stime">'+time+cashier+'</div></div><div style="text-align:right"><div class="stot">'+dolr(s.total)+'</div><div class="spay">'+payLbl+'</div></div></div>';}).join('');
   document.getElementById('sales-list').innerHTML=sHtml;
   if(isNew&&ts.length>0)showNotif('Nueva venta: '+dolr(ts[ts.length-1].total));
 }
@@ -326,6 +326,14 @@ function drawBarChart(id,days){
   data.forEach(function(v,i){var x=pad.l+gap*i+(gap-bw)/2;var bh=h*(v/max);var y=pad.t+h-bh;ctx.fillStyle=v>0?'rgba(167,139,250,0.8)':'rgba(255,255,255,0.05)';ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x,y,bw,bh,2);else ctx.rect(x,y,bw,bh);ctx.fill();if(i%interval===0){ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='9px Segoe UI';ctx.textAlign='center';ctx.fillText(fmtDate(dates[i]),x+bw/2,H-5);}});
 }
 
+function normPayLabel(s){
+  var abbr={Ef:'Efectivo',ef:'Efectivo',EF:'Efectivo',Tj:'Tarjeta',tj:'Tarjeta',TJ:'Tarjeta',Tr:'Transferencia',Trf:'Transferencia',Div:'Dividido',Cred:'Crédito',OA:'Cuenta Abierta'};
+  var lbl=(s.payLabel||'').trim();
+  if(abbr[lbl])return abbr[lbl];
+  if(lbl&&lbl.length>3)return lbl;
+  var byMethod={cash:'Efectivo',card:'Tarjeta',transf:'Transferencia',split:'Dividido',credit:'Crédito'};
+  return byMethod[s.payMethod]||lbl||'Crédito';
+}
 function showNotif(msg){var n=document.createElement('div');n.style.cssText='position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#1a1a22;border:1.5px solid rgba(167,139,250,.4);border-radius:10px;padding:9px 16px;font-size:.82rem;color:#fff;z-index:9999;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4);transition:opacity .3s;';n.textContent=msg;document.body.appendChild(n);setTimeout(function(){n.style.opacity='0';setTimeout(function(){n.remove();},300);},2500);}
 
 async function init(){
