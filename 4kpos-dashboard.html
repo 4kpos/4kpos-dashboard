@@ -517,6 +517,24 @@ function editMinStock(pid){var f=document.getElementById('ms-'+pid+'-form');var 
 function cancelMinStock(pid){var f=document.getElementById('ms-'+pid+'-form');if(f)f.style.display='none';}
 async function saveMinStock(pid){var inp=document.getElementById('ms-'+pid+'-inp');var val=document.getElementById('ms-'+pid+'-val');var btn=document.getElementById('ms-'+pid+'-sbtn');if(!inp)return;var n=parseInt(inp.value)||0;if(n<0)n=0;var p=(DB.products||[]).find(function(x){return x.id===pid;});if(!p){cancelMinStock(pid);return;}p.minStock=n;if(btn)btn.textContent='...';try{await fetch(API+'?action=save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({license_key:KEY,data:{sales:DB.sales||[],products:DB.products,categories:DB.categories||[],cfg:DB.cfg||{}}})});if(val)val.textContent=n;cancelMinStock(pid);showNotif('✓ '+t('minLbl')+': '+n);}catch(e){showNotif(LANG==='es'?'Error al guardar':'Save error');if(btn)btn.textContent='✓';}}
 
+// ── Chart tooltip ──────────────────────────────────────
+var _chartTip=null;
+function _getTip(){
+  if(!_chartTip){
+    _chartTip=document.createElement('div');
+    _chartTip.style.cssText='position:fixed;background:#1a1a22;border:1.5px solid rgba(59,130,246,.55);border-radius:8px;padding:6px 12px;font-size:.82rem;font-weight:700;color:#fff;pointer-events:none;z-index:300;display:none;box-shadow:0 4px 18px rgba(0,0,0,.55);white-space:nowrap;';
+    document.body.appendChild(_chartTip);
+  }
+  return _chartTip;
+}
+function _hideTip(){_getTip().style.display='none';}
+function _showTip(txt,cx,cy){
+  var el=_getTip();el.textContent=txt;el.style.display='block';
+  var tw=el.offsetWidth||110;
+  el.style.left=Math.min(cx+14,window.innerWidth-tw-8)+'px';
+  el.style.top=Math.max(cy-42,8)+'px';
+}
+
 // ── Chart ──────────────────────────────────────────────
 function drawBarChart(id,days){
   var canvas=document.getElementById(id);if(!canvas)return;
@@ -534,11 +552,9 @@ function drawBarChart(id,days){
   var dates=[];for(var i=days-1;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);d.setHours(0,0,0,0);dates.push(d);}
   var data=dates.map(function(d){var nx=new Date(d);nx.setDate(nx.getDate()+1);return (DB.sales||[]).filter(function(s){return s.status==='active'&&new Date(s.date)>=d&&new Date(s.date)<nx;}).reduce(function(s,x){return s+x.total;},0);});
   var max=Math.max.apply(null,data)||1;
-  // Extra top padding for rotated labels; wider left margin for thousands-formatted Y axis
-  var pad={t:42,r:8,b:30,l:56};
+  var pad={t:26,r:8,b:30,l:56};
   var w=W-pad.l-pad.r,h=H-pad.t-pad.b;
   var bw=Math.max(4,w/days*0.78),gap=w/days;
-  // Y axis: $1,234 format (no decimals, thousands separator)
   function fmtY(v){return '$'+Math.round(v).toLocaleString();}
   // Grid + Y labels
   for(var gi=0;gi<=4;gi++){
@@ -550,32 +566,56 @@ function drawBarChart(id,days){
   }
   // Bars + X labels
   var interval=days<=7?1:days<=14?2:5;
+  var barRects=[];
   data.forEach(function(v,i){
     var x=pad.l+gap*i+(gap-bw)/2;
     var bh=Math.max(v>0?2:0,h*(v/max));
     var y=pad.t+h-bh;
-    // Bar
+    barRects.push({x:x,y:y,w:bw,h:bh,v:v,date:dates[i]});
     ctx.fillStyle=v>0?barColor:barEmpty;
     ctx.beginPath();
     if(ctx.roundRect)ctx.roundRect(x,y,bw,bh,3);else ctx.rect(x,y,bw,bh);
     ctx.fill();
-    // X label
     if(i%interval===0){
       ctx.fillStyle=txtColor;ctx.font='bold 13px Segoe UI';ctx.textAlign='center';
       ctx.fillText(fmtDate(dates[i]),x+bw/2,H-6);
     }
-    // Value above bar — rotated -45°, no $ sign, no decimals, both 7-day and 30-day views
-    if(v>0){
-      ctx.save();
-      ctx.translate(x+bw/2,y-4);
-      ctx.rotate(-Math.PI/4);
-      ctx.fillStyle='#fff';
-      ctx.font='bold 11px Segoe UI';
-      ctx.textAlign='left';
-      ctx.fillText(Math.round(v).toLocaleString(),0,0);
-      ctx.restore();
+    // Values above bars only on weekly chart (≤7 days): horizontal, 10px, no $ no decimals
+    if(days<=7&&v>0){
+      ctx.fillStyle='#fff';ctx.font='bold 10px Segoe UI';ctx.textAlign='center';
+      ctx.fillText(Math.round(v).toLocaleString(),x+bw/2,y-5);
     }
   });
+  // Tooltip for 30-day chart — store rects on canvas, register listeners once
+  canvas._br=barRects;canvas._cW=W;canvas._cH=H;canvas._cDays=days;
+  if(!canvas._tipReady){
+    canvas._tipReady=true;
+    function hit(cx,cy){
+      var r=canvas.getBoundingClientRect();
+      var lx=(cx-r.left)*(canvas._cW/r.width);
+      var ly=(cy-r.top)*(canvas._cH/r.height);
+      for(var j=0;j<canvas._br.length;j++){
+        var b=canvas._br[j];
+        if(lx>=b.x&&lx<=b.x+b.w&&ly>=b.y-12&&ly<=b.y+b.h)return b;
+      }
+      return null;
+    }
+    canvas.addEventListener('mousemove',function(e){
+      if(canvas._cDays<=7){_hideTip();return;}
+      var b=hit(e.clientX,e.clientY);
+      if(b&&b.v>0)_showTip(fmtDate(b.date)+': $'+Math.round(b.v).toLocaleString(),e.clientX,e.clientY);
+      else _hideTip();
+    });
+    canvas.addEventListener('mouseleave',_hideTip);
+    canvas.addEventListener('touchstart',function(e){
+      if(canvas._cDays<=7)return;
+      var tc=e.touches[0];
+      var b=hit(tc.clientX,tc.clientY);
+      if(b&&b.v>0){_showTip(fmtDate(b.date)+': $'+Math.round(b.v).toLocaleString(),tc.clientX,tc.clientY);e.preventDefault();}
+      else _hideTip();
+    },{passive:false});
+    canvas.addEventListener('touchend',function(){setTimeout(_hideTip,1800);});
+  }
 }
 
 // ── Pay labels ─────────────────────────────────────────
