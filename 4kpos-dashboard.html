@@ -542,7 +542,7 @@ function drawBarChart(id,days){
     var gy=pad.t+h-h/4*gi;
     ctx.strokeStyle=gridColor;ctx.lineWidth=1;
     ctx.beginPath();ctx.moveTo(pad.l,gy);ctx.lineTo(pad.l+w,gy);ctx.stroke();
-    ctx.fillStyle=txtColor;ctx.font='bold 11px Segoe UI';ctx.textAlign='right';
+    ctx.fillStyle=txtColor;ctx.font='bold 13px Segoe UI';ctx.textAlign='right';
     ctx.fillText(dolr(max/4*gi),pad.l-5,gy+4);
   }
   // Bars + X labels
@@ -558,12 +558,12 @@ function drawBarChart(id,days){
     ctx.fill();
     // X label
     if(i%interval===0){
-      ctx.fillStyle=txtColor;ctx.font='bold 11px Segoe UI';ctx.textAlign='center';
+      ctx.fillStyle=txtColor;ctx.font='bold 13px Segoe UI';ctx.textAlign='center';
       ctx.fillText(fmtDate(dates[i]),x+bw/2,H-6);
     }
     // Value on bar (only for 7-day view)
     if(days<=7&&v>0){
-      ctx.fillStyle='#fff';ctx.font='bold 10px Segoe UI';ctx.textAlign='center';
+      ctx.fillStyle='#fff';ctx.font='bold 14px Segoe UI';ctx.textAlign='center';
       ctx.fillText(dolr(v),x+bw/2,y-4);
     }
   });
