@@ -41,8 +41,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .live-dot{width:7px;height:7px;border-radius:50%;background:#34d399;animation:pulse 1.5s ease infinite;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
 .upd{font-size:.68rem;color:rgba(255,255,255,.45);margin-top:4px;}
-.ttl-btn{background:rgba(255,255,255,.14);border:none;border-radius:6px;color:#fff;padding:4px 8px;font-size:.72rem;cursor:pointer;font-weight:600;position:relative;}
-.ttl-btn:active{background:rgba(255,255,255,.25);}
+.ttl-btn{background:rgba(255,255,255,.16);border:none;border-radius:8px;color:#fff;padding:8px 12px;font-size:1.375rem;line-height:1;cursor:pointer;font-weight:700;position:relative;}
+.ttl-btn:active{background:rgba(255,255,255,.28);}
+#lang-btn{font-size:.875rem;letter-spacing:.5px;padding:8px 11px;}
 .page{display:none;padding:12px 14px;}.page.on{display:block;}
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .card{border-radius:11px;padding:13px;}
@@ -84,7 +85,7 @@ body.light .card.bl{background:rgba(96,165,250,.12);border-color:rgba(96,165,250
 .pay-bar{flex:1;height:7px;background:var(--brd);border-radius:3px;margin:0 10px;}
 .pay-fill{height:100%;border-radius:3px;}
 .chart-wrap{background:var(--bg2);border:1.5px solid var(--brd);border-radius:11px;padding:12px;margin-bottom:12px;}
-canvas{width:100%;display:block;}
+canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges;}
 .botnav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1.5px solid var(--brd);display:flex;padding:8px 0;}
 .bnav{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0;color:var(--tx3);font-size:.62rem;font-weight:600;transition:color .2s;}
 .bnav.on{color:#3b82f6;}
@@ -148,7 +149,7 @@ canvas{width:100%;display:block;}
       <div class="biz" id="biz-name">Mi Negocio</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
-      <div style="display:flex;align-items:center;gap:5px">
+      <div style="display:flex;align-items:center;gap:10px">
         <button id="bell-btn" class="ttl-btn" onclick="showMsgPanel()" title="Mensajes">
           🔔<span id="bell-badge">0</span>
         </button>
@@ -447,13 +448,31 @@ function renderInventory(){
   document.getElementById('low-list').innerHTML=low.length===0?'<div class="empty">'+t('allStockOk')+'</div>':low.map(function(p){return '<div class="low-item"><span style="font-size:.84rem;font-weight:600">'+escHtml(p.name)+'</span><div style="text-align:right"><div style="color:#f87171;font-weight:600">'+(p.stock||0)+' '+t('remaining')+'</div><div style="font-size:.67rem;color:var(--tx3)">'+t('minLbl')+': '+(p.minStock!==undefined?p.minStock:5)+'</div></div></div>';}).join('');
   if(!prods.length){document.getElementById('all-prods').innerHTML='<div class="empty">'+t('noProds')+'</div>';return;}
   var groups={};
+  // TODO: sincronizar tabla categories desde el POS a Supabase
   prods.forEach(function(p){
     var cid=p.cat?String(p.cat):'__none__';
-    var cname=cid==='__none__'?t('uncategorized'):(catMap[cid]||null);
-    // If catMap is empty (not yet synced from POS), group all by their cat ID but show "Sin nombre"
-    if(!cname)cname=cats.length===0&&cid!=='__none__'?t('sinNombre'):t('sinNombre');
+    var cname;
+    if(cid==='__none__'){
+      cname=t('uncategorized');
+    }else if(catMap[cid]){
+      // Resolved from DB.categories (synced from POS)
+      cname=catMap[cid];
+    }else if(/^\d{10,}$/.test(cid)){
+      // Numeric timestamp ID — categories not yet synced; use sequential label per unique ID
+      cname=null; // resolved below after all IDs are collected
+    }else{
+      // cat field already contains the name directly (legacy data)
+      cname=cid;
+    }
     if(!groups[cid])groups[cid]={name:cname,prods:[]};
     groups[cid].prods.push(p);
+  });
+  // Assign readable labels to unresolved timestamp IDs
+  var idCounter=1;
+  Object.keys(groups).forEach(function(cid){
+    if(groups[cid].name===null){
+      groups[cid].name=(LANG==='es'?'Categoría ':'Category ')+idCounter++;
+    }
   });
   var keys=Object.keys(groups).sort(function(a,b){if(a==='__none__')return 1;if(b==='__none__')return -1;return groups[a].name.localeCompare(groups[b].name);});
   document.getElementById('all-prods').innerHTML=keys.map(function(cid,ci){
@@ -501,9 +520,12 @@ async function saveMinStock(pid){var inp=document.getElementById('ms-'+pid+'-inp
 // ── Chart ──────────────────────────────────────────────
 function drawBarChart(id,days){
   var canvas=document.getElementById(id);if(!canvas)return;
+  var dpr=Math.min(window.devicePixelRatio||1,3);
   var W=canvas.parentElement.clientWidth-24||300;
-  canvas.width=W;canvas.height=160;
-  var ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,160);
+  var H=160;
+  canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);
+  canvas.style.width=W+'px';canvas.style.height=H+'px';
+  var ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,W,H);
   var cs=getComputedStyle(canvas);
   var txtColor=cs.getPropertyValue('--chart-txt').trim()||'#e0e0e0';
   var gridColor=cs.getPropertyValue('--chart-grid').trim()||'rgba(255,255,255,.13)';
@@ -512,7 +534,7 @@ function drawBarChart(id,days){
   var dates=[];for(var i=days-1;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);d.setHours(0,0,0,0);dates.push(d);}
   var data=dates.map(function(d){var nx=new Date(d);nx.setDate(nx.getDate()+1);return (DB.sales||[]).filter(function(s){return s.status==='active'&&new Date(s.date)>=d&&new Date(s.date)<nx;}).reduce(function(s,x){return s+x.total;},0);});
   var max=Math.max.apply(null,data)||1;
-  var H=160,pad={t:12,r:8,b:30,l:48};
+  var pad={t:12,r:8,b:30,l:48};
   var w=W-pad.l-pad.r,h=H-pad.t-pad.b;
   var bw=Math.max(4,w/days*0.78),gap=w/days;
   // Grid + Y labels
