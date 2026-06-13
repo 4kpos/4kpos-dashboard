@@ -518,21 +518,23 @@ function cancelMinStock(pid){var f=document.getElementById('ms-'+pid+'-form');if
 async function saveMinStock(pid){var inp=document.getElementById('ms-'+pid+'-inp');var val=document.getElementById('ms-'+pid+'-val');var btn=document.getElementById('ms-'+pid+'-sbtn');if(!inp)return;var n=parseInt(inp.value)||0;if(n<0)n=0;var p=(DB.products||[]).find(function(x){return x.id===pid;});if(!p){cancelMinStock(pid);return;}p.minStock=n;if(btn)btn.textContent='...';try{await fetch(API+'?action=save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({license_key:KEY,data:{sales:DB.sales||[],products:DB.products,categories:DB.categories||[],cfg:DB.cfg||{}}})});if(val)val.textContent=n;cancelMinStock(pid);showNotif('✓ '+t('minLbl')+': '+n);}catch(e){showNotif(LANG==='es'?'Error al guardar':'Save error');if(btn)btn.textContent='✓';}}
 
 // ── Chart tooltip ──────────────────────────────────────
-var _chartTip=null;
+var _chartTip=null,_tipTimer=null;
 function _getTip(){
   if(!_chartTip){
     _chartTip=document.createElement('div');
-    _chartTip.style.cssText='position:fixed;background:#1a1a22;border:1.5px solid rgba(59,130,246,.55);border-radius:8px;padding:6px 12px;font-size:.82rem;font-weight:700;color:#fff;pointer-events:none;z-index:300;display:none;box-shadow:0 4px 18px rgba(0,0,0,.55);white-space:nowrap;';
+    _chartTip.style.cssText='position:fixed;background:#1a1a22;border:1.5px solid rgba(59,130,246,.6);border-radius:9px;padding:7px 13px;font-size:.85rem;font-weight:700;color:#fff;pointer-events:none;z-index:300;display:none;box-shadow:0 4px 20px rgba(0,0,0,.6);white-space:nowrap;';
     document.body.appendChild(_chartTip);
   }
   return _chartTip;
 }
-function _hideTip(){_getTip().style.display='none';}
-function _showTip(txt,cx,cy){
+function _hideTip(){clearTimeout(_tipTimer);_getTip().style.display='none';}
+function _showTip(txt,cx,cy,autoHide){
+  clearTimeout(_tipTimer);
   var el=_getTip();el.textContent=txt;el.style.display='block';
-  var tw=el.offsetWidth||110;
+  var tw=el.offsetWidth||120;
   el.style.left=Math.min(cx+14,window.innerWidth-tw-8)+'px';
-  el.style.top=Math.max(cy-42,8)+'px';
+  el.style.top=Math.max(cy-46,8)+'px';
+  if(autoHide)_tipTimer=setTimeout(_hideTip,2400);
 }
 
 // ── Chart ──────────────────────────────────────────────
@@ -586,35 +588,40 @@ function drawBarChart(id,days){
       ctx.fillText(Math.round(v).toLocaleString(),x+bw/2,y-5);
     }
   });
-  // Tooltip for 30-day chart — store rects on canvas, register listeners once
+  // Tooltip for 30-day chart — store rects and dims on canvas, register listeners once
   canvas._br=barRects;canvas._cW=W;canvas._cH=H;canvas._cDays=days;
   if(!canvas._tipReady){
     canvas._tipReady=true;
-    function hit(cx,cy){
+    // Hit test: uses full column width (gap) so narrow bars are easy to tap on mobile
+    function hitBar(cx,cy){
       var r=canvas.getBoundingClientRect();
       var lx=(cx-r.left)*(canvas._cW/r.width);
       var ly=(cy-r.top)*(canvas._cH/r.height);
-      for(var j=0;j<canvas._br.length;j++){
-        var b=canvas._br[j];
-        if(lx>=b.x&&lx<=b.x+b.w&&ly>=b.y-12&&ly<=b.y+b.h)return b;
+      var bars=canvas._br||[];
+      var gapW=bars.length>1?(bars[1].x+bars[1].w/2-(bars[0].x+bars[0].w/2)):20;
+      for(var j=0;j<bars.length;j++){
+        var b=bars[j];
+        var mid=b.x+b.w/2;
+        if(Math.abs(lx-mid)<=gapW/2&&ly<=b.y+b.h+8)return b;
       }
       return null;
     }
-    canvas.addEventListener('mousemove',function(e){
+    function tipTxt(b){return fmtDate(b.date)+': $'+Math.round(b.v).toLocaleString();}
+    // pointermove covers mouse hover on desktop
+    canvas.addEventListener('pointermove',function(e){
       if(canvas._cDays<=7){_hideTip();return;}
-      var b=hit(e.clientX,e.clientY);
-      if(b&&b.v>0)_showTip(fmtDate(b.date)+': $'+Math.round(b.v).toLocaleString(),e.clientX,e.clientY);
+      var b=hitBar(e.clientX,e.clientY);
+      if(b&&b.v>0)_showTip(tipTxt(b),e.clientX,e.clientY,false);
       else _hideTip();
     });
-    canvas.addEventListener('mouseleave',_hideTip);
-    canvas.addEventListener('touchstart',function(e){
+    canvas.addEventListener('pointerleave',_hideTip);
+    // pointerdown fires on both tap (mobile) and click (desktop)
+    canvas.addEventListener('pointerdown',function(e){
       if(canvas._cDays<=7)return;
-      var tc=e.touches[0];
-      var b=hit(tc.clientX,tc.clientY);
-      if(b&&b.v>0){_showTip(fmtDate(b.date)+': $'+Math.round(b.v).toLocaleString(),tc.clientX,tc.clientY);e.preventDefault();}
+      var b=hitBar(e.clientX,e.clientY);
+      if(b&&b.v>0)_showTip(tipTxt(b),e.clientX,e.clientY,true);
       else _hideTip();
-    },{passive:false});
-    canvas.addEventListener('touchend',function(){setTimeout(_hideTip,1800);});
+    });
   }
 }
 
