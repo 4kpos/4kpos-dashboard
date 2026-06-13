@@ -70,7 +70,12 @@ body.light .card.bl{background:rgba(96,165,250,.12);border-color:rgba(96,165,250
 .bar-lbl{display:flex;justify-content:space-between;font-size:.76rem;color:var(--tx2);margin-bottom:3px;}
 .bar-track{height:8px;background:var(--brd);border-radius:4px;}
 .bar-fill{height:100%;border-radius:4px;transition:width .6s ease;}
-.sale-item{background:var(--bg2);border:1.5px solid var(--brd);border-radius:10px;padding:10px 12px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;}
+.sale-item{background:var(--bg2);border:1.5px solid var(--brd);border-radius:10px;padding:10px 12px;margin-bottom:7px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;}
+.sale-hdr{display:flex;justify-content:space-between;align-items:center;}
+.sale-detail{display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--brd);}
+.sale-detail.open{display:block;}
+.sale-drow{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--brd);font-size:.78rem;color:var(--tx2);}
+.sale-drow:last-of-type{border:none;}
 .sale-item.new{border-color:rgba(52,211,153,.4);background:rgba(52,211,153,.05);animation:newitem .5s ease;}
 @keyframes newitem{from{transform:translateX(-10px);opacity:0}to{transform:none;opacity:1}}
 .snum{font-size:.7rem;color:#3b82f6;font-weight:600;margin-bottom:2px;}
@@ -409,7 +414,39 @@ function renderToday(isNew){
   document.getElementById('pay-rows').innerHTML=payHtml||'<div class="empty">'+t('noSales')+'</div>';
   renderProdBars(ts,'prod-bars');
   document.getElementById('sale-count').textContent=ts.length+' '+t('salesN');
-  var sHtml=ts.length===0?'<div class="empty">'+t('noSalesYet')+'</div>':ts.slice().reverse().map(function(s,i){var items=(s.items||[]).map(function(i){return escHtml(i.name)+(i.qty>1?' x'+i.qty:'');}).join(', ');var time=new Date(s.date).toLocaleTimeString(LANG==='es'?'es':'en',{hour:'2-digit',minute:'2-digit'});var payLbl=normPayLabel(s);var cashier=s.cashier?(' · '+escHtml(s.cashier)):'';return '<div class="sale-item'+(isNew&&i===0?' new':'')+'"><div><div class="snum">'+t('order')+(s.rnum||s.id)+'</div><div class="sitems">'+items+'</div><div class="stime">'+time+cashier+'</div></div><div style="text-align:right"><div class="stot">'+dolr(s.total)+'</div><div class="spay">'+payLbl+'</div></div></div>';}).join('');
+  var sHtml=ts.length===0?'<div class="empty">'+t('noSalesYet')+'</div>':ts.slice().reverse().map(function(s,i){
+    var sid='s'+i;
+    var itArr=s.items||[];
+    if(typeof itArr==='string'){try{itArr=JSON.parse(itArr);}catch(e){itArr=[];}}
+    var summary=itArr.map(function(it){return escHtml(it.name)+(it.qty>1?' x'+it.qty:'');}).join(', ');
+    var time=new Date(s.date).toLocaleTimeString(LANG==='es'?'es':'en',{hour:'2-digit',minute:'2-digit'});
+    var payLbl=normPayLabel(s);
+    var cashier=s.cashier?escHtml(s.cashier):'';
+    var detRows=itArr.map(function(it){
+      var lt=(it.price||0)*(it.qty||1);
+      return '<div class="sale-drow">'
+        +'<span>'+escHtml(it.name)+(it.qty>1?' <span style="color:var(--tx3)">×'+it.qty+'</span>':' <span style="color:var(--tx3)">×1</span>')+'</span>'
+        +'<span style="font-family:monospace">'+dolr(lt)+'</span>'
+        +'</div>';
+    }).join('');
+    var detFooter='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px;padding-top:4px">'
+      +'<span style="font-size:.73rem;color:var(--tx3)">'+payLbl+(cashier?' · '+cashier:'')+'</span>'
+      +'<span style="font-size:.8rem;font-family:monospace;font-weight:700;color:#34d399">Total: '+dolr(s.total)+'</span>'
+      +'</div>';
+    return '<div class="sale-item'+(isNew&&i===0?' new':'')+'" onclick="toggleSaleDetail(\''+sid+'\')">'
+      +'<div class="sale-hdr">'
+      +'<div><div class="snum">'+t('order')+(s.rnum||s.id)+'</div><div class="sitems">'+summary+'</div><div class="stime">'+time+(cashier?' · '+cashier:'')+'</div></div>'
+      +'<div style="text-align:right;padding-left:8px">'
+      +'<div class="stot">'+dolr(s.total)+'</div>'
+      +'<div class="spay">'+payLbl+'</div>'
+      +'<div id="sa-'+sid+'" style="font-size:.6rem;color:var(--tx4);margin-top:3px">▼</div>'
+      +'</div></div>'
+      +'<div class="sale-detail" id="sd-'+sid+'">'
+      +(detRows||'<div style="font-size:.78rem;color:var(--tx3)">Sin detalle</div>')
+      +detFooter
+      +'</div>'
+      +'</div>';
+  }).join('');
   document.getElementById('sales-list').innerHTML=sHtml;
   if(isNew&&ts.length>0)showNotif((LANG==='es'?'Nueva venta: ':'New sale: ')+dolr(ts[ts.length-1].total));
 }
@@ -623,6 +660,15 @@ function drawBarChart(id,days){
       else _hideTip();
     });
   }
+}
+
+// ── Sale detail expand/collapse ────────────────────────
+function toggleSaleDetail(id){
+  var det=document.getElementById('sd-'+id);
+  var arr=document.getElementById('sa-'+id);
+  if(!det)return;
+  var open=det.classList.toggle('open');
+  if(arr)arr.textContent=open?'▲':'▼';
 }
 
 // ── Pay labels ─────────────────────────────────────────
