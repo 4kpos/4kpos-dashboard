@@ -102,16 +102,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
 .spin{display:inline-block;animation:sp 1s linear infinite;}
 @keyframes sp{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .loading{text-align:center;padding:50px 20px;color:var(--tx3);}
-/* Messages panel */
-#msg-panel{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);align-items:flex-end;}
-#msg-panel.open{display:flex;}
-#msg-sheet{width:100%;background:var(--bg2);border-radius:20px 20px 0 0;max-height:80vh;display:flex;flex-direction:column;}
-#msg-sheet-head{padding:14px 16px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
-#msg-list{overflow-y:auto;padding:12px 14px;}
-.msg-item{background:var(--bg3);border:1.5px solid var(--brd);border-radius:10px;padding:10px 12px;margin-bottom:8px;}
-.msg-item.urgent{border-color:rgba(248,113,113,.55);}
-.msg-item.read{opacity:.6;}
-#bell-badge{display:none;position:absolute;top:-5px;right:-5px;background:#f44336;color:#fff;border-radius:50%;font-size:.58rem;font-weight:800;width:16px;height:16px;align-items:center;justify-content:center;line-height:1;}
+
 /* Install banner */
 #install-banner{display:none;position:fixed;bottom:80px;left:12px;right:12px;background:linear-gradient(135deg,#0d1f4a,#1e3a8a);border:1.5px solid rgba(59,130,246,.4);border-radius:14px;padding:14px 16px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:slideUp .3s ease;}
 @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
@@ -155,9 +146,6 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
       <div style="display:flex;align-items:center;gap:10px">
-        <button id="bell-btn" class="ttl-btn" onclick="showMsgPanel()" title="Mensajes">
-          🔔<span id="bell-badge">0</span>
-        </button>
         <button id="theme-btn" class="ttl-btn" onclick="toggleTheme()">🌙</button>
         <button id="lang-btn" class="ttl-btn" onclick="toggleLang()">EN</button>
         <div class="live-badge"><div class="live-dot"></div><span data-t="connected">Conectado</span></div>
@@ -229,17 +217,6 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
 
 <div id="loading" class="loading"><div class="spin" style="font-size:2rem">⏳</div><div style="margin-top:10px">Cargando...</div></div>
 
-<!-- Messages panel -->
-<div id="msg-panel" onclick="if(event.target===this)closeMsgPanel()">
-  <div id="msg-sheet">
-    <div id="msg-sheet-head">
-      <span style="font-weight:700;font-size:.95rem" data-t="messages">Mensajes</span>
-      <button onclick="closeMsgPanel()" style="background:none;border:none;color:var(--tx3);font-size:1.3rem;cursor:pointer;line-height:1">✕</button>
-    </div>
-    <div id="msg-list"><div class="empty" data-t="noMessages">Sin mensajes</div></div>
-  </div>
-</div>
-
 <div id="install-banner">
   <div class="ib-row">
     <div class="ib-icon"><img src="icon-192.png" alt="4K POS"></div>
@@ -261,7 +238,6 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
 <script>
 const API='https://izalnhluwtyotuxwkqrh.supabase.co/functions/v1/posapi';
 let DB=null,KEY=null,lastSaleCount=0,refreshInterval=null;
-var MSG_UNREAD=0,MSG_POLL=null,_cachedMsgs=[];
 
 // ── Helpers ────────────────────────────────────────────
 function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -308,7 +284,6 @@ var TR={
     ordersN:'ordenes',salesN:'ventas',avg2:'Prom.',minLbl:'Mín',inStock:'en stock',
     order:'Orden #',uncategorized:'Sin categoría',sinNombre:'Sin nombre',
     stockOk:'stock ok',stockLow:'stock bajo',vsAyer:'% vs ayer',remaining:'restantes',prod:'prod.',
-    messages:'Mensajes',noMessages:'Sin mensajes',markRead:'Marcar leído',urgente:'URGENTE'
   },
   en:{
     incToday:"Today's income",orders:'Orders',highTicket:'Highest ticket',products:'Products',
@@ -326,7 +301,6 @@ var TR={
     ordersN:'orders',salesN:'sales',avg2:'Avg.',minLbl:'Min',inStock:'in stock',
     order:'Order #',uncategorized:'Uncategorized',sinNombre:'No name',
     stockOk:'stock ok',stockLow:'low stock',vsAyer:'% vs yesterday',remaining:'remaining',prod:'prod.',
-    messages:'Messages',noMessages:'No messages',markRead:'Mark read',urgente:'URGENT'
   }
 };
 function t(k){return (TR[LANG]||TR.es)[k]||k;}
@@ -681,66 +655,6 @@ function normPayLabel(s){
   return byMethod[s.payMethod]||lbl||'Crédito';
 }
 
-// ── Messages ───────────────────────────────────────────
-async function loadMsgs(){
-  try{
-    var r=await fetch(API+'?action=get-messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({license_key:KEY})});
-    var j=await r.json();
-    if(!j.success)return;
-    _cachedMsgs=j.messages||[];
-    var prev=MSG_UNREAD;
-    MSG_UNREAD=_cachedMsgs.filter(function(m){return !m.read;}).length;
-    updateMsgBadge();
-    if(document.getElementById('msg-panel').classList.contains('open'))renderMsgs(_cachedMsgs);
-    // Toast for new urgent unread messages
-    if(MSG_UNREAD>prev){
-      var newUrgent=_cachedMsgs.filter(function(m){return !m.read&&m.priority==='urgent';});
-      if(newUrgent.length>0){
-        var msg=newUrgent[0];
-        showNotif('🔴 '+(msg.from_user?msg.from_user+': ':'')+msg.text.substring(0,50));
-      }
-    }
-  }catch(e){}
-}
-function updateMsgBadge(){
-  var badge=document.getElementById('bell-badge');
-  if(!badge)return;
-  if(MSG_UNREAD>0){badge.textContent=MSG_UNREAD>9?'9+':String(MSG_UNREAD);badge.style.display='flex';}
-  else{badge.style.display='none';}
-}
-function showMsgPanel(){
-  var panel=document.getElementById('msg-panel');
-  panel.classList.add('open');
-  renderMsgs(_cachedMsgs);
-  loadMsgs();
-}
-function closeMsgPanel(){document.getElementById('msg-panel').classList.remove('open');}
-function renderMsgs(msgs){
-  var list=document.getElementById('msg-list');
-  if(!msgs||!msgs.length){list.innerHTML='<div class="empty">'+t('noMessages')+'</div>';return;}
-  var sorted=msgs.slice().sort(function(a,b){return new Date(b.created_at||0)-new Date(a.created_at||0);});
-  list.innerHTML=sorted.map(function(m){
-    var isUrg=m.priority==='urgent';
-    var cls='msg-item'+(isUrg?' urgent':'')+(m.read?' read':'');
-    var urgBadge=isUrg?(' <span style="background:#f87171;color:#fff;border-radius:4px;padding:1px 5px;font-size:.6rem;font-weight:800;margin-left:4px">'+t('urgente')+'</span>'):'';
-    var readBtn=!m.read?('<button onclick="markMsgRead(\''+escHtml(String(m.id))+'\')" style="margin-top:6px;background:var(--inp-bg);border:none;border-radius:6px;color:var(--tx2);padding:4px 10px;font-size:.72rem;cursor:pointer">✓ '+t('markRead')+'</button>'):'';
-    return '<div class="'+cls+'">'
-      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px">'
-      +'<span style="font-size:.72rem;font-weight:700;color:#3b82f6">'+escHtml(m.from_user||'POS')+urgBadge+'</span>'
-      +'<span style="font-size:.68rem;color:var(--tx3)">'+timeAgo(m.created_at)+'</span>'
-      +'</div>'
-      +'<div style="font-size:.85rem;line-height:1.5;color:var(--tx)">'+escHtml(m.text||'')+'</div>'
-      +readBtn
-      +'</div>';
-  }).join('');
-}
-async function markMsgRead(id){
-  try{
-    await fetch(API+'?action=mark-read',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({license_key:KEY,id:id})});
-    await loadMsgs();
-  }catch(e){}
-}
-
 // ── Notifications ──────────────────────────────────────
 function showNotif(msg){var n=document.createElement('div');n.style.cssText='position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1.5px solid rgba(59,130,246,.4);border-radius:10px;padding:10px 18px;font-size:.83rem;color:var(--tx);z-index:9999;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.45);transition:opacity .3s;';n.textContent=msg;document.body.appendChild(n);setTimeout(function(){n.style.opacity='0';setTimeout(function(){n.remove();},300);},2800);}
 
@@ -757,9 +671,6 @@ async function init(){
     document.getElementById('botnav').style.display='flex';
     if(refreshInterval)clearInterval(refreshInterval);
     refreshInterval=setInterval(function(){loadData(false);},10000);
-    // Start message polling (every 30s)
-    loadMsgs();
-    MSG_POLL=setInterval(loadMsgs,30000);
   }
 }
 
