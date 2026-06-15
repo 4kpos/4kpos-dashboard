@@ -393,7 +393,7 @@ function renderToday(isNew){
     var itArr=s.items||[];
     if(typeof itArr==='string'){try{itArr=JSON.parse(itArr);}catch(e){itArr=[];}}
     var summary=itArr.map(function(it){return escHtml(it.name)+(it.qty>1?' x'+it.qty:'');}).join(', ');
-    var time=new Date(s.date).toLocaleTimeString(LANG==='es'?'es':'en',{hour:'2-digit',minute:'2-digit'});
+    var time=new Date(s.date).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
     var payLbl=normPayLabel(s);
     var cashier=s.cashier?escHtml(s.cashier):'';
     var detRows=itArr.map(function(it){
