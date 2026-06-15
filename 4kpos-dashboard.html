@@ -223,7 +223,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
 
 <div class="botnav" id="botnav" style="display:none">
   <div class="bnav on" onclick="showPage('hoy',this)"><div class="bnav-ico">📊</div><span data-t="today">Hoy</span></div>
-  <div class="bnav" onclick="showPage('semana',this)"><div class="bnav-ico" id="bnav-week-ico" style="font-size:.82rem;font-weight:800;letter-spacing:-.5px;line-height:1.5">—</div><span data-t="weekRange">Semana</span></div>
+  <div class="bnav" onclick="showPage('semana',this)" style="min-width:52px"><div class="bnav-ico">📅</div><div id="bnav-week-range" style="font-size:.58rem;font-weight:700;letter-spacing:-.2px;margin-top:-3px;line-height:1.2;color:inherit">—</div><span data-t="weekRange">Semana</span></div>
   <div class="bnav" onclick="showPage('mes',this)"><div class="bnav-ico">📈</div><span data-t="month">Mes</span></div>
   <div class="bnav" onclick="showPage('inv',this)"><div class="bnav-ico">📦</div><span data-t="inventory">Inventario</span></div>
   <div class="bnav" onclick="refresh()"><div class="bnav-ico">🔄</div><span data-t="refresh">Actualizar</span></div>
@@ -253,7 +253,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
 const API='https://izalnhluwtyotuxwkqrh.supabase.co/functions/v1/posapi';
 const SUPA_URL='https://izalnhluwtyotuxwkqrh.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6YWxuaGx1d3R5b3R1eHdrcXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNDg2OTEsImV4cCI6MjA5NTkyNDY5MX0.qtaMdroQMP4CIARsStkSWx6vGU-T5id98zczaGKGAvk';
-let DB=null,KEY=null,lastSaleCount=0,refreshInterval=null;
+let DB=null,KEY=null,lastSaleCount=0,refreshInterval=null,_lastShiftState=null;
 
 // ── Helpers ────────────────────────────────────────────
 function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -302,7 +302,9 @@ var TR={
     stockOk:'stock ok',stockLow:'stock bajo',vsAyer:'% vs ayer',remaining:'restantes',prod:'prod.',
     yesterdaySales:'Ventas de ayer',pendingCredits:'Créditos pendientes',
     creditAbono:'Abono crédito',noCredits:'Sin créditos pendientes',
-    creditTotal:'Total pendiente',onlineStatus:'Online',offlineStatus:'Offline',
+    creditTotal:'Total pendiente',
+    shiftOpen:'Turno abierto',shiftClosed:'Turno cerrado',noActivity:'Sin actividad',
+    shiftOpenAlert:'abrió turno',shiftCloseAlert:'cerró turno',
     weekRange:'Semana',creditPayments:'Pagos de crédito',
     purchases:'compra',purchases_p:'compras',
   },
@@ -324,7 +326,9 @@ var TR={
     stockOk:'stock ok',stockLow:'low stock',vsAyer:'% vs yesterday',remaining:'remaining',prod:'prod.',
     yesterdaySales:"Yesterday's sales",pendingCredits:'Pending credits',
     creditAbono:'Credit payment',noCredits:'No pending credits',
-    creditTotal:'Total pending',onlineStatus:'Online',offlineStatus:'Offline',
+    creditTotal:'Total pending',
+    shiftOpen:'Shift open',shiftClosed:'Shift closed',noActivity:'No activity',
+    shiftOpenAlert:'opened shift',shiftCloseAlert:'closed shift',
     weekRange:'Week',creditPayments:'Credit payments',
     purchases:'purchase',purchases_p:'purchases',
   }
@@ -372,16 +376,36 @@ async function loadData(showToast){
       bizEl.innerHTML='<span style="color:#1e3a8a;font-weight:800">4K</span> <span style="color:#e6b800">Solutions</span>';
     }else{bizEl.textContent=rawBiz;}
     document.getElementById('upd-time').textContent=j.updated_at?(t('lastSync')+': '+timeAgo(j.updated_at)):'';
-    // User online/offline status
+    // Shift status
+    var shiftInfo=getShiftStatus(DB);
     var statusEl=document.getElementById('pos-user-status');
     if(statusEl){
-      var lastSyncTime=j.updated_at?new Date(j.updated_at):null;
-      var isOnline=lastSyncTime&&(Date.now()-lastSyncTime.getTime()<5*60*1000);
-      var lastSaleWithUser=(DB.sales||[]).filter(function(s){return s.cashier;}).slice(-1)[0];
-      var userName=lastSaleWithUser?lastSaleWithUser.cashier:'';
       statusEl.style.display='block';
-      statusEl.innerHTML=(userName?'<span style="opacity:.8">'+escHtml(userName)+'</span> · ':'')
-        +(isOnline?'<span style="color:#34d399">⬤ '+t('onlineStatus')+'</span>':'<span style="color:#f87171">⬤ '+t('offlineStatus')+'</span>');
+      var stHtml='';
+      if(shiftInfo.state==='open'){
+        var openTimeTxt=shiftInfo.openAt?' · '+new Date(shiftInfo.openAt).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}):'';
+        stHtml='<span style="color:#34d399">⬤ '+t('shiftOpen')+'</span>'+(shiftInfo.user?' · '+escHtml(shiftInfo.user):'')+openTimeTxt;
+      }else if(shiftInfo.state==='closed'){
+        var closeTimeTxt=shiftInfo.closedAt?' · '+new Date(shiftInfo.closedAt).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}):'';
+        stHtml='<span style="color:#f87171">⬤ '+t('shiftClosed')+'</span>'+(shiftInfo.user?' · '+escHtml(shiftInfo.user):'')+closeTimeTxt;
+      }else{
+        stHtml='<span style="color:rgba(255,255,255,.35)">⬤ '+t('noActivity')+'</span>';
+      }
+      statusEl.innerHTML=stHtml;
+      // Alert on shift state change
+      if(_lastShiftState!==null&&_lastShiftState!==shiftInfo.state){
+        var alertMsg='';
+        var uName=shiftInfo.user||(shiftInfo.state==='open'?t('shiftOpen'):t('shiftClosed'));
+        if(shiftInfo.state==='open'){
+          alertMsg=escHtml(uName)+' '+t('shiftOpenAlert');
+          if(shiftInfo.openAt)alertMsg+=' · '+new Date(shiftInfo.openAt).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
+        }else if(shiftInfo.state==='closed'){
+          alertMsg=escHtml(uName)+' '+t('shiftCloseAlert');
+          if(shiftInfo.closedAt)alertMsg+=' · '+new Date(shiftInfo.closedAt).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
+        }
+        if(alertMsg)showNotif(alertMsg,5000);
+      }
+      _lastShiftState=shiftInfo.state;
     }
     renderToday(isNew);
     if(showToast)showNotif(LANG==='es'?'Actualizado':'Updated');
@@ -788,7 +812,7 @@ function getWeekRange(){
   return mon.getDate()+'-'+sun.getDate();
 }
 function updateWeekBtn(){
-  var el=document.getElementById('bnav-week-ico');
+  var el=document.getElementById('bnav-week-range');
   if(el)el.textContent=getWeekRange();
 }
 
@@ -811,8 +835,28 @@ function normPayLabel(s){
   return byMethod[s.payMethod]||lbl||'Crédito';
 }
 
+// ── Shift status ───────────────────────────────────────
+function getShiftStatus(data){
+  var cfg=(data&&data.cfg)||{};
+  var todayStr=new Date().toDateString();
+  // Explicit shift fields written by POS (shiftOpen, shiftUser, shiftOpenAt, shiftClosedAt)
+  if(cfg.shiftOpen===true){
+    return{state:'open',user:cfg.shiftUser||cfg.currentUser||'',openAt:cfg.shiftOpenAt||null,closedAt:null};
+  }
+  if(cfg.shiftOpen===false&&cfg.shiftClosedAt&&new Date(cfg.shiftClosedAt).toDateString()===todayStr){
+    return{state:'closed',user:cfg.shiftUser||'',openAt:null,closedAt:cfg.shiftClosedAt};
+  }
+  // Fallback: infer from today's sales
+  var todaySales=(data.sales||[]).filter(function(s){return s.status==='active'&&new Date(s.date).toDateString()===todayStr;});
+  if(todaySales.length>0){
+    var lastWithUser=todaySales.filter(function(s){return s.cashier;}).slice(-1)[0];
+    return{state:'open',user:lastWithUser?lastWithUser.cashier:'',openAt:null,closedAt:null};
+  }
+  return{state:'none',user:'',openAt:null,closedAt:null};
+}
+
 // ── Notifications ──────────────────────────────────────
-function showNotif(msg){var n=document.createElement('div');n.style.cssText='position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1.5px solid rgba(59,130,246,.4);border-radius:10px;padding:10px 18px;font-size:.83rem;color:var(--tx);z-index:9999;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.45);transition:opacity .3s;';n.textContent=msg;document.body.appendChild(n);setTimeout(function(){n.style.opacity='0';setTimeout(function(){n.remove();},300);},2800);}
+function showNotif(msg,dur){var n=document.createElement('div');n.style.cssText='position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1.5px solid rgba(59,130,246,.4);border-radius:10px;padding:10px 18px;font-size:.83rem;color:var(--tx);z-index:9999;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.45);transition:opacity .3s;';n.textContent=msg;document.body.appendChild(n);setTimeout(function(){n.style.opacity='0';setTimeout(function(){n.remove();},300);},dur||2800);}
 
 // ── Init ───────────────────────────────────────────────
 async function init(){
@@ -827,7 +871,7 @@ async function init(){
     document.getElementById('botnav').style.display='flex';
     renderCredits();
     if(refreshInterval)clearInterval(refreshInterval);
-    refreshInterval=setInterval(function(){loadData(false);renderCredits();},10000);
+    refreshInterval=setInterval(function(){loadData(false);renderCredits();},30000);
   }
 }
 
