@@ -231,7 +231,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
         <rect x="2" y="16" width="46" height="6" fill="#ef4444"/>
         <circle cx="14" cy="8" r="3" fill="white" stroke="#999" stroke-width="1"/>
         <circle cx="36" cy="8" r="3" fill="white" stroke="#999" stroke-width="1"/>
-        <text x="25" y="39" text-anchor="middle" font-size="13" font-weight="bold" fill="#333" id="cal-range">—</text>
+        <text x="25" y="39" text-anchor="middle" font-size="13" font-weight="bold" fill="#333" id="cal-range">21/23</text>
       </svg>
     </div>
     <span data-t="weekRange">Semana</span>
@@ -753,7 +753,8 @@ function renderCredits(){
   if(!DB)return;
   var secEl=document.getElementById('sec-credits');if(!secEl)return;
   var pendingSales=(DB.sales||[]).filter(function(s){
-    return s.payMethod==='credit'&&s.status==='active'&&s.creditStatus!=='paid';
+    return s.payMethod==='credit'&&s.status==='active'
+      &&(s.creditStatus==='pending'||s.creditStatus==='partial');
   });
   var totalEl=document.getElementById('cred-total-lbl');
   var countEl=document.getElementById('cred-count-lbl');
@@ -762,7 +763,7 @@ function renderCredits(){
     if(totalEl)totalEl.textContent=dolr(0);
     if(countEl)countEl.textContent='';
     if(listEl)listEl.innerHTML='<div class="empty">'+t('noCredits')+'</div>';
-    secEl.style.display='none';
+    secEl.style.display='block';
     return;
   }
   var totalPending=pendingSales.reduce(function(s,c){return s+Math.max(0,(c.total||0)-(c.creditPaid||0));},0);
@@ -856,10 +857,7 @@ function getWeekRange(){
   var sun=new Date(mon);sun.setDate(mon.getDate()+6);
   return mon.getDate()+'-'+sun.getDate();
 }
-function updateWeekBtn(){
-  var el=document.getElementById('cal-range');
-  if(el)el.textContent=getWeekRange();
-}
+function updateWeekBtn(){}
 
 // ── Sale detail expand/collapse ────────────────────────
 function toggleSaleDetail(id){
