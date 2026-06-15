@@ -143,6 +143,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
     <div>
       <div class="logo"><span style="color:#1e3a8a">4K</span><span style="color:#1a7a3a"> P</span><span style="color:#e6b800">O</span><span style="color:#cc1111">S</span></div>
       <div class="biz" id="biz-name">Mi Negocio</div>
+      <div id="pos-user-status" style="font-size:.66rem;color:rgba(255,255,255,.5);margin-top:3px;display:none;line-height:1.4"></div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
       <div style="display:flex;align-items:center;gap:10px">
@@ -170,13 +171,26 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
       <div style="font-size:.7rem;color:var(--tx3)" id="sale-count"></div>
     </div>
     <div id="sales-list"></div>
+
+    <div id="sec-credits" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px">
+        <div class="sec-ttl" style="margin:0" data-t="pendingCredits">Créditos pendientes</div>
+        <div style="font-size:.7rem;color:var(--tx3)" id="cred-count-lbl"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(251,191,36,.08);border:1.5px solid rgba(251,191,36,.3);border-radius:10px;padding:10px 14px;margin-bottom:8px">
+        <span style="font-size:.75rem;color:rgba(251,191,36,.85)" data-t="creditTotal">Total pendiente</span>
+        <span style="font-family:monospace;font-weight:700;color:#fbbf24;font-size:1rem" id="cred-total-lbl">$0.00</span>
+      </div>
+      <div id="credits-list"></div>
+    </div>
   </div>
 
   <div class="page" id="pg-semana">
     <div class="cards">
       <div class="card gn"><div class="clbl" data-t="thisWeek">Esta semana</div><div class="cval" id="w-inc">$0.00</div><div class="csub" id="w-ords">0 ordenes</div></div>
       <div class="card ac"><div class="clbl" data-t="avgDay">Promedio/dia</div><div class="cval" id="w-avg">$0.00</div><div class="csub" data-t="last7">ultimos 7 dias</div></div>
-      <div class="card am wide"><div class="clbl" data-t="bestDay">Mejor dia</div><div class="cval" id="w-best">-</div><div class="csub" id="w-best-amt"></div></div>
+      <div class="card am"><div class="clbl" data-t="bestDay">Mejor dia</div><div class="cval" id="w-best">-</div><div class="csub" id="w-best-amt"></div></div>
+      <div class="card bl"><div class="clbl" data-t="yesterdaySales">Ventas de ayer</div><div class="cval" id="w-yest">$0.00</div><div class="csub" id="w-yest-cnt">0 ordenes</div></div>
     </div>
     <div class="sec-ttl" data-t="salesByDay">Ventas por dia</div>
     <div class="chart-wrap"><canvas id="week-chart"></canvas></div>
@@ -209,7 +223,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
 
 <div class="botnav" id="botnav" style="display:none">
   <div class="bnav on" onclick="showPage('hoy',this)"><div class="bnav-ico">📊</div><span data-t="today">Hoy</span></div>
-  <div class="bnav" onclick="showPage('semana',this)"><div class="bnav-ico">📅</div><span data-t="week">Semana</span></div>
+  <div class="bnav" onclick="showPage('semana',this)"><div class="bnav-ico" id="bnav-week-ico" style="font-size:.82rem;font-weight:800;letter-spacing:-.5px;line-height:1.5">—</div><span data-t="weekRange">Semana</span></div>
   <div class="bnav" onclick="showPage('mes',this)"><div class="bnav-ico">📈</div><span data-t="month">Mes</span></div>
   <div class="bnav" onclick="showPage('inv',this)"><div class="bnav-ico">📦</div><span data-t="inventory">Inventario</span></div>
   <div class="bnav" onclick="refresh()"><div class="bnav-ico">🔄</div><span data-t="refresh">Actualizar</span></div>
@@ -286,6 +300,11 @@ var TR={
     ordersN:'ordenes',salesN:'ventas',avg2:'Prom.',minLbl:'Mín',inStock:'en stock',
     order:'Orden #',uncategorized:'Sin categoría',sinNombre:'Sin nombre',
     stockOk:'stock ok',stockLow:'stock bajo',vsAyer:'% vs ayer',remaining:'restantes',prod:'prod.',
+    yesterdaySales:'Ventas de ayer',pendingCredits:'Créditos pendientes',
+    creditAbono:'Abono crédito',noCredits:'Sin créditos pendientes',
+    creditTotal:'Total pendiente',onlineStatus:'Online',offlineStatus:'Offline',
+    weekRange:'Semana',creditPayments:'Pagos de crédito',
+    purchases:'compra',purchases_p:'compras',
   },
   en:{
     incToday:"Today's income",orders:'Orders',highTicket:'Highest ticket',products:'Products',
@@ -303,6 +322,11 @@ var TR={
     ordersN:'orders',salesN:'sales',avg2:'Avg.',minLbl:'Min',inStock:'in stock',
     order:'Order #',uncategorized:'Uncategorized',sinNombre:'No name',
     stockOk:'stock ok',stockLow:'low stock',vsAyer:'% vs yesterday',remaining:'remaining',prod:'prod.',
+    yesterdaySales:"Yesterday's sales",pendingCredits:'Pending credits',
+    creditAbono:'Credit payment',noCredits:'No pending credits',
+    creditTotal:'Total pending',onlineStatus:'Online',offlineStatus:'Offline',
+    weekRange:'Week',creditPayments:'Credit payments',
+    purchases:'purchase',purchases_p:'purchases',
   }
 };
 function t(k){return (TR[LANG]||TR.es)[k]||k;}
@@ -313,6 +337,7 @@ function applyLang(){
   if(DB){
     var pg=document.querySelector('.page.on');
     renderToday(false);
+    renderCredits();
     if(pg){if(pg.id==='pg-semana')renderWeek();else if(pg.id==='pg-mes')renderMonth();else if(pg.id==='pg-inv')renderInventory();}
   }
 }
@@ -347,6 +372,17 @@ async function loadData(showToast){
       bizEl.innerHTML='<span style="color:#1e3a8a;font-weight:800">4K</span> <span style="color:#e6b800">Solutions</span>';
     }else{bizEl.textContent=rawBiz;}
     document.getElementById('upd-time').textContent=j.updated_at?(t('lastSync')+': '+timeAgo(j.updated_at)):'';
+    // User online/offline status
+    var statusEl=document.getElementById('pos-user-status');
+    if(statusEl){
+      var lastSyncTime=j.updated_at?new Date(j.updated_at):null;
+      var isOnline=lastSyncTime&&(Date.now()-lastSyncTime.getTime()<5*60*1000);
+      var lastSaleWithUser=(DB.sales||[]).filter(function(s){return s.cashier;}).slice(-1)[0];
+      var userName=lastSaleWithUser?lastSaleWithUser.cashier:'';
+      statusEl.style.display='block';
+      statusEl.innerHTML=(userName?'<span style="opacity:.8">'+escHtml(userName)+'</span> · ':'')
+        +(isOnline?'<span style="color:#34d399">⬤ '+t('onlineStatus')+'</span>':'<span style="color:#f87171">⬤ '+t('offlineStatus')+'</span>');
+    }
     renderToday(isNew);
     if(showToast)showNotif(LANG==='es'?'Actualizado':'Updated');
   }catch(e){console.error(e);}
@@ -384,14 +420,43 @@ function renderToday(isNew){
   if(yinc>0){var pct=Math.round((inc-yinc)/yinc*100);diffEl.textContent=(pct>=0?'+':'')+pct+t('vsAyer');diffEl.className='cdiff '+(pct>0?'up':pct<0?'dn':'eq');}else diffEl.textContent='';
   var payMap={cash:0,card:0,transf:0,credit:0,split:0};
   ts.forEach(function(s){var m=s.payMethod||'credit';if(payMap[m]!==undefined)payMap[m]+=s.total;else payMap.credit+=s.total;});
-  var payTotal=inc||1;
+  // Collect today's credit payments (abonos) received
+  var todayStr=new Date().toDateString();
+  var credPayItems=[];
+  (DB.sales||[]).forEach(function(s){
+    if(s.payMethod!=='credit')return;
+    (s.creditPayments||[]).forEach(function(p){
+      if(new Date(p.date).toDateString()!==todayStr)return;
+      credPayItems.push({date:p.date,amount:p.amount||0,client:s.creditClient||s.creditCedula||'—',method:p.method||'cash'});
+    });
+  });
+  var credPayTotal=credPayItems.reduce(function(s,p){return s+p.amount;},0);
+  var payTotal=(inc+credPayTotal)||1;
   var pNames=LANG==='en'?{cash:'Cash',card:'Card',transf:'Transfer',credit:'Credit',split:'Split'}:{cash:'Efectivo',card:'Tarjeta',transf:'Transferencia',credit:'Crédito',split:'Dividido'};
   var payColors={cash:'#34d399',card:'#3b82f6',transf:'#60a5fa',credit:'#fbbf24',split:'#f87171'};
   var payHtml=Object.entries(payMap).filter(function(e){return e[1]>0;}).map(function(e){var pct=Math.round(e[1]/payTotal*100);return '<div class="pay-row"><span style="font-size:.8rem;min-width:80px;color:var(--tx2)">'+pNames[e[0]]+'</span><div class="pay-bar"><div class="pay-fill" style="width:'+pct+'%;background:'+payColors[e[0]]+'"></div></div><span style="font-size:.78rem;font-family:monospace;color:'+payColors[e[0]]+'">'+dolr(e[1])+'</span></div>';}).join('');
+  if(credPayTotal>0){
+    var cpPct=Math.round(credPayTotal/payTotal*100);
+    payHtml+='<div class="pay-row"><span style="font-size:.8rem;min-width:80px;color:var(--tx2)">'+t('creditPayments')+'</span><div class="pay-bar"><div class="pay-fill" style="width:'+cpPct+'%;background:#a78bfa"></div></div><span style="font-size:.78rem;font-family:monospace;color:#a78bfa">'+dolr(credPayTotal)+'</span></div>';
+  }
   document.getElementById('pay-rows').innerHTML=payHtml||'<div class="empty">'+t('noSales')+'</div>';
   renderProdBars(ts,'prod-bars');
-  document.getElementById('sale-count').textContent=ts.length+' '+t('salesN');
-  var sHtml=ts.length===0?'<div class="empty">'+t('noSalesYet')+'</div>':ts.slice().reverse().map(function(s,i){
+  document.getElementById('sale-count').textContent=ts.length+' '+t('salesN')+(credPayTotal>0?' + '+credPayItems.length+' '+t('creditAbono'):'');
+  // Synthetic items for credit payments received today
+  var credPayHtml=credPayItems.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);}).map(function(p){
+    var time=new Date(p.date).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
+    var mLbl={cash:LANG==='es'?'Efectivo':'Cash',card:LANG==='es'?'Tarjeta':'Card',split:'Split'}[p.method]||p.method;
+    return '<div class="sale-item" style="border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.05)">'
+      +'<div class="sale-hdr">'
+      +'<div><div class="snum" style="color:#a78bfa">'+t('creditAbono')+'</div>'
+      +'<div class="sitems">'+escHtml(p.client)+'</div>'
+      +'<div class="stime">'+time+'</div></div>'
+      +'<div style="text-align:right">'
+      +'<div class="stot" style="color:#a78bfa">'+dolr(p.amount)+'</div>'
+      +'<div class="spay">'+mLbl+'</div>'
+      +'</div></div></div>';
+  }).join('');
+  var regularSaleHtml=ts.slice().reverse().map(function(s,i){
     var sid='s'+i;
     var itArr=s.items||[];
     if(typeof itArr==='string'){try{itArr=JSON.parse(itArr);}catch(e){itArr=[];}}
@@ -424,6 +489,7 @@ function renderToday(isNew){
       +'</div>'
       +'</div>';
   }).join('');
+  var sHtml=(!regularSaleHtml&&!credPayHtml)?'<div class="empty">'+t('noSalesYet')+'</div>':credPayHtml+regularSaleHtml;
   document.getElementById('sales-list').innerHTML=sHtml;
   if(isNew&&ts.length>0)showNotif((LANG==='es'?'Nueva venta: ':'New sale: ')+dolr(ts[ts.length-1].total));
 }
@@ -437,6 +503,10 @@ function renderWeek(){
   var dayMap={};ws.forEach(function(s){var d=new Date(s.date).toDateString();if(!dayMap[d])dayMap[d]={total:0,date:new Date(s.date)};dayMap[d].total+=s.total;});
   var days=Object.values(dayMap).sort(function(a,b){return b.total-a.total;});
   if(days.length>0){document.getElementById('w-best').textContent=dayName(days[0].date);document.getElementById('w-best-amt').textContent=dolr(days[0].total);}
+  var ys=getYesterdaySales();
+  var yinc=ys.reduce(function(s,x){return s+x.total;},0);
+  document.getElementById('w-yest').textContent=dolr(yinc);
+  document.getElementById('w-yest-cnt').textContent=ys.length+' '+t('ordersN');
   setTimeout(function(){drawBarChart('week-chart',7);},50);
   renderProdBars(ws,'week-prods');
 }
@@ -638,6 +708,90 @@ function drawBarChart(id,days){
   }
 }
 
+// ── Credits ────────────────────────────────────────────
+function renderCredits(){
+  if(!DB)return;
+  var secEl=document.getElementById('sec-credits');if(!secEl)return;
+  var pendingSales=(DB.sales||[]).filter(function(s){
+    return s.payMethod==='credit'&&s.status==='active'&&s.creditStatus!=='paid';
+  });
+  var totalEl=document.getElementById('cred-total-lbl');
+  var countEl=document.getElementById('cred-count-lbl');
+  var listEl=document.getElementById('credits-list');
+  if(!pendingSales.length){
+    if(totalEl)totalEl.textContent=dolr(0);
+    if(countEl)countEl.textContent='';
+    if(listEl)listEl.innerHTML='<div class="empty">'+t('noCredits')+'</div>';
+    secEl.style.display='block';
+    return;
+  }
+  var totalPending=pendingSales.reduce(function(s,c){return s+Math.max(0,(c.total||0)-(c.creditPaid||0));},0);
+  if(totalEl)totalEl.textContent=dolr(totalPending);
+  if(countEl)countEl.textContent=pendingSales.length+' '+t('salesN');
+  secEl.style.display='block';
+  // Group by client
+  var clients={};
+  pendingSales.forEach(function(s){
+    var key=s.creditClient||s.creditCedula||('ID '+s.id);
+    if(!clients[key])clients[key]={name:key,cedula:s.creditCedula||'',sales:[]};
+    clients[key].sales.push(s);
+  });
+  if(listEl)listEl.innerHTML=Object.entries(clients).map(function(e,i){
+    var cname=e[0],data=e[1];
+    var cTotal=data.sales.reduce(function(s,c){return s+Math.max(0,(c.total||0)-(c.creditPaid||0));},0);
+    var cid='crd'+i;
+    var detail=data.sales.map(function(s){
+      var owed=Math.max(0,(s.total||0)-(s.creditPaid||0));
+      var items=(s.items||[]).map(function(it){return escHtml(it.name)+(it.qty>1?' x'+it.qty:'');}).join(', ')||'—';
+      var paymentsHtml=(s.creditPayments||[]).slice(-3).map(function(p){
+        var mLbl={cash:LANG==='es'?'Efectivo':'Cash',card:LANG==='es'?'Tarjeta':'Card',split:'Split'}[p.method||'cash']||p.method||'';
+        return '<div style="font-size:.7rem;color:var(--tx3);padding:2px 0">'+new Date(p.date).toLocaleDateString()+' — '+dolr(p.amount||0)+(mLbl?' ('+mLbl+')':'')+'</div>';
+      }).join('');
+      return '<div style="background:var(--bg3);border-radius:8px;padding:9px 11px;margin-bottom:6px">'
+        +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
+        +'<div style="flex:1;font-size:.79rem;color:var(--tx2)">'+items+'</div>'
+        +'<div style="font-family:monospace;font-size:.85rem;font-weight:700;color:#fbbf24;padding-left:10px">'+dolr(owed)+'</div>'
+        +'</div>'
+        +(paymentsHtml?'<div style="margin-top:5px;padding-top:5px;border-top:1px solid var(--brd)">'+paymentsHtml+'</div>':'')
+        +'</div>';
+    }).join('');
+    var buyWord=data.sales.length===1?t('purchases'):t('purchases_p');
+    return '<div class="sale-item" style="border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.04);margin-bottom:7px">'
+      +'<div onclick="toggleCreditDetail(\''+cid+'\')" style="-webkit-tap-highlight-color:transparent;user-select:none">'
+      +'<div class="sale-hdr">'
+      +'<div>'
+      +'<div style="font-weight:700;font-size:.87rem;color:var(--tx)">'+escHtml(cname)+'</div>'
+      +(data.cedula?'<div style="font-size:.7rem;color:var(--tx3)">CI '+escHtml(data.cedula)+'</div>':'')
+      +'<div style="font-size:.73rem;color:var(--tx3)">'+data.sales.length+' '+buyWord+'</div>'
+      +'</div>'
+      +'<div style="text-align:right">'
+      +'<div style="font-family:monospace;font-size:.95rem;font-weight:700;color:#fbbf24">'+dolr(cTotal)+'</div>'
+      +'<div id="crd-ico-'+cid+'" style="font-size:.6rem;color:var(--tx4);margin-top:3px">▼</div>'
+      +'</div>'
+      +'</div></div>'
+      +'<div id="'+cid+'" style="display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--brd)">'+detail+'</div>'
+      +'</div>';
+  }).join('');
+}
+function toggleCreditDetail(id){
+  var d=document.getElementById(id);var ic=document.getElementById('crd-ico-'+id);
+  if(!d)return;var o=d.style.display!=='none';
+  d.style.display=o?'none':'block';
+  if(ic)ic.textContent=o?'▼':'▲';
+}
+
+// ── Week range ─────────────────────────────────────────
+function getWeekRange(){
+  var now=new Date(),day=now.getDay();
+  var mon=new Date(now);mon.setDate(now.getDate()-(day===0?6:day-1));
+  var sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  return mon.getDate()+'-'+sun.getDate();
+}
+function updateWeekBtn(){
+  var el=document.getElementById('bnav-week-ico');
+  if(el)el.textContent=getWeekRange();
+}
+
 // ── Sale detail expand/collapse ────────────────────────
 function toggleSaleDetail(id){
   var det=document.getElementById('sd-'+id);
@@ -671,14 +825,16 @@ async function init(){
     document.getElementById('loading').style.display='none';
     document.getElementById('app').style.display='block';
     document.getElementById('botnav').style.display='flex';
+    renderCredits();
     if(refreshInterval)clearInterval(refreshInterval);
-    refreshInterval=setInterval(function(){loadData(false);},10000);
+    refreshInterval=setInterval(function(){loadData(false);renderCredits();},10000);
   }
 }
 
 window.onload=function(){
   applyTheme();
   applyLang();
+  updateWeekBtn();
   KEY=getKey();
   if(!KEY){document.getElementById('loading').style.display='none';document.getElementById('key-screen').style.display='block';}
   else{init();}
