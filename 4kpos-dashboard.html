@@ -271,6 +271,15 @@ let DB=null,KEY=null,lastSaleCount=0,refreshInterval=null,_lastShiftState=null;
 function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function dolr(n){return '$'+Number(n||0).toFixed(2);}
 function fmtDate(d){return (d.getMonth()+1)+'/'+(d.getDate());}
+function dueBadge(dueDate){
+  if(!dueDate)return '';
+  var now=new Date();now.setHours(0,0,0,0);
+  var due=new Date(dueDate);due.setHours(0,0,0,0);
+  var diff=Math.round((due-now)/(1000*60*60*24));
+  if(diff<0)return '<span style="display:inline-block;font-size:.64rem;font-weight:700;color:#fff;background:#ef4444;border-radius:3px;padding:1px 5px;margin-left:5px">VENCIDO '+Math.abs(diff)+'d</span>';
+  if(diff<=3)return '<span style="display:inline-block;font-size:.64rem;font-weight:700;color:#92400e;background:#fbbf24;border-radius:3px;padding:1px 5px;margin-left:5px">Vence '+diff+'d</span>';
+  return '<span style="display:inline-block;font-size:.64rem;color:#34d399;border:1px solid #34d399;border-radius:3px;padding:1px 5px;margin-left:5px">'+due.toLocaleDateString()+'</span>';
+}
 function dayName(d){var ns={es:['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat']};return (ns[LANG]||ns.es)[d.getDay()];}
 function timeAgo(iso){if(!iso)return '';var m=Math.floor((Date.now()-new Date(iso).getTime())/60000);if(m<1)return LANG==='es'?'ahora mismo':'just now';if(m<60)return LANG==='es'?('hace '+m+' min'):(m+' min ago');return LANG==='es'?('hace '+Math.floor(m/60)+'h'):(Math.floor(m/60)+'h ago');}
 function fmtKey(inp){var v=inp.value.toUpperCase().replace(/[^A-Z0-9]/g,'');var o=v.substring(0,2);if(v.length>2)o+='-'+v.substring(2,6);if(v.length>6)o+='-'+v.substring(6,10);if(v.length>10)o+='-'+v.substring(10,14);inp.value=o;}
@@ -805,8 +814,9 @@ function renderCredits(){
           +'<span style="color:#a78bfa">+'+dolr(p.amount||0)+'</span>'
           +'</div>';
       }).join('');
+      var dBadge=dueBadge(s.creditDueDate||null);
       return '<div style="background:var(--bg3);border-radius:8px;padding:9px 11px;margin-bottom:6px">'
-        +'<div style="font-size:.79rem;color:var(--tx2);margin-bottom:6px">'+items+'</div>'
+        +'<div style="font-size:.79rem;color:var(--tx2);margin-bottom:6px">'+items+(dBadge?' '+dBadge:'')+'</div>'
         +'<div style="display:flex;gap:8px;font-size:.72rem;margin-bottom:'+(paymentsHtml?'6':'0')+'px">'
         +'<div style="flex:1;text-align:center;background:var(--brd);border-radius:6px;padding:4px 6px">'
         +'<div style="color:var(--tx3);margin-bottom:1px">'+t('creditOriginal')+'</div>'
@@ -825,11 +835,14 @@ function renderCredits(){
         +'</div>';
     }).join('');
     var buyWord=data.sales.length===1?t('purchases'):t('purchases_p');
-    return '<div class="sale-item" style="border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.04);margin-bottom:7px">'
+    var hasOverdue=data.sales.some(function(s){if(!s.creditDueDate)return false;var due=new Date(s.creditDueDate);due.setHours(0,0,0,0);var now=new Date();now.setHours(0,0,0,0);return due<now;});
+    var borderColor=hasOverdue?'rgba(239,68,68,.5)':'rgba(251,191,36,.3)';
+    var bgColor=hasOverdue?'rgba(239,68,68,.04)':'rgba(251,191,36,.04)';
+    return '<div class="sale-item" style="border-color:'+borderColor+';background:'+bgColor+';margin-bottom:7px">'
       +'<div onclick="toggleCreditDetail(\''+cid+'\')" style="-webkit-tap-highlight-color:transparent;user-select:none">'
       +'<div class="sale-hdr">'
       +'<div>'
-      +'<div style="font-weight:700;font-size:.87rem;color:var(--tx)">'+escHtml(cname)+'</div>'
+      +'<div style="font-weight:700;font-size:.87rem;color:var(--tx)">'+escHtml(cname)+(hasOverdue?'<span style="font-size:.64rem;font-weight:700;color:#fff;background:#ef4444;border-radius:3px;padding:1px 5px;margin-left:5px">VENCIDO</span>':'')+'</div>'
       +(data.cedula?'<div style="font-size:.7rem;color:var(--tx3)">CI '+escHtml(data.cedula)+'</div>':'')
       +'<div style="font-size:.73rem;color:var(--tx3)">'+data.sales.length+' '+buyWord+'</div>'
       +'</div>'
