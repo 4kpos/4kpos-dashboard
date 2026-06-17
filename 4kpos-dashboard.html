@@ -393,6 +393,22 @@ async function loadData(showToast){
     var newCount=(j.data&&j.data.sales)?j.data.sales.filter(function(s){return s.status==='active';}).length:0;
     var isNew=DB&&newCount>lastSaleCount;
     DB=j.data||{products:[],sales:[],cfg:{}};
+    if(!DB.cfg)DB.cfg={};
+    // Fetch latest shift status from pos_data (written directly by POS on shift changes)
+    try{
+      var spr=await fetch(SUPA_URL+'/rest/v1/pos_data?id=eq.shift_status&select=value',{
+        headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
+      });
+      var spd=await spr.json();
+      if(spd&&spd[0]&&spd[0].value){
+        var sd=JSON.parse(spd[0].value);
+        if(sd.status==='open')DB.cfg.shiftOpen=true;
+        else if(sd.status==='closed')DB.cfg.shiftOpen=false;
+        if(sd.user)DB.cfg.shiftUser=sd.user;
+        if(sd.openedAt)DB.cfg.shiftOpenAt=sd.openedAt;
+        if(sd.closedAt)DB.cfg.shiftClosedAt=sd.closedAt;
+      }
+    }catch(e){}
     await loadCategories();
     lastSaleCount=newCount;
     var rawBiz=(DB.cfg&&DB.cfg.bizName)||'';
@@ -761,9 +777,15 @@ function drawBarChart(id,days){
 function renderCredits(){
   if(!DB)return;
   var secEl=document.getElementById('sec-credits');if(!secEl)return;
+  // Debug: show all credit sales and their fields
+  var _dbgAll=(DB.sales||[]).filter(function(s){return s.payMethod==='credit';});
+  console.log('[Credits] Total sales in DB:', (DB.sales||[]).length, '| Credit sales:', _dbgAll.length);
+  console.log('[Credits] Credit fields:', _dbgAll.map(function(s){return{id:s.id,rnum:s.rnum,creditStatus:s.creditStatus,creditClient:s.creditClient,creditPaid:s.creditPaid,total:s.total,status:s.status};}));
+  // Include sales with creditStatus pending|partial OR undefined/null (legacy data without status)
   var pendingSales=(DB.sales||[]).filter(function(s){
-    return s.payMethod==='credit'&&s.status==='active'
-      &&(s.creditStatus==='pending'||s.creditStatus==='partial');
+    if(s.payMethod!=='credit'||s.status!=='active')return false;
+    var cs=s.creditStatus;
+    return !cs||cs==='pending'||cs==='partial';
   });
   var totalEl=document.getElementById('cred-total-lbl');
   var countEl=document.getElementById('cred-count-lbl');
@@ -900,10 +922,10 @@ function getShiftStatus(data){
   if(cfg.shiftOpen===true){
     return{state:'open',user:cfg.shiftUser||cfg.currentUser||'',openAt:cfg.shiftOpenAt||null,closedAt:null};
   }
-  if(cfg.shiftOpen===false&&cfg.shiftClosedAt&&new Date(cfg.shiftClosedAt).toDateString()===todayStr){
-    return{state:'closed',user:cfg.shiftUser||'',openAt:null,closedAt:cfg.shiftClosedAt};
+  if(cfg.shiftOpen===false){
+    return{state:'closed',user:cfg.shiftUser||'',openAt:null,closedAt:cfg.shiftClosedAt||null};
   }
-  // Fallback: infer from today's sales
+  // Fallback: infer from today's sales (only when shiftOpen is not set at all)
   var todaySales=(data.sales||[]).filter(function(s){return s.status==='active'&&new Date(s.date).toDateString()===todayStr;});
   if(todaySales.length>0){
     var lastWithUser=todaySales.filter(function(s){return s.cashier;}).slice(-1)[0];
