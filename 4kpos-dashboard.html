@@ -211,6 +211,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
     <div class="cards">
       <div class="card am"><div class="clbl" data-t="totalProds">Total productos</div><div class="cval" id="inv-total">0</div><div class="csub" data-t="inCatalog">en catalogo</div></div>
       <div class="card rd"><div class="clbl" data-t="lowStock">Stock bajo</div><div class="cval" id="inv-low">0</div><div class="csub" data-t="needReorder">necesitan reorden</div></div>
+      <div class="card" style="border-color:#f0c040"><div class="clbl" style="color:#f0c040" data-t="pendingCredits">Crédito pendiente</div><div class="cval" style="color:#f0c040" id="inv-cred-total">—</div><div class="csub" id="inv-cred-count">—</div></div>
     </div>
     <div class="sec-ttl" data-t="lowStockItems">Productos con stock bajo</div>
     <div id="low-list"></div>
@@ -530,6 +531,13 @@ function renderInventory(){
   var low=prods.filter(isLow);
   document.getElementById('inv-total').textContent=prods.length;
   document.getElementById('inv-low').textContent=low.length;
+  fetch(SUPA_URL+'/rest/v1/pos_data?id=eq.credit_summary&select=value',{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}})
+    .then(function(r){return r.json();}).then(function(d){
+      if(d&&d[0]&&d[0].value){var cs=JSON.parse(d[0].value);
+        document.getElementById('inv-cred-total').textContent=dolr(cs.totalPending||0);
+        document.getElementById('inv-cred-count').textContent=(cs.count||0)+' crédito(s)';
+      }
+    }).catch(function(){});
   document.getElementById('low-list').innerHTML=low.length===0?'<div class="empty">'+t('allStockOk')+'</div>':low.map(function(p){return '<div class="low-item"><span style="font-size:.84rem;font-weight:600">'+escHtml(p.name)+'</span><div style="text-align:right"><div style="color:#f87171;font-weight:600">'+(p.stock||0)+' '+t('remaining')+'</div><div style="font-size:.67rem;color:var(--tx3)">'+t('minLbl')+': '+(p.minStock!==undefined?p.minStock:5)+'</div></div></div>';}).join('');
   if(!prods.length){document.getElementById('all-prods').innerHTML='<div class="empty">'+t('noProds')+'</div>';return;}
   var groups={};
