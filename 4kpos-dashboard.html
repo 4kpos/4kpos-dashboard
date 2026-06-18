@@ -685,23 +685,16 @@ function drawBarChart(id,days){
 }
 
 // ── Credits — actualiza tarjeta superior ───────────────
-async function renderCredits(){
+function renderCredits(){
   var totalEl=document.getElementById('h-cred-total');
   var countEl=document.getElementById('h-cred-count');
-  try{
-    var r=await fetch(SUPA_URL+'/rest/v1/pos_data?id=eq.credit_summary&select=value',{
-      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
-    });
-    var d=await r.json();
-    if(d&&d[0]&&d[0].value){
-      var cs=JSON.parse(d[0].value);
-      if(totalEl)totalEl.textContent=dolr(cs.totalPending||0);
-      if(countEl)countEl.textContent=(cs.count||0)+' '+(LANG==='es'?'crédito(s) pendiente(s)':'pending credit(s)');
-      return;
-    }
-  }catch(e){}
-  if(totalEl)totalEl.textContent='$0.00';
-  if(countEl)countEl.textContent='—';
+  if(!DB){if(totalEl)totalEl.textContent='$0.00';if(countEl)countEl.textContent='—';return;}
+  var pending=(DB.sales||[]).filter(function(s){
+    return s.payMethod==='credit' && s.creditStatus!=='paid';
+  });
+  var total=pending.reduce(function(sum,s){return sum+(s.total||0)-(s.creditPaid||0);},0);
+  if(totalEl)totalEl.textContent=dolr(Math.max(0,total));
+  if(countEl)countEl.textContent=pending.length+' '+(LANG==='es'?'crédito(s) pendiente(s)':'pending credit(s)');
 }
 
 // ── Week range ─────────────────────────────────────────
