@@ -159,7 +159,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
       <div class="card gn"><div class="clbl" data-t="incToday">Ingresos hoy</div><div class="cval" id="h-inc">$0.00</div><div class="csub" id="h-ords">0 ordenes</div><div class="cdiff" id="h-diff"></div></div>
       <div class="card ac"><div class="clbl" data-t="orders">Ordenes</div><div class="cval" id="h-cnt">0</div><div class="csub" id="h-avg">Prom. $0.00</div></div>
       <div class="card am"><div class="clbl" data-t="highTicket">Ticket mayor</div><div class="cval" id="h-max">$0.00</div><div class="csub" data-t="orderHighest">orden mas alta</div></div>
-      <div class="card bl"><div class="clbl" data-t="products">Productos</div><div class="cval" id="h-prods">0</div><div class="csub" id="h-low">stock ok</div></div>
+      <div class="card" style="border-color:#f0c040"><div class="clbl" style="color:#f0c040" data-t="pendingCredits">Créditos pendientes</div><div class="cval" style="color:#f0c040" id="h-cred-total">$0.00</div><div class="csub" id="h-cred-count">—</div></div>
     </div>
     <div class="sec-ttl" data-t="payMethod">Metodo de pago</div>
     <div class="card wide" style="padding:10px 14px"><div id="pay-rows"></div></div>
@@ -171,16 +171,6 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
     </div>
     <div id="sales-list"></div>
 
-    <div id="sec-credits" style="display:none">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px">
-        <div class="sec-ttl" style="margin:0" data-t="pendingCredits">Créditos pendientes</div>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(251,191,36,.08);border:1.5px solid rgba(251,191,36,.3);border-radius:10px;padding:10px 14px;margin-bottom:8px">
-        <span style="font-size:.75rem;color:rgba(251,191,36,.85)" data-t="creditTotal">Total pendiente</span>
-        <span style="font-family:monospace;font-weight:700;color:#fbbf24;font-size:1rem" id="cred-total-lbl">$0.00</span>
-      </div>
-      <div id="credits-list"></div>
-    </div>
   </div>
 
   <div class="page" id="pg-semana">
@@ -211,7 +201,6 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
     <div class="cards">
       <div class="card am"><div class="clbl" data-t="totalProds">Total productos</div><div class="cval" id="inv-total">0</div><div class="csub" data-t="inCatalog">en catalogo</div></div>
       <div class="card rd"><div class="clbl" data-t="lowStock">Stock bajo</div><div class="cval" id="inv-low">0</div><div class="csub" data-t="needReorder">necesitan reorden</div></div>
-      <div class="card" style="border-color:#f0c040"><div class="clbl" style="color:#f0c040" data-t="pendingCredits">Crédito pendiente</div><div class="cval" style="color:#f0c040" id="inv-cred-total">—</div><div class="csub" id="inv-cred-count">—</div></div>
     </div>
     <div class="sec-ttl" data-t="lowStockItems">Productos con stock bajo</div>
     <div id="low-list"></div>
@@ -430,9 +419,6 @@ function renderToday(isNew){
   document.getElementById('h-cnt').textContent=ts.length;
   document.getElementById('h-avg').textContent=t('avg2')+' '+dolr(avg);
   document.getElementById('h-max').textContent=dolr(max);
-  document.getElementById('h-prods').textContent=(DB.products||[]).length;
-  var low=(DB.products||[]).filter(function(p){return (p.stock||0)<=(p.minStock!==undefined?p.minStock:5);}).length;
-  document.getElementById('h-low').textContent=low>0?low+' '+t('stockLow'):t('stockOk');
   var diffEl=document.getElementById('h-diff');
   if(yinc>0){var pct=Math.round((inc-yinc)/yinc*100);diffEl.textContent=(pct>=0?'+':'')+pct+t('vsAyer');diffEl.className='cdiff '+(pct>0?'up':pct<0?'dn':'eq');}else diffEl.textContent='';
   var payMap={cash:0,card:0,transf:0,credit:0,split:0};
@@ -531,13 +517,6 @@ function renderInventory(){
   var low=prods.filter(isLow);
   document.getElementById('inv-total').textContent=prods.length;
   document.getElementById('inv-low').textContent=low.length;
-  fetch(SUPA_URL+'/rest/v1/pos_data?id=eq.credit_summary&select=value',{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}})
-    .then(function(r){return r.json();}).then(function(d){
-      if(d&&d[0]&&d[0].value){var cs=JSON.parse(d[0].value);
-        document.getElementById('inv-cred-total').textContent=dolr(cs.totalPending||0);
-        document.getElementById('inv-cred-count').textContent=(cs.count||0)+' crédito(s)';
-      }
-    }).catch(function(){});
   document.getElementById('low-list').innerHTML=low.length===0?'<div class="empty">'+t('allStockOk')+'</div>':low.map(function(p){return '<div class="low-item"><span style="font-size:.84rem;font-weight:600">'+escHtml(p.name)+'</span><div style="text-align:right"><div style="color:#f87171;font-weight:600">'+(p.stock||0)+' '+t('remaining')+'</div><div style="font-size:.67rem;color:var(--tx3)">'+t('minLbl')+': '+(p.minStock!==undefined?p.minStock:5)+'</div></div></div>';}).join('');
   if(!prods.length){document.getElementById('all-prods').innerHTML='<div class="empty">'+t('noProds')+'</div>';return;}
   var groups={};
@@ -705,12 +684,10 @@ function drawBarChart(id,days){
   }
 }
 
-// ── Credits ────────────────────────────────────────────
+// ── Credits — actualiza tarjeta superior ───────────────
 async function renderCredits(){
-  var secEl=document.getElementById('sec-credits');if(!secEl)return;
-  var totalEl=document.getElementById('cred-total-lbl');
-  var listEl=document.getElementById('credits-list');
-  secEl.style.display='block';
+  var totalEl=document.getElementById('h-cred-total');
+  var countEl=document.getElementById('h-cred-count');
   try{
     var r=await fetch(SUPA_URL+'/rest/v1/pos_data?id=eq.credit_summary&select=value',{
       headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
@@ -719,12 +696,12 @@ async function renderCredits(){
     if(d&&d[0]&&d[0].value){
       var cs=JSON.parse(d[0].value);
       if(totalEl)totalEl.textContent=dolr(cs.totalPending||0);
-      if(listEl)listEl.innerHTML=cs.updatedAt?'<div style="font-size:.7rem;color:var(--tx3);text-align:right;margin-top:4px">'+t('lastSync')+': '+timeAgo(cs.updatedAt)+'</div>':'';
+      if(countEl)countEl.textContent=(cs.count||0)+' '+(LANG==='es'?'crédito(s) pendiente(s)':'pending credit(s)');
       return;
     }
   }catch(e){}
-  if(totalEl)totalEl.textContent='—';
-  if(listEl)listEl.innerHTML='<div class="empty">'+(LANG==='es'?'Sin datos del POS':'No POS data')+'</div>';
+  if(totalEl)totalEl.textContent='$0.00';
+  if(countEl)countEl.textContent='—';
 }
 
 // ── Week range ─────────────────────────────────────────
