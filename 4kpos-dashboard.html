@@ -159,7 +159,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
       <div class="card gn"><div class="clbl" data-t="incToday">Ingresos hoy</div><div class="cval" id="h-inc">$0.00</div><div class="csub" id="h-ords">0 ordenes</div><div class="cdiff" id="h-diff"></div></div>
       <div class="card ac"><div class="clbl" data-t="orders">Ordenes</div><div class="cval" id="h-cnt">0</div><div class="csub" id="h-avg">Prom. $0.00</div></div>
       <div class="card am"><div class="clbl" data-t="highTicket">Ticket mayor</div><div class="cval" id="h-max">$0.00</div><div class="csub" data-t="orderHighest">orden mas alta</div></div>
-      <div class="card" style="border-color:#f0c040"><div class="clbl" style="color:#f0c040" data-t="pendingCredits">Créditos pendientes</div><div class="cval" style="color:#f0c040" id="h-cred-total">$0.00</div><div class="csub" id="h-cred-count">—</div></div>
+      <div class="card am"><div class="clbl" data-t="pendingCredits">Créditos pendientes</div><div class="cval" id="h-cred-total">$0.00</div><div class="csub" id="h-cred-count">—</div></div>
     </div>
     <div class="sec-ttl" data-t="payMethod">Metodo de pago</div>
     <div class="card wide" style="padding:10px 14px"><div id="pay-rows"></div></div>
@@ -690,7 +690,7 @@ function renderCredits(){
   var countEl=document.getElementById('h-cred-count');
   if(!DB){if(totalEl)totalEl.textContent='$0.00';if(countEl)countEl.textContent='—';return;}
   var pending=(DB.sales||[]).filter(function(s){
-    return s.payMethod==='credit' && (s.creditStatus==='pending'||s.creditStatus==='partial');
+    return s.payMethod==='credit' && s.creditStatus!=='paid' && (s.total-(s.creditPaid||0))>0;
   });
   var total=pending.reduce(function(sum,s){return sum+(s.total||0)-(s.creditPaid||0);},0);
   if(totalEl)totalEl.textContent=dolr(Math.max(0,total));
