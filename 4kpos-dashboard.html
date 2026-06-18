@@ -436,42 +436,14 @@ function renderToday(isNew){
   if(yinc>0){var pct=Math.round((inc-yinc)/yinc*100);diffEl.textContent=(pct>=0?'+':'')+pct+t('vsAyer');diffEl.className='cdiff '+(pct>0?'up':pct<0?'dn':'eq');}else diffEl.textContent='';
   var payMap={cash:0,card:0,transf:0,credit:0,split:0};
   ts.forEach(function(s){var m=s.payMethod||'credit';if(payMap[m]!==undefined)payMap[m]+=s.total;else payMap.credit+=s.total;});
-  // Collect today's credit payments (abonos) received
-  var todayStr=new Date().toDateString();
-  var credPayItems=[];
-  (DB.sales||[]).forEach(function(s){
-    if(s.payMethod!=='credit')return;
-    (s.creditPayments||[]).forEach(function(p){
-      if(new Date(p.date).toDateString()!==todayStr)return;
-      credPayItems.push({date:p.date,amount:p.amount||0,client:s.creditClient||s.creditCedula||'—',method:p.method||'cash'});
-    });
-  });
-  var credPayTotal=credPayItems.reduce(function(s,p){return s+p.amount;},0);
-  var payTotal=(inc+credPayTotal)||1;
+  var payTotal=inc||1;
   var pNames={cash:t('payEfectivo'),card:t('payTarjeta'),transf:t('payTransf'),credit:t('payCredito'),split:t('payDividido')};
   var payColors={cash:'#22c55e',card:'#3b82f6',transf:'#60a5fa',credit:'#f0c040',split:'#f87171'};
   var payHtml=Object.entries(payMap).filter(function(e){return e[1]>0;}).map(function(e){var pct=Math.round(e[1]/payTotal*100);return '<div class="pay-row"><span style="font-size:.8rem;min-width:80px;color:var(--tx2)">'+pNames[e[0]]+'</span><div class="pay-bar"><div class="pay-fill" style="width:'+pct+'%;background:'+payColors[e[0]]+'"></div></div><span style="font-size:.78rem;font-family:monospace;color:'+payColors[e[0]]+'">'+dolr(e[1])+'</span></div>';}).join('');
-  if(credPayTotal>0){
-    var cpPct=Math.round(credPayTotal/payTotal*100);
-    payHtml+='<div class="pay-row"><span style="font-size:.8rem;min-width:80px;color:var(--tx2)">'+t('creditPayments')+'</span><div class="pay-bar"><div class="pay-fill" style="width:'+cpPct+'%;background:#a78bfa"></div></div><span style="font-size:.78rem;font-family:monospace;color:#a78bfa">'+dolr(credPayTotal)+'</span></div>';
-  }
   document.getElementById('pay-rows').innerHTML=payHtml||'<div class="empty">'+t('noSales')+'</div>';
   renderProdBars(ts,'prod-bars');
-  document.getElementById('sale-count').textContent=ts.length+' '+t('salesN')+(credPayTotal>0?' + '+credPayItems.length+' '+t('creditAbono'):'');
-  // Synthetic items for credit payments received today
-  var credPayHtml=credPayItems.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);}).map(function(p){
-    var time=new Date(p.date).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
-    var mLbl={cash:t('payEfectivo'),card:t('payTarjeta'),split:t('payDividido')}[p.method]||p.method;
-    return '<div class="sale-item" style="border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.05)">'
-      +'<div class="sale-hdr">'
-      +'<div><div class="snum" style="color:#a78bfa">'+t('creditAbono')+'</div>'
-      +'<div class="sitems">'+escHtml(p.client)+'</div>'
-      +'<div class="stime">'+time+'</div></div>'
-      +'<div style="text-align:right">'
-      +'<div class="stot" style="color:#a78bfa">'+dolr(p.amount)+'</div>'
-      +'<div class="spay">'+mLbl+'</div>'
-      +'</div></div></div>';
-  }).join('');
+  document.getElementById('sale-count').textContent=ts.length+' '+t('salesN');
+  var credPayHtml='';
   var regularSaleHtml=ts.slice().reverse().map(function(s,i){
     var sid='s'+i;
     var itArr=s.items||[];
@@ -731,7 +703,6 @@ async function renderCredits(){
   var totalEl=document.getElementById('cred-total-lbl');
   var listEl=document.getElementById('credits-list');
   secEl.style.display='block';
-  // Try pos_data credit_summary first (written by POS)
   try{
     var r=await fetch(SUPA_URL+'/rest/v1/pos_data?id=eq.credit_summary&select=value',{
       headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
@@ -744,19 +715,8 @@ async function renderCredits(){
       return;
     }
   }catch(e){}
-  // Fallback: calculate from DB.sales already loaded
-  if(DB){
-    var pending=(DB.sales||[]).filter(function(s){
-      if(s.payMethod!=='credit'||s.status!=='active')return false;
-      var cs=s.creditStatus;return !cs||cs==='pending'||cs==='partial';
-    });
-    var total=pending.reduce(function(s,c){return s+Math.max(0,(c.total||0)-(c.creditPaid||0));},0);
-    if(totalEl)totalEl.textContent=dolr(total);
-    if(listEl)listEl.innerHTML=pending.length?'<div style="font-size:.7rem;color:var(--tx3);margin-top:4px">'+(LANG==='es'?pending.length+' crédito(s) pendiente(s)':pending.length+' pending credit(s)')+'</div>':'<div class="empty">'+t('noCredits')+'</div>';
-  }else{
-    if(totalEl)totalEl.textContent='—';
-    if(listEl)listEl.innerHTML='<div class="empty">'+(LANG==='es'?'Sin datos de crédito':'No credit data')+'</div>';
-  }
+  if(totalEl)totalEl.textContent='—';
+  if(listEl)listEl.innerHTML='<div class="empty">'+(LANG==='es'?'Sin datos del POS':'No POS data')+'</div>';
 }
 
 // ── Week range ─────────────────────────────────────────
