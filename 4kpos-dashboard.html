@@ -690,7 +690,7 @@ function renderCredits(){
   var countEl=document.getElementById('h-cred-count');
   if(!DB){if(totalEl)totalEl.textContent='$0.00';if(countEl)countEl.textContent='—';return;}
   var pending=(DB.sales||[]).filter(function(s){
-    return s.payMethod==='credit' && s.creditStatus!=='paid';
+    return s.payMethod==='credit' && (s.creditStatus==='pending'||s.creditStatus==='partial');
   });
   var total=pending.reduce(function(sum,s){return sum+(s.total||0)-(s.creditPaid||0);},0);
   if(totalEl)totalEl.textContent=dolr(Math.max(0,total));
