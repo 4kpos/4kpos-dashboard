@@ -688,13 +688,9 @@ function drawBarChart(id,days){
 function renderCredits(){
   var totalEl=document.getElementById('h-cred-total');
   var countEl=document.getElementById('h-cred-count');
-  if(!DB){if(totalEl)totalEl.textContent='$0.00';if(countEl)countEl.textContent='—';return;}
-  var pending=(DB.sales||[]).filter(function(s){
-    return s.payMethod==='credit' && s.creditStatus!=='paid' && (s.total-(s.creditPaid||0))>0;
-  });
-  var total=pending.reduce(function(sum,s){return sum+(s.total||0)-(s.creditPaid||0);},0);
-  if(totalEl)totalEl.textContent=dolr(Math.max(0,total));
-  if(countEl)countEl.textContent=pending.length+' '+(LANG==='es'?'crédito(s) pendiente(s)':'pending credit(s)');
+  var cs=(DB&&DB.creditSummary)||{totalPending:0,count:0};
+  if(totalEl)totalEl.textContent=dolr(cs.totalPending||0);
+  if(countEl)countEl.textContent=(cs.count||0)+' '+(LANG==='es'?'crédito(s) pendiente(s)':'pending credit(s)');
 }
 
 // ── Week range ─────────────────────────────────────────
