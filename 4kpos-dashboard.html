@@ -386,6 +386,7 @@ async function loadData(showToast){
     var isNew=DB&&newCount>lastSaleCount;
     DB=j.data||{products:[],sales:[],cfg:{}};
     await loadCategories();
+    await loadCreditSummary();
     lastSaleCount=newCount;
     var rawBiz=(DB.cfg&&DB.cfg.bizName)||'';
     var bizEl=document.getElementById('biz-name');
@@ -510,6 +511,19 @@ async function loadCategories(){
     var cats=await r.json();
     if(Array.isArray(cats)&&cats.length){
       DB.categories=cats;
+    }
+  }catch(e){}
+}
+async function loadCreditSummary(){
+  if(!KEY)return;
+  try{
+    var r=await fetch(SUPA_URL+'/rest/v1/categories?id=eq.credit_summary&license_key=eq.'+encodeURIComponent(KEY),{
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
+    });
+    var rows=await r.json();
+    if(Array.isArray(rows)&&rows[0]&&rows[0].name){
+      var cs=JSON.parse(rows[0].name);
+      if(DB)DB.creditSummary={totalPending:cs.totalPending||0,count:cs.count||0};
     }
   }catch(e){}
 }
