@@ -53,15 +53,19 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .card.rd{background:rgba(248,113,113,.09);border:1.5px solid rgba(248,113,113,.35);}
 .card.bl{background:rgba(96,165,250,.09);border:1.5px solid rgba(96,165,250,.35);}
 .card.wide{grid-column:1/-1;}
+.card.gold{background:linear-gradient(135deg,rgba(240,192,64,.16),rgba(240,192,64,.06));border:1.5px solid #f0c040;}
 body.light .card.gn{background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.45);}
 body.light .card.ac{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.45);}
 body.light .card.am{background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.45);}
 body.light .card.rd{background:rgba(248,113,113,.12);border-color:rgba(248,113,113,.45);}
 body.light .card.bl{background:rgba(96,165,250,.12);border-color:rgba(96,165,250,.45);}
+body.light .card.gold{background:linear-gradient(135deg,rgba(240,192,64,.2),rgba(240,192,64,.08));border-color:#c9a000;}
 .clbl{font-size:.66rem;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;}
 .card.gn .clbl{color:#34d399;}.card.ac .clbl{color:#3b82f6;}.card.am .clbl{color:#fbbf24;}.card.rd .clbl{color:#f87171;}.card.bl .clbl{color:#60a5fa;}
+.card.gold .clbl{color:#f0c040;}
 .cval{font-family:monospace;font-size:1.35rem;font-weight:700;}
 .card.gn .cval{color:#34d399;}.card.ac .cval{color:#3b82f6;}.card.am .cval{color:#fbbf24;}.card.rd .cval{color:#f87171;}.card.bl .cval{color:#60a5fa;}
+.card.gold .cval{color:#f0c040;}
 .csub{font-size:.7rem;opacity:.7;margin-top:2px;}
 .cdiff{font-size:.72rem;margin-top:3px;font-weight:600;}
 .cdiff.up{color:#34d399;}.cdiff.dn{color:#f87171;}.cdiff.eq{color:var(--tx3);}
@@ -159,7 +163,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
       <div class="card gn"><div class="clbl" data-t="incToday">Ingresos hoy</div><div class="cval" id="h-inc">$0.00</div><div class="csub" id="h-ords">0 ordenes</div><div class="cdiff" id="h-diff"></div></div>
       <div class="card ac"><div class="clbl" data-t="orders">Ordenes</div><div class="cval" id="h-cnt">0</div><div class="csub" id="h-avg">Prom. $0.00</div></div>
       <div class="card am"><div class="clbl" data-t="highTicket">Ticket mayor</div><div class="cval" id="h-max">$0.00</div><div class="csub" data-t="orderHighest">orden mas alta</div></div>
-      <div class="card am"><div class="clbl" data-t="pendingCredits">Créditos pendientes</div><div class="cval" id="h-cred-total">$0.00</div><div class="csub" id="h-cred-count">—</div></div>
+      <div class="card gold"><div class="clbl" data-t="pendingCredits">Créditos pendientes</div><div class="cval" id="h-cred-total">$0.00</div><div class="csub" id="h-cred-count">—</div></div>
     </div>
     <div class="sec-ttl" data-t="payMethod">Metodo de pago</div>
     <div class="card wide" style="padding:10px 14px"><div id="pay-rows"></div></div>
