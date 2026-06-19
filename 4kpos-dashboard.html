@@ -82,6 +82,15 @@ body.light .card.gold{background:linear-gradient(135deg,rgba(240,192,64,.2),rgba
 .sale-drow:last-of-type{border:none;}
 .sale-item.new{border-color:rgba(52,211,153,.4);background:rgba(52,211,153,.05);animation:newitem .5s ease;}
 @keyframes newitem{from{transform:translateX(-10px);opacity:0}to{transform:none;opacity:1}}
+.cred-row{background:var(--bg2);border:1.5px solid rgba(240,192,64,.25);border-radius:10px;padding:10px 13px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;}
+.cred-row-info{flex:1;min-width:0;}
+.cred-row-name{font-size:.84rem;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cred-row-meta{font-size:.7rem;color:var(--tx3);margin-top:2px;}
+.cred-row-amt{font-family:monospace;font-weight:700;color:#f0c040;font-size:.95rem;margin-left:10px;white-space:nowrap;}
+.cred-row-due{font-size:.68rem;font-weight:600;margin-top:2px;}
+.cred-row-due.overdue{color:#f87171;}
+.cred-row-due.soon{color:#fbbf24;}
+.cred-row-due.ok{color:var(--tx3);}
 .snum{font-size:.7rem;color:#3b82f6;font-weight:600;margin-bottom:2px;}
 .sitems{font-size:.8rem;color:var(--tx2);}
 .stime{font-size:.68rem;color:var(--tx3);margin-top:2px;}
@@ -163,8 +172,9 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
       <div class="card gn"><div class="clbl" data-t="incToday">Ingresos hoy</div><div class="cval" id="h-inc">$0.00</div><div class="csub" id="h-ords">0 ordenes</div><div class="cdiff" id="h-diff"></div></div>
       <div class="card ac"><div class="clbl" data-t="orders">Ordenes</div><div class="cval" id="h-cnt">0</div><div class="csub" id="h-avg">Prom. $0.00</div></div>
       <div class="card am"><div class="clbl" data-t="highTicket">Ticket mayor</div><div class="cval" id="h-max">$0.00</div><div class="csub" data-t="orderHighest">orden mas alta</div></div>
-      <div class="card gold"><div class="clbl" data-t="pendingCredits">Créditos pendientes</div><div class="cval" id="h-cred-total">$0.00</div><div class="csub" id="h-cred-count">—</div></div>
+      <div class="card gold" id="cred-card" onclick="toggleCredDetail()" style="cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent"><div class="clbl" data-t="pendingCredits">Créditos pendientes</div><div class="cval" id="h-cred-total">$0.00</div><div class="csub" id="h-cred-count">—</div><div style="font-size:.6rem;color:#f0c040;opacity:.6;margin-top:3px" id="cred-card-hint">▾ ver detalle</div></div>
     </div>
+    <div id="cred-detail" style="display:none;margin-bottom:14px"></div>
     <div class="sec-ttl" data-t="payMethod">Metodo de pago</div>
     <div class="card wide" style="padding:10px 14px"><div id="pay-rows"></div></div>
     <div class="sec-ttl" data-t="topProds">Productos mas vendidos</div>
@@ -709,6 +719,38 @@ function renderCredits(){
   var cs=(DB&&DB.creditSummary)||{totalPending:0,count:0};
   if(totalEl)totalEl.textContent=dolr(cs.totalPending||0);
   if(countEl)countEl.textContent=(cs.count||0)+' '+(LANG==='es'?'crédito(s) pendiente(s)':'pending credit(s)');
+  // Rebuild detail list (keep hidden, toggle shows it)
+  var detail=document.getElementById('cred-detail');
+  if(!detail)return;
+  var items=(cs.items&&cs.items.length)?cs.items:[];
+  if(!items.length){detail.innerHTML='';return;}
+  var now=new Date();now.setHours(0,0,0,0);
+  detail.innerHTML=items.map(function(it){
+    var dueHtml='';
+    if(it.dueDate){
+      var due=new Date(it.dueDate);due.setHours(0,0,0,0);
+      var diff=Math.round((due-now)/(1000*60*60*24));
+      if(diff<0){dueHtml='<div class="cred-row-due overdue">⚠ '+(LANG==='es'?'Vencido hace '+Math.abs(diff)+'d':'Overdue '+Math.abs(diff)+'d ago')+'</div>';}
+      else if(diff<=3){dueHtml='<div class="cred-row-due soon">⏳ '+(LANG==='es'?'Vence en '+diff+'d':'Due in '+diff+'d')+'</div>';}
+      else{dueHtml='<div class="cred-row-due ok">'+(LANG==='es'?'Vence: ':'Due: ')+due.toLocaleDateString()+'</div>';}
+    }
+    return '<div class="cred-row">'
+      +'<div class="cred-row-info">'
+      +'<div class="cred-row-name">'+(it.client||'—')+'</div>'
+      +'<div class="cred-row-meta">'+new Date(it.date).toLocaleDateString()+(it.total?(LANG==='es'?' · Total: ':' · Total: ')+dolr(it.total):'')+'</div>'
+      +dueHtml
+      +'</div>'
+      +'<div class="cred-row-amt">'+dolr(it.balance||0)+'</div>'
+      +'</div>';
+  }).join('');
+}
+function toggleCredDetail(){
+  var detail=document.getElementById('cred-detail');
+  var hint=document.getElementById('cred-card-hint');
+  if(!detail)return;
+  var open=detail.style.display==='none'||detail.style.display==='';
+  detail.style.display=open?'block':'none';
+  if(hint)hint.textContent=open?(LANG==='es'?'▴ ocultar':'▴ hide'):(LANG==='es'?'▾ ver detalle':'▾ show detail');
 }
 
 // ── Week range ─────────────────────────────────────────
