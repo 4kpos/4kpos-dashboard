@@ -533,7 +533,8 @@ async function loadCreditSummary(){
     var rows=await r.json();
     if(Array.isArray(rows)&&rows[0]&&rows[0].name){
       var cs=JSON.parse(rows[0].name);
-      if(DB)DB.creditSummary={totalPending:cs.totalPending||0,count:cs.count||0};
+      console.log('Credit summary from Supabase:',cs);
+      if(DB)DB.creditSummary={totalPending:cs.totalPending||0,count:cs.count||0,items:cs.items||[]};
     }
   }catch(e){}
 }
