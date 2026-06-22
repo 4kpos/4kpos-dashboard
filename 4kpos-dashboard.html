@@ -156,6 +156,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
     <div>
       <div class="logo"><span style="color:#1e3a8a">4K</span><span style="color:#1a7a3a"> P</span><span style="color:#e6b800">O</span><span style="color:#cc1111">S</span></div>
       <div class="biz" id="biz-name">Mi Negocio</div>
+      <div id="shift-inline" style="font-size:.64rem;margin-top:2px;color:var(--tx2)"></div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
       <div style="display:flex;align-items:center;gap:10px">
@@ -173,7 +174,6 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
       <div class="card ac"><div class="clbl" data-t="orders">Ordenes</div><div class="cval" id="h-cnt">0</div><div class="csub" id="h-avg">Prom. $0.00</div></div>
       <div class="card am"><div class="clbl" data-t="highTicket">Ticket mayor</div><div class="cval" id="h-max">$0.00</div><div class="csub" data-t="orderHighest">orden mas alta</div></div>
       <div class="card gold" id="cred-card" onclick="toggleCredDetail()" style="cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent"><div class="clbl" data-t="pendingCredits">Créditos pendientes</div><div class="cval" id="h-cred-total">$0.00</div><div class="csub" id="h-cred-count">—</div><div style="font-size:.6rem;color:#f0c040;opacity:.6;margin-top:3px" id="cred-card-hint">▾ ver detalle</div></div>
-      <div class="card bl wide" id="shift-card"><div class="clbl" data-t="activeShift">Turno activo</div><div class="cval" id="shift-status-val">—</div><div class="csub" id="shift-status-sub">—</div></div>
     </div>
     <div id="cred-detail" style="display:none;margin-bottom:14px"></div>
     <div class="sec-ttl" data-t="payMethod">Metodo de pago</div>
@@ -770,22 +770,22 @@ function toggleCredDetail(){
   if(hint)hint.textContent=open?(LANG==='es'?'▴ ocultar':'▴ hide'):(LANG==='es'?'▾ ver detalle':'▾ show detail');
 }
 function renderShiftStatus(){
-  var valEl=document.getElementById('shift-status-val');
-  var subEl=document.getElementById('shift-status-sub');
+  var inEl=document.getElementById('shift-inline');
+  if(!inEl)return;
   var ss=(DB&&DB.shiftStatus)||null;
-  if(!valEl)return;
   if(ss&&ss.active){
-    valEl.textContent=ss.currentUser||'—';
-    var subTxt='';
+    var txt=ss.currentUser||'—';
     if(ss.shiftOpenedAt){
       var d=new Date(ss.shiftOpenedAt);
-      subTxt=t('shiftSince')+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-      if(ss.lastSeen){var ls=new Date(ss.lastSeen);subTxt+=' · '+t('shiftLastSeen')+': '+ls.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
-    }else{subTxt=t('shiftOpen');}
-    if(subEl)subEl.textContent=subTxt;
+      txt+=' '+t('shiftSince')+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    }
+    if(ss.lastSeen){
+      var ls=new Date(ss.lastSeen);
+      txt+=' ('+t('shiftLastSeen')+' '+ls.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+')';
+    }
+    inEl.innerHTML='<span style="color:#34d399">&#9679;</span> '+txt;
   }else{
-    valEl.textContent=ss?t('shiftClosed'):'—';
-    if(subEl)subEl.textContent=(ss&&ss.shiftClosedAt)?new Date(ss.shiftClosedAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):t('noActivity');
+    inEl.innerHTML='<span style="color:var(--tx3)">&#9679;</span> '+(LANG==='es'?'Sin turno activo':'No active shift');
   }
 }
 
