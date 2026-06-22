@@ -157,6 +157,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
       <div class="logo"><span style="color:#1e3a8a">4K</span><span style="color:#1a7a3a"> P</span><span style="color:#e6b800">O</span><span style="color:#cc1111">S</span></div>
       <div class="biz" id="biz-name">Mi Negocio</div>
       <div id="shift-inline" style="font-size:.64rem;margin-top:2px;color:var(--tx2)"></div>
+      <div id="shift-note-inline" style="font-size:.61rem;font-style:italic;color:var(--tx3);margin-top:1px;display:none;line-height:1.3;max-width:220px;overflow:hidden;"></div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
       <div style="display:flex;align-items:center;gap:10px">
@@ -327,7 +328,7 @@ var TR={
     yesterdaySales:'Ventas de ayer',pendingCredits:'Créditos pendientes',activeShift:'Turno activo',shiftSince:'Desde',shiftLastSeen:'Visto',
     creditAbono:'Abono crédito',noCredits:'Sin créditos pendientes',
     creditTotal:'Total pendiente',creditOriginal:'Original',creditPaid2:'Abonado',creditBalance:'Saldo',
-    shiftOpen:'Turno abierto',shiftClosed:'Turno cerrado',noActivity:'Sin actividad',
+    shiftNote:'Nota',shiftOpen:'Turno abierto',shiftClosed:'Turno cerrado',noActivity:'Sin actividad',
     shiftOpenAlert:'abrió turno',shiftCloseAlert:'cerró turno',
     weekRange:'Semana',creditPayments:'Pagos de crédito',
     purchases:'compra',purchases_p:'compras',
@@ -353,7 +354,7 @@ var TR={
     yesterdaySales:"Yesterday's sales",pendingCredits:'Pending credits',activeShift:'Active shift',shiftSince:'Since',shiftLastSeen:'Last seen',
     creditAbono:'Credit payment',noCredits:'No pending credits',
     creditTotal:'Total pending',creditOriginal:'Original',creditPaid2:'Paid',creditBalance:'Balance',
-    shiftOpen:'Shift open',shiftClosed:'Shift closed',noActivity:'No activity',
+    shiftNote:'Note',shiftOpen:'Shift open',shiftClosed:'Shift closed',noActivity:'No activity',
     shiftOpenAlert:'opened shift',shiftCloseAlert:'closed shift',
     weekRange:'Week',creditPayments:'Credit payments',
     purchases:'purchase',purchases_p:'purchases',
@@ -771,6 +772,7 @@ function toggleCredDetail(){
 }
 function renderShiftStatus(){
   var inEl=document.getElementById('shift-inline');
+  var noteEl=document.getElementById('shift-note-inline');
   if(!inEl)return;
   var ss=(DB&&DB.shiftStatus)||null;
   if(ss&&ss.active){
@@ -786,6 +788,17 @@ function renderShiftStatus(){
     inEl.innerHTML='<span style="color:#34d399">&#9679;</span> '+txt;
   }else{
     inEl.innerHTML='<span style="color:var(--tx3)">&#9679;</span> '+(LANG==='es'?'Sin turno activo':'No active shift');
+  }
+  if(noteEl){
+    var note=ss&&ss.note;
+    if(note){
+      var truncated=note.length>100?note.substring(0,100)+'…':note;
+      noteEl.textContent='📝 '+t('shiftNote')+': '+truncated;
+      noteEl.style.display='';
+    }else{
+      noteEl.textContent='';
+      noteEl.style.display='none';
+    }
   }
 }
 
