@@ -156,8 +156,8 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
     <div>
       <div class="logo"><span style="color:#1e3a8a">4K</span><span style="color:#1a7a3a"> P</span><span style="color:#e6b800">O</span><span style="color:#cc1111">S</span></div>
       <div class="biz" id="biz-name">Mi Negocio</div>
-      <div id="shift-inline" style="font-size:.64rem;margin-top:2px;color:var(--tx2)"></div>
-      <div id="shift-note-inline" style="font-size:.61rem;font-style:italic;color:var(--tx3);margin-top:1px;display:none;line-height:1.3;max-width:220px;overflow:hidden;"></div>
+      <div id="shift-inline" style="font-size:.72rem;margin-top:2px;color:rgba(255,255,255,.85)"></div>
+      <div id="shift-note-inline" style="font-size:.63rem;font-style:italic;color:rgba(255,255,255,.55);margin-top:1px;display:none;line-height:1.3;max-width:220px;overflow:hidden;"></div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
       <div style="display:flex;align-items:center;gap:10px">
@@ -165,7 +165,10 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
         <button id="lang-btn" class="ttl-btn" onclick="toggleLang()">EN</button>
         <div class="live-badge"><div class="live-dot"></div><span data-t="connected">Conectado</span></div>
       </div>
-      <div class="upd" id="upd-time"></div>
+      <div style="display:flex;align-items:center;gap:5px;justify-content:flex-end">
+        <div class="upd" id="upd-time"></div>
+        <button onclick="refresh()" title="Sincronizar" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:.82rem;cursor:pointer;padding:1px 3px;line-height:1;border-radius:4px;-webkit-tap-highlight-color:transparent">🔄</button>
+      </div>
     </div>
   </div>
 
@@ -545,13 +548,15 @@ async function loadCreditSummary(){
 async function loadShiftStatus(){
   if(!KEY)return;
   try{
-    var r=await fetch(SUPA_URL+'/rest/v1/categories?id=eq.shift_status&license_key=eq.'+encodeURIComponent(KEY),{
+    var r=await fetch(SUPA_URL+'/rest/v1/categories?id=like.shift_status%25&license_key=eq.'+encodeURIComponent(KEY),{
       headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
     });
     var rows=await r.json();
-    if(Array.isArray(rows)&&rows[0]&&rows[0].name){
-      var ss=JSON.parse(rows[0].name);
-      if(DB)DB.shiftStatus=ss;
+    if(Array.isArray(rows)&&DB){
+      DB.shiftStatuses=rows
+        .filter(function(row){return row.id&&row.id.startsWith('shift_status')&&row.name;})
+        .map(function(row){try{var s=JSON.parse(row.name);s._pcRow=row.id;return s;}catch(e){return null;}})
+        .filter(Boolean);
     }
   }catch(e){}
 }
@@ -774,23 +779,24 @@ function renderShiftStatus(){
   var inEl=document.getElementById('shift-inline');
   var noteEl=document.getElementById('shift-note-inline');
   if(!inEl)return;
-  var ss=(DB&&DB.shiftStatus)||null;
-  if(ss&&ss.active){
-    var txt=ss.currentUser||'—';
-    if(ss.shiftOpenedAt){
-      var d=new Date(ss.shiftOpenedAt);
-      txt+=' '+t('shiftSince')+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    }
-    if(ss.lastSeen){
-      var ls=new Date(ss.lastSeen);
-      txt+=' ('+t('shiftLastSeen')+' '+ls.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+')';
-    }
-    inEl.innerHTML='<span style="color:#34d399">&#9679;</span> '+txt;
-  }else{
-    inEl.innerHTML='<span style="color:var(--tx3)">&#9679;</span> '+(LANG==='es'?'Sin turno activo':'No active shift');
+  var statuses=(DB&&DB.shiftStatuses)||[];
+  var active=statuses.filter(function(ss){return ss&&ss.active;});
+  if(active.length===0){
+    inEl.innerHTML='<span style="color:rgba(255,255,255,.3)">&#9679;</span> '+(LANG==='es'?'Sin turno activo':'No active shift');
+    if(noteEl){noteEl.textContent='';noteEl.style.display='none';}
+    return;
   }
+  inEl.innerHTML=active.map(function(ss,i){
+    var user=ss.currentUser||'—';
+    var since='';
+    if(ss.shiftOpenedAt){var d=new Date(ss.shiftOpenedAt);since=' '+t('shiftSince')+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+    var pcId=ss.pcId||(ss._pcRow&&ss._pcRow!=='shift_status'?ss._pcRow.replace('shift_status_',''):'');
+    var pcLabel=pcId?' · PC '+escHtml(pcId.slice(-4)):'';
+    return '<div'+(i>0?' style="margin-top:1px"':'')+'><span style="color:#34d399">&#9679;</span> '+escHtml(user)+escHtml(since)+pcLabel+'</div>';
+  }).join('');
   if(noteEl){
-    var note=ss&&ss.note;
+    var note=null;
+    for(var i=0;i<active.length;i++){if(active[i].note){note=active[i].note;break;}}
     if(note){
       var truncated=note.length>100?note.substring(0,100)+'…':note;
       noteEl.textContent='📝 '+t('shiftNote')+': '+truncated;
