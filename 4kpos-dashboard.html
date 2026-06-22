@@ -173,6 +173,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
       <div class="card ac"><div class="clbl" data-t="orders">Ordenes</div><div class="cval" id="h-cnt">0</div><div class="csub" id="h-avg">Prom. $0.00</div></div>
       <div class="card am"><div class="clbl" data-t="highTicket">Ticket mayor</div><div class="cval" id="h-max">$0.00</div><div class="csub" data-t="orderHighest">orden mas alta</div></div>
       <div class="card gold" id="cred-card" onclick="toggleCredDetail()" style="cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent"><div class="clbl" data-t="pendingCredits">Créditos pendientes</div><div class="cval" id="h-cred-total">$0.00</div><div class="csub" id="h-cred-count">—</div><div style="font-size:.6rem;color:#f0c040;opacity:.6;margin-top:3px" id="cred-card-hint">▾ ver detalle</div></div>
+      <div class="card bl wide" id="shift-card"><div class="clbl" data-t="activeShift">Turno activo</div><div class="cval" id="shift-status-val">—</div><div class="csub" id="shift-status-sub">—</div></div>
     </div>
     <div id="cred-detail" style="display:none;margin-bottom:14px"></div>
     <div class="sec-ttl" data-t="payMethod">Metodo de pago</div>
@@ -323,7 +324,7 @@ var TR={
     ordersN:'ordenes',salesN:'ventas',avg2:'Prom.',minLbl:'Mín',inStock:'en stock',
     order:'Orden #',uncategorized:'Sin categoría',sinNombre:'Sin nombre',
     stockOk:'stock ok',stockLow:'stock bajo',vsAyer:'% vs ayer',remaining:'restantes',prod:'prod.',
-    yesterdaySales:'Ventas de ayer',pendingCredits:'Créditos pendientes',
+    yesterdaySales:'Ventas de ayer',pendingCredits:'Créditos pendientes',activeShift:'Turno activo',shiftSince:'Desde',shiftLastSeen:'Visto',
     creditAbono:'Abono crédito',noCredits:'Sin créditos pendientes',
     creditTotal:'Total pendiente',creditOriginal:'Original',creditPaid2:'Abonado',creditBalance:'Saldo',
     shiftOpen:'Turno abierto',shiftClosed:'Turno cerrado',noActivity:'Sin actividad',
@@ -349,7 +350,7 @@ var TR={
     ordersN:'orders',salesN:'sales',avg2:'Avg.',minLbl:'Min',inStock:'in stock',
     order:'Order #',uncategorized:'Uncategorized',sinNombre:'No name',
     stockOk:'stock ok',stockLow:'low stock',vsAyer:'% vs yesterday',remaining:'remaining',prod:'prod.',
-    yesterdaySales:"Yesterday's sales",pendingCredits:'Pending credits',
+    yesterdaySales:"Yesterday's sales",pendingCredits:'Pending credits',activeShift:'Active shift',shiftSince:'Since',shiftLastSeen:'Last seen',
     creditAbono:'Credit payment',noCredits:'No pending credits',
     creditTotal:'Total pending',creditOriginal:'Original',creditPaid2:'Paid',creditBalance:'Balance',
     shiftOpen:'Shift open',shiftClosed:'Shift closed',noActivity:'No activity',
@@ -369,6 +370,7 @@ function applyLang(){
     var pg=document.querySelector('.page.on');
     renderToday(false);
     renderCredits();
+    renderShiftStatus();
     if(pg){if(pg.id==='pg-semana')renderWeek();else if(pg.id==='pg-mes')renderMonth();else if(pg.id==='pg-inv')renderInventory();}
   }
 }
@@ -397,6 +399,7 @@ async function loadData(showToast){
     DB=j.data||{products:[],sales:[],cfg:{}};
     await loadCategories();
     await loadCreditSummary();
+    await loadShiftStatus();
     lastSaleCount=newCount;
     var rawBiz=(DB.cfg&&DB.cfg.bizName)||'';
     var bizEl=document.getElementById('biz-name');
@@ -535,6 +538,19 @@ async function loadCreditSummary(){
       var cs=JSON.parse(rows[0].name);
       console.log('Credit summary from Supabase:',cs);
       if(DB)DB.creditSummary={totalPending:cs.totalPending||0,count:cs.count||0,items:cs.items||[]};
+    }
+  }catch(e){}
+}
+async function loadShiftStatus(){
+  if(!KEY)return;
+  try{
+    var r=await fetch(SUPA_URL+'/rest/v1/categories?id=eq.shift_status&license_key=eq.'+encodeURIComponent(KEY),{
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
+    });
+    var rows=await r.json();
+    if(Array.isArray(rows)&&rows[0]&&rows[0].name){
+      var ss=JSON.parse(rows[0].name);
+      if(DB)DB.shiftStatus=ss;
     }
   }catch(e){}
 }
@@ -753,6 +769,25 @@ function toggleCredDetail(){
   detail.style.display=open?'block':'none';
   if(hint)hint.textContent=open?(LANG==='es'?'▴ ocultar':'▴ hide'):(LANG==='es'?'▾ ver detalle':'▾ show detail');
 }
+function renderShiftStatus(){
+  var valEl=document.getElementById('shift-status-val');
+  var subEl=document.getElementById('shift-status-sub');
+  var ss=(DB&&DB.shiftStatus)||null;
+  if(!valEl)return;
+  if(ss&&ss.active){
+    valEl.textContent=ss.currentUser||'—';
+    var subTxt='';
+    if(ss.shiftOpenedAt){
+      var d=new Date(ss.shiftOpenedAt);
+      subTxt=t('shiftSince')+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+      if(ss.lastSeen){var ls=new Date(ss.lastSeen);subTxt+=' · '+t('shiftLastSeen')+': '+ls.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+    }else{subTxt=t('shiftOpen');}
+    if(subEl)subEl.textContent=subTxt;
+  }else{
+    valEl.textContent=ss?t('shiftClosed'):'—';
+    if(subEl)subEl.textContent=(ss&&ss.shiftClosedAt)?new Date(ss.shiftClosedAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):t('noActivity');
+  }
+}
 
 // ── Week range ─────────────────────────────────────────
 function getWeekRange(){
@@ -799,8 +834,9 @@ async function init(){
     document.getElementById('app').style.display='block';
     document.getElementById('botnav').style.display='flex';
     renderCredits();
+    renderShiftStatus();
     if(refreshInterval)clearInterval(refreshInterval);
-    refreshInterval=setInterval(function(){loadData(false);renderCredits();},30000);
+    refreshInterval=setInterval(function(){loadData(false);renderCredits();renderShiftStatus();},30000);
   }
 }
 
