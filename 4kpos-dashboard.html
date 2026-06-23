@@ -780,7 +780,13 @@ function renderShiftStatus(){
   var noteEl=document.getElementById('shift-note-inline');
   if(!inEl)return;
   var statuses=(DB&&DB.shiftStatuses)||[];
-  var active=statuses.filter(function(ss){return ss&&ss.active;});
+  var _staleMs=30*60*1000,_now=Date.now();
+  var active=statuses.filter(function(ss){
+    if(!ss||!ss.active)return false;
+    var ts=ss.updatedAt||ss.lastSeen;
+    if(!ts)return false;
+    return (_now-new Date(ts).getTime())<_staleMs;
+  });
   if(active.length===0){
     inEl.innerHTML='<span style="color:rgba(255,255,255,.3)">&#9679;</span> '+(LANG==='es'?'Sin turno activo':'No active shift');
     if(noteEl){noteEl.textContent='';noteEl.style.display='none';}
