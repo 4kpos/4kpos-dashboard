@@ -131,6 +131,14 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
 #install-banner .ib-btn.secondary{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);}
 #ios-instructions{display:none;background:rgba(255,255,255,.06);border-radius:8px;padding:10px;margin-top:10px;font-size:.78rem;color:rgba(255,255,255,.75);line-height:1.6;}
 #ios-instructions strong{color:#60a5fa;}
+/* Shift note modal */
+#snm-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;align-items:center;justify-content:center;padding:16px;}
+#snm-bg.open{display:flex;}
+#snm{background:var(--bg2);border:1.5px solid var(--brd2);border-radius:16px;width:min(400px,calc(100vw - 32px));max-height:80vh;display:flex;flex-direction:column;overflow:hidden;}
+#snm-hd{padding:15px 18px 13px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+#snm-hd h3{font-size:.95rem;font-weight:700;color:var(--tx);}
+#snm-body{padding:16px 18px;overflow-y:auto;font-size:.88rem;color:var(--tx2);line-height:1.65;white-space:pre-wrap;word-break:break-word;flex:1;}
+#snm-ft{padding:12px 18px 16px;border-top:1px solid var(--brd);flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -157,7 +165,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
       <div class="logo"><span style="color:#1e3a8a">4K</span><span style="color:#1a7a3a"> P</span><span style="color:#e6b800">O</span><span style="color:#cc1111">S</span></div>
       <div class="biz" id="biz-name">Mi Negocio</div>
       <div id="shift-inline" style="font-size:.72rem;margin-top:2px;color:rgba(255,255,255,.85)"></div>
-      <div id="shift-note-inline" style="font-size:.63rem;font-style:italic;color:rgba(255,255,255,.55);margin-top:1px;display:none;line-height:1.3;max-width:220px;overflow:hidden;"></div>
+      <div id="shift-note-inline" style="display:none"></div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
       <div style="display:flex;align-items:center;gap:10px">
@@ -331,7 +339,7 @@ var TR={
     yesterdaySales:'Ventas de ayer',pendingCredits:'Créditos pendientes',activeShift:'Turno activo',shiftSince:'Desde',shiftLastSeen:'Visto',
     creditAbono:'Abono crédito',noCredits:'Sin créditos pendientes',
     creditTotal:'Total pendiente',creditOriginal:'Original',creditPaid2:'Abonado',creditBalance:'Saldo',
-    shiftNote:'Nota',shiftOpen:'Turno abierto',shiftClosed:'Turno cerrado',noActivity:'Sin actividad',
+    shiftNote:'Nota',shiftNoteBtn:'Ver nota del turno',shiftOpen:'Turno abierto',shiftClosed:'Turno cerrado',noActivity:'Sin actividad',
     shiftOpenAlert:'abrió turno',shiftCloseAlert:'cerró turno',
     weekRange:'Semana',creditPayments:'Pagos de crédito',
     purchases:'compra',purchases_p:'compras',
@@ -357,7 +365,7 @@ var TR={
     yesterdaySales:"Yesterday's sales",pendingCredits:'Pending credits',activeShift:'Active shift',shiftSince:'Since',shiftLastSeen:'Last seen',
     creditAbono:'Credit payment',noCredits:'No pending credits',
     creditTotal:'Total pending',creditOriginal:'Original',creditPaid2:'Paid',creditBalance:'Balance',
-    shiftNote:'Note',shiftOpen:'Shift open',shiftClosed:'Shift closed',noActivity:'No activity',
+    shiftNote:'Note',shiftNoteBtn:'View shift note',shiftOpen:'Shift open',shiftClosed:'Shift closed',noActivity:'No activity',
     shiftOpenAlert:'opened shift',shiftCloseAlert:'closed shift',
     weekRange:'Week',creditPayments:'Credit payments',
     purchases:'purchase',purchases_p:'purchases',
@@ -804,11 +812,12 @@ function renderShiftStatus(){
     var note=null;
     for(var i=0;i<active.length;i++){if(active[i].note){note=active[i].note;break;}}
     if(note){
-      var truncated=note.length>100?note.substring(0,100)+'…':note;
-      noteEl.textContent='📝 '+t('shiftNote')+': '+truncated;
+      _currentShiftNote=note;
+      noteEl.innerHTML='<button onclick="openNoteModal()" style="background:rgba(255,255,255,.13);border:1.5px solid rgba(255,255,255,.28);border-radius:20px;color:rgba(255,255,255,.92);padding:3px 11px;font-size:.68rem;font-weight:600;cursor:pointer;margin-top:3px;-webkit-tap-highlight-color:transparent;white-space:nowrap">📝 '+t('shiftNoteBtn')+'</button>';
       noteEl.style.display='';
     }else{
-      noteEl.textContent='';
+      _currentShiftNote=null;
+      noteEl.innerHTML='';
       noteEl.style.display='none';
     }
   }
@@ -847,6 +856,19 @@ function normPayLabel(s){
 // ── Notifications ──────────────────────────────────────
 function showNotif(msg,dur){var n=document.createElement('div');n.style.cssText='position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1.5px solid rgba(59,130,246,.4);border-radius:10px;padding:10px 18px;font-size:.83rem;color:var(--tx);z-index:9999;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.45);transition:opacity .3s;';n.textContent=msg;document.body.appendChild(n);setTimeout(function(){n.style.opacity='0';setTimeout(function(){n.remove();},300);},dur||2800);}
 
+// ── Shift note modal ───────────────────────────────────
+var _currentShiftNote=null;
+function openNoteModal(){
+  var b=document.getElementById('snm-body');
+  if(b)b.textContent=_currentShiftNote||'';
+  var bg=document.getElementById('snm-bg');
+  if(bg)bg.classList.add('open');
+}
+function closeNoteModal(e){
+  if(!e||e.target===document.getElementById('snm-bg')){
+    document.getElementById('snm-bg').classList.remove('open');
+  }
+}
 // ── Init ───────────────────────────────────────────────
 async function init(){
   document.getElementById('loading').style.display='block';
@@ -883,5 +905,16 @@ if(isIOS&&!isInStandalone&&!localStorage.getItem('install_dismissed')){setTimeou
 function installApp(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt.userChoice.then(function(r){if(r.outcome==='accepted'){document.getElementById('install-banner').style.display='none';localStorage.setItem('install_dismissed','1');}deferredPrompt=null;});}
 function closeBanner(){document.getElementById('install-banner').style.display='none';localStorage.setItem('install_dismissed','1');}
 </script>
+<!-- Shift note modal -->
+<div id="snm-bg" onclick="closeNoteModal(event)">
+  <div id="snm">
+    <div id="snm-hd">
+      <h3>📝 <span id="snm-title">Nota del turno</span></h3>
+      <button onclick="closeNoteModal()" style="background:none;border:1.5px solid var(--brd2);border-radius:7px;color:var(--tx3);width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
+    </div>
+    <div id="snm-body"></div>
+    <div id="snm-ft"><button onclick="closeNoteModal()" class="btn-p" style="font-size:.88rem;padding:11px">Cerrar</button></div>
+  </div>
+</div>
 </body>
 </html>
