@@ -147,14 +147,14 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
   <div class="top" style="justify-content:center;padding:24px 16px">
     <div style="text-align:center">
       <div style="font-size:1.6rem;font-weight:800;margin-bottom:4px"><span style="color:#1e3a8a">4K</span><span style="color:#1a7a3a"> P</span><span style="color:#e6b800">O</span><span style="color:#cc1111">S</span></div>
-      <div style="font-size:.82rem;color:rgba(255,255,255,.5)">Dashboard de Ventas</div>
+      <div style="font-size:.82rem;color:rgba(255,255,255,.5)" data-t="dashSubtitle">Dashboard de Ventas</div>
     </div>
   </div>
   <div class="key-screen">
-    <h2 style="margin-bottom:6px">Ingresa tu licencia</h2>
-    <p style="font-size:.82rem;color:var(--tx3);margin-bottom:16px">Usa la clave que recibiste al activar tu 4K POS</p>
+    <h2 style="margin-bottom:6px" data-t="enterLicense">Ingresa tu licencia</h2>
+    <p style="font-size:.82rem;color:var(--tx3);margin-bottom:16px" data-t="licenseHint">Usa la clave que recibiste al activar tu 4K POS</p>
     <input type="text" class="fi" id="key-input" placeholder="4K-XXXX-XXXX-XXXX" maxlength="19" oninput="fmtKey(this)" onkeydown="if(event.key==='Enter')goKey()">
-    <button class="btn-p" onclick="goKey()">Ver mi Dashboard</button>
+    <button class="btn-p" onclick="goKey()" data-t="viewDashboard">Ver mi Dashboard</button>
     <div style="margin-top:16px;text-align:center;font-size:1rem;font-weight:800;letter-spacing:.5px"><span style="color:#1e3a8a">4K</span> <span style="color:#e6b800">Solutions</span></div>
   </div>
 </div>
@@ -163,7 +163,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
   <div class="top">
     <div>
       <div class="logo"><span style="color:#1e3a8a">4K</span><span style="color:#1a7a3a"> P</span><span style="color:#e6b800">O</span><span style="color:#cc1111">S</span></div>
-      <div class="biz" id="biz-name">Mi Negocio</div>
+      <div class="biz" id="biz-name" data-t-default="myBusiness">Mi Negocio</div>
       <div id="shift-inline" style="font-size:.72rem;margin-top:2px;color:rgba(255,255,255,.85)"></div>
       <div id="shift-note-inline" style="display:none"></div>
     </div>
@@ -175,7 +175,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
       </div>
       <div style="display:flex;align-items:center;gap:5px;justify-content:flex-end">
         <div class="upd" id="upd-time"></div>
-        <button onclick="refresh()" title="Sincronizar" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:.82rem;cursor:pointer;padding:1px 3px;line-height:1;border-radius:4px;-webkit-tap-highlight-color:transparent">🔄</button>
+        <button onclick="refresh()" id="sync-btn" title="Sincronizar" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:.82rem;cursor:pointer;padding:1px 3px;line-height:1;border-radius:4px;-webkit-tap-highlight-color:transparent">🔄</button>
       </div>
     </div>
   </div>
@@ -185,7 +185,7 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
       <div class="card gn"><div class="clbl" data-t="incToday">Ingresos hoy</div><div class="cval" id="h-inc">$0.00</div><div class="csub" id="h-ords">0 ordenes</div><div class="cdiff" id="h-diff"></div></div>
       <div class="card ac"><div class="clbl" data-t="orders">Ordenes</div><div class="cval" id="h-cnt">0</div><div class="csub" id="h-avg">Prom. $0.00</div></div>
       <div class="card am"><div class="clbl" data-t="highTicket">Ticket mayor</div><div class="cval" id="h-max">$0.00</div><div class="csub" data-t="orderHighest">orden mas alta</div></div>
-      <div class="card gold" id="cred-card" onclick="toggleCredDetail()" style="cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent"><div class="clbl" data-t="pendingCredits">Créditos pendientes</div><div class="cval" id="h-cred-total">$0.00</div><div class="csub" id="h-cred-count">—</div><div style="font-size:.6rem;color:#f0c040;opacity:.6;margin-top:3px" id="cred-card-hint">▾ ver detalle</div></div>
+      <div class="card gold" id="cred-card" onclick="toggleCredDetail()" style="cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent"><div class="clbl" data-t="pendingCredits">Créditos pendientes</div><div class="cval" id="h-cred-total">$0.00</div><div class="csub" id="h-cred-count">—</div><div style="font-size:.6rem;color:#f0c040;opacity:.6;margin-top:3px" id="cred-card-hint" data-t="showDetail">▾ ver detalle</div></div>
     </div>
     <div id="cred-detail" style="display:none;margin-bottom:14px"></div>
     <div class="sec-ttl" data-t="payMethod">Metodo de pago</div>
@@ -256,23 +256,23 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
   <div class="bnav" onclick="refresh()"><div class="bnav-ico">🔄</div><span data-t="refresh">Actualizar</span></div>
 </div>
 
-<div id="loading" class="loading"><div class="spin" style="font-size:2rem">⏳</div><div style="margin-top:10px">Cargando...</div></div>
+<div id="loading" class="loading"><div class="spin" style="font-size:2rem">⏳</div><div style="margin-top:10px" data-t="loading">Cargando...</div></div>
 
 <div id="install-banner">
   <div class="ib-row">
     <div class="ib-icon"><img src="icon-192.png" alt="4K POS"></div>
     <div class="ib-text">
       <div class="ib-title">4K POS Dashboard</div>
-      <div class="ib-sub">Agrega la app a tu pantalla de inicio</div>
+      <div class="ib-sub" data-t="addToHome">Agrega la app a tu pantalla de inicio</div>
     </div>
     <button onclick="closeBanner()" style="background:none;border:none;color:rgba(255,255,255,.3);font-size:1.2rem;cursor:pointer;padding:0 0 0 8px;">✕</button>
   </div>
-  <div id="ios-instructions">
+  <div id="ios-instructions" data-t="iosInstructions">
     📱 En Safari: toca <strong>Compartir</strong> (□↑) → <strong>"Agregar a pantalla de inicio"</strong>
   </div>
   <div class="ib-actions">
-    <button class="ib-btn primary" id="install-btn" onclick="installApp()">📲 Instalar app</button>
-    <button class="ib-btn secondary" onclick="closeBanner()">Ahora no</button>
+    <button class="ib-btn primary" id="install-btn" onclick="installApp()" data-t="installApp">📲 Instalar app</button>
+    <button class="ib-btn secondary" onclick="closeBanner()" data-t="notNow">Ahora no</button>
   </div>
 </div>
 
@@ -291,8 +291,8 @@ function dueBadge(dueDate){
   var now=new Date();now.setHours(0,0,0,0);
   var due=new Date(dueDate);due.setHours(0,0,0,0);
   var diff=Math.round((due-now)/(1000*60*60*24));
-  if(diff<0)return '<span style="display:inline-block;font-size:.64rem;font-weight:700;color:#fff;background:#ef4444;border-radius:3px;padding:1px 5px;margin-left:5px">VENCIDO '+Math.abs(diff)+'d</span>';
-  if(diff<=3)return '<span style="display:inline-block;font-size:.64rem;font-weight:700;color:#92400e;background:#fbbf24;border-radius:3px;padding:1px 5px;margin-left:5px">Vence '+diff+'d</span>';
+  if(diff<0)return '<span style="display:inline-block;font-size:.64rem;font-weight:700;color:#fff;background:#ef4444;border-radius:3px;padding:1px 5px;margin-left:5px">'+t('overdueN')+' '+Math.abs(diff)+t('overdueUnit')+'</span>';
+  if(diff<=3)return '<span style="display:inline-block;font-size:.64rem;font-weight:700;color:#92400e;background:#fbbf24;border-radius:3px;padding:1px 5px;margin-left:5px">'+t('dueSoon')+' '+diff+t('dueUnit')+'</span>';
   return '<span style="display:inline-block;font-size:.64rem;color:#34d399;border:1px solid #34d399;border-radius:3px;padding:1px 5px;margin-left:5px">'+due.toLocaleDateString()+'</span>';
 }
 function dayName(d){var ns={es:['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat']};return (ns[LANG]||ns.es)[d.getDay()];}
@@ -345,6 +345,21 @@ var TR={
     purchases:'compra',purchases_p:'compras',
     payEfectivo:'Efectivo',payTarjeta:'Tarjeta',payTransf:'Transferencia',payDividido:'Dividido',payCredito:'Crédito',payOA:'Cta. Abierta',
     clientLbl:'Cliente',
+    dashSubtitle:'Dashboard de Ventas',enterLicense:'Ingresa tu licencia',
+    licenseHint:'Usa la clave que recibiste al activar tu 4K POS',
+    viewDashboard:'Ver mi Dashboard',myBusiness:'Mi Negocio',
+    loading:'Cargando...',syncTitle:'Sincronizar',
+    addToHome:'Agrega la app a tu pantalla de inicio',
+    iosInstructions:'📱 En Safari: toca <strong>Compartir</strong> (□↑) → <strong>"Agregar a pantalla de inicio"</strong>',
+    installApp:'📲 Instalar app',notNow:'Ahora no',
+    shiftNoteTitle:'Nota del turno',close:'Cerrar',
+    showDetail:'▾ ver detalle',hideDetail:'▴ ocultar',
+    noActiveShift:'Sin turno activo',
+    noSaleDetail:'Sin detalle',saleTotal:'Total',perUnit:'c/u',
+    creditsPending:'crédito(s) pendiente(s)',
+    overdueN:'Vencido hace',overdueUnit:'d',
+    dueSoon:'Vence en',dueUnit:'d',dueOn:'Vence:',
+    newSaleNotif:'Nueva venta:',updated:'Actualizado',
   },
   en:{
     incToday:"Today's income",orders:'Orders',highTicket:'Highest ticket',products:'Products',
@@ -371,13 +386,42 @@ var TR={
     purchases:'purchase',purchases_p:'purchases',
     payEfectivo:'Cash',payTarjeta:'Card',payTransf:'Transfer',payDividido:'Split',payCredito:'Credit',payOA:'Open Acct.',
     clientLbl:'Customer',
+    dashSubtitle:'Sales Dashboard',enterLicense:'Enter your license',
+    licenseHint:'Use the key you received when activating your 4K POS',
+    viewDashboard:'View my Dashboard',myBusiness:'My Business',
+    loading:'Loading...',syncTitle:'Sync',
+    addToHome:'Add the app to your home screen',
+    iosInstructions:'📱 In Safari: tap <strong>Share</strong> (□↑) → <strong>"Add to Home Screen"</strong>',
+    installApp:'📲 Install app',notNow:'Not now',
+    shiftNoteTitle:'Shift note',close:'Close',
+    showDetail:'▾ show detail',hideDetail:'▴ hide',
+    noActiveShift:'No active shift',
+    noSaleDetail:'No detail',saleTotal:'Total',perUnit:'ea.',
+    creditsPending:'pending credit(s)',
+    overdueN:'Overdue',overdueUnit:'d ago',
+    dueSoon:'Due in',dueUnit:'d',dueOn:'Due:',
+    newSaleNotif:'New sale:',updated:'Updated',
   }
 };
 function t(k){return (TR[LANG]||TR.es)[k]||k;}
 function applyLang(){
   var btn=document.getElementById('lang-btn');
   if(btn)btn.textContent=LANG==='es'?'EN':'ES';
-  document.querySelectorAll('[data-t]').forEach(function(el){var k=el.getAttribute('data-t');var v=t(k);if(v)el.textContent=v;});
+  document.querySelectorAll('[data-t]').forEach(function(el){
+    var k=el.getAttribute('data-t');
+    var v=t(k);
+    if(!v)return;
+    // iosInstructions uses innerHTML (contains <strong> tags)
+    if(k==='iosInstructions'){el.innerHTML=v;}
+    else{el.textContent=v;}
+  });
+  // Update sync button title attribute
+  var sb=document.getElementById('sync-btn');
+  if(sb)sb.title=t('syncTitle');
+  // Update biz-name only if it still shows the default placeholder
+  var bizEl=document.getElementById('biz-name');
+  if(bizEl&&bizEl.getAttribute('data-t-default')==='myBusiness'&&!DB){bizEl.textContent=t('myBusiness');}
+
   if(DB){
     var pg=document.querySelector('.page.on');
     renderToday(false);
@@ -420,7 +464,7 @@ async function loadData(showToast){
     }else{bizEl.textContent=rawBiz;}
     document.getElementById('upd-time').textContent=j.updated_at?(t('lastSync')+': '+timeAgo(j.updated_at)):'';
     renderToday(isNew);
-    if(showToast)showNotif(LANG==='es'?'Actualizado':'Updated');
+    if(showToast)showNotif(t('updated'));
   }catch(e){console.error(e);}
 }
 
@@ -479,7 +523,7 @@ function renderToday(isNew){
     }).join('');
     var detFooter='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px;padding-top:4px">'
       +'<span style="font-size:.73rem;color:var(--tx3)">'+payLbl+(cashier?' · '+cashier:'')+'</span>'
-      +'<span style="font-size:.8rem;font-family:monospace;font-weight:700;color:'+sColor+'">Total: '+dolr(s.total)+'</span>'
+      +'<span style="font-size:.8rem;font-family:monospace;font-weight:700;color:'+sColor+'">'+t('saleTotal')+': '+dolr(s.total)+'</span>'
       +'</div>';
     return '<div class="sale-item'+(isNew&&i===0?' new':'')+'" onclick="toggleSaleDetail(\''+sid+'\')">'
       +'<div class="sale-hdr">'
@@ -490,14 +534,14 @@ function renderToday(isNew){
       +'<div id="sa-'+sid+'" style="font-size:.6rem;color:var(--tx4);margin-top:3px">▼</div>'
       +'</div></div>'
       +'<div class="sale-detail" id="sd-'+sid+'">'
-      +(detRows||'<div style="font-size:.78rem;color:var(--tx3)">Sin detalle</div>')
+      +(detRows||'<div style="font-size:.78rem;color:var(--tx3)">'+t('noSaleDetail')+'</div>')
       +detFooter
       +'</div>'
       +'</div>';
   }).join('');
   var sHtml=(!regularSaleHtml&&!credPayHtml)?'<div class="empty">'+t('noSalesYet')+'</div>':credPayHtml+regularSaleHtml;
   document.getElementById('sales-list').innerHTML=sHtml;
-  if(isNew&&ts.length>0)showNotif((LANG==='es'?'Nueva venta: ':'New sale: ')+dolr(ts[ts.length-1].total));
+  if(isNew&&ts.length>0)showNotif(t('newSaleNotif')+' '+dolr(ts[ts.length-1].total));
 }
 
 function renderWeek(){
@@ -603,7 +647,7 @@ function renderInventory(){
         +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
         +'<div style="flex:1">'
         +'<div style="font-weight:600;font-size:.84rem;color:var(--tx)">'+escHtml(p.name)+'</div>'
-        +'<div style="font-size:.72rem;color:var(--tx2);margin-top:2px">'+dolr(p.price)+' c/u</div>'
+        +'<div style="font-size:.72rem;color:var(--tx2);margin-top:2px">'+dolr(p.price)+' '+t('perUnit')+'</div>'
         +'<div style="font-size:.7rem;color:var(--tx3);margin-top:3px;display:flex;align-items:center;gap:3px">'
         +t('minLbl')+': <span id="ms-'+p.id+'-val">'+ms+'</span>'
         +' <button onclick="editMinStock(\''+p.id+'\')" style="background:none;border:none;cursor:pointer;font-size:.75rem;padding:0 1px;opacity:.5;line-height:1">✏️</button>'
@@ -749,7 +793,7 @@ function renderCredits(){
   var countEl=document.getElementById('h-cred-count');
   var cs=(DB&&DB.creditSummary)||{totalPending:0,count:0};
   if(totalEl)totalEl.textContent=dolr(cs.totalPending||0);
-  if(countEl)countEl.textContent=(cs.count||0)+' '+(LANG==='es'?'crédito(s) pendiente(s)':'pending credit(s)');
+  if(countEl)countEl.textContent=(cs.count||0)+' '+t('creditsPending');
   // Rebuild detail list (keep hidden, toggle shows it)
   var detail=document.getElementById('cred-detail');
   if(!detail)return;
@@ -761,9 +805,9 @@ function renderCredits(){
     if(it.dueDate){
       var due=new Date(it.dueDate);due.setHours(0,0,0,0);
       var diff=Math.round((due-now)/(1000*60*60*24));
-      if(diff<0){dueHtml='<div class="cred-row-due overdue">⚠ '+(LANG==='es'?'Vencido hace '+Math.abs(diff)+'d':'Overdue '+Math.abs(diff)+'d ago')+'</div>';}
-      else if(diff<=3){dueHtml='<div class="cred-row-due soon">⏳ '+(LANG==='es'?'Vence en '+diff+'d':'Due in '+diff+'d')+'</div>';}
-      else{dueHtml='<div class="cred-row-due ok">'+(LANG==='es'?'Vence: ':'Due: ')+due.toLocaleDateString()+'</div>';}
+      if(diff<0){dueHtml='<div class="cred-row-due overdue">⚠ '+t('overdueN')+' '+Math.abs(diff)+t('overdueUnit')+'</div>';}
+      else if(diff<=3){dueHtml='<div class="cred-row-due soon">⏳ '+t('dueSoon')+' '+diff+t('dueUnit')+'</div>';}
+      else{dueHtml='<div class="cred-row-due ok">'+t('dueOn')+' '+due.toLocaleDateString()+'</div>';}
     }
     return '<div class="cred-row">'
       +'<div class="cred-row-info">'
@@ -781,7 +825,7 @@ function toggleCredDetail(){
   if(!detail)return;
   var open=detail.style.display==='none'||detail.style.display==='';
   detail.style.display=open?'block':'none';
-  if(hint)hint.textContent=open?(LANG==='es'?'▴ ocultar':'▴ hide'):(LANG==='es'?'▾ ver detalle':'▾ show detail');
+  if(hint)hint.textContent=open?t('hideDetail'):t('showDetail');
 }
 function renderShiftStatus(){
   var inEl=document.getElementById('shift-inline');
@@ -796,7 +840,7 @@ function renderShiftStatus(){
     return (_now-new Date(ts).getTime())<_staleMs;
   });
   if(active.length===0){
-    inEl.innerHTML='<span style="color:rgba(255,255,255,.3)">&#9679;</span> '+(LANG==='es'?'Sin turno activo':'No active shift');
+    inEl.innerHTML='<span style="color:rgba(255,255,255,.3)">&#9679;</span> '+t('noActiveShift');
     if(noteEl){noteEl.textContent='';noteEl.style.display='none';}
     return;
   }
@@ -909,11 +953,11 @@ function closeBanner(){document.getElementById('install-banner').style.display='
 <div id="snm-bg" onclick="closeNoteModal(event)">
   <div id="snm">
     <div id="snm-hd">
-      <h3>📝 <span id="snm-title">Nota del turno</span></h3>
+      <h3>📝 <span id="snm-title" data-t="shiftNoteTitle">Nota del turno</span></h3>
       <button onclick="closeNoteModal()" style="background:none;border:1.5px solid var(--brd2);border-radius:7px;color:var(--tx3);width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
     </div>
     <div id="snm-body"></div>
-    <div id="snm-ft"><button onclick="closeNoteModal()" class="btn-p" style="font-size:.88rem;padding:11px">Cerrar</button></div>
+    <div id="snm-ft"><button onclick="closeNoteModal()" class="btn-p" style="font-size:.88rem;padding:11px" data-t="close">Cerrar</button></div>
   </div>
 </div>
 </body>
