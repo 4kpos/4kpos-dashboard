@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>4K POS — Sistema de Punto de Venta Profesional</title>
+<title data-i18n="page_title">4K POS — Sistema de Punto de Venta Profesional</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;}
@@ -98,187 +98,195 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;}
 footer{background:#1a1a22;border-top:1.5px solid rgba(255,255,255,.07);padding:30px 20px;text-align:center;}
 footer .logo{font-size:1.2rem;font-weight:800;margin-bottom:8px;}
 footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
+.lang-switcher{position:fixed;top:12px;right:14px;z-index:2000;display:flex;gap:6px;}
+.lang-btn{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;color:rgba(255,255,255,.6);padding:4px 10px;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.lang-btn:hover,.lang-btn.on{border-color:#a78bfa;color:#a78bfa;background:rgba(167,139,250,.1);}
 </style>
 </head>
 <body>
 
+<!-- Language Switcher -->
+<div class="lang-switcher">
+  <button class="lang-btn on" id="btn-es" onclick="setLang('es')">ES</button>
+  <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+</div>
+
 <div class="hero">
   <div class="hero-logo"><span class="c1">4K</span> <span class="c2">P</span><span class="c3">O</span><span class="c4">S</span></div>
-  <div class="hero-tag">✨ Sistema Profesional de Punto de Venta</div>
-  <h1>Controla tu negocio<br>desde cualquier lugar</h1>
-  <p>POS completo para Windows con sincronización en la nube, dashboard en tu celular y todo lo que necesitas para vender más.</p>
+  <div class="hero-tag" data-i18n="hero_tag">✨ Sistema Profesional de Punto de Venta</div>
+  <h1 data-i18n="hero_h1">Controla tu negocio<br>desde cualquier lugar</h1>
+  <p data-i18n="hero_p">POS completo para Windows con sincronización en la nube, dashboard en tu celular y todo lo que necesitas para vender más.</p>
   <div class="hero-btns">
-    <a href="#pricing" class="btn-main">Ver planes y precios</a>
-    <a href="#features" class="btn-sec">Ver funciones</a>
-    <a href="https://github.com/4kpos/4kpos-app/releases/download/latest/4K.POS.Setup.5.0.0.exe" class="btn-sec" style="border-color:#34d399;color:#34d399">⬇️ Descargar gratis</a>
+    <a href="#pricing" class="btn-main" data-i18n="btn_see_plans">Ver planes y precios</a>
+    <a href="#features" class="btn-sec" data-i18n="btn_see_features">Ver funciones</a>
+    <a href="https://github.com/4kpos/4kpos-app/releases/download/latest/4K.POS.Setup.5.0.0.exe" class="btn-sec" style="border-color:#34d399;color:#34d399" data-i18n="btn_download">⬇️ Descargar gratis</a>
   </div>
 </div>
 
 <div class="features" id="features">
-  <h2>Todo lo que necesitas</h2>
-  <p class="sub">Diseñado para negocios pequeños y medianos en República Dominicana</p>
+  <h2 data-i18n="feat_h2">Todo lo que necesitas</h2>
+  <p class="sub" data-i18n="feat_sub">Diseñado para negocios pequeños y medianos en República Dominicana</p>
   <div class="feat-grid">
-    <div class="feat"><div class="feat-ico">🛒</div><h3>Punto de Venta Completo</h3><p>Cobra con efectivo, tarjeta o transferencia. Teclado numérico táctil, carrito de compras y recibo imprimible.</p></div>
-    <div class="feat"><div class="feat-ico">📱</div><h3>Dashboard en tu Celular</h3><p>Ve tus ventas en tiempo real desde el celular. Gráficas de ventas diarias, semanales y mensuales.</p></div>
-    <div class="feat"><div class="feat-ico">📦</div><h3>Control de Inventario</h3><p>Gestiona tu stock, recibe alertas de productos bajos y registra facturas de compra que actualizan el inventario.</p></div>
-    <div class="feat"><div class="feat-ico">🧾</div><h3>Recibos Profesionales</h3><p>Imprime recibos con tu logo, nombre del negocio, redes sociales y código QR. Compatible con impresoras térmicas.</p></div>
-    <div class="feat"><div class="feat-ico">👥</div><h3>Multi-Usuario</h3><p>Crea usuarios con roles. Admin con control total o cajero solo para cobrar. Login y cierre de turno con cuadre.</p></div>
-    <div class="feat"><div class="feat-ico">📒</div><h3>Contabilidad Básica</h3><p>Registra gastos, facturas de proveedores y ve gráficas de flujo de caja. Utilidad neta en tiempo real.</p></div>
-    <div class="feat"><div class="feat-ico">☁️</div><h3>Sincronización en la Nube</h3><p>Tus datos siempre seguros y accesibles. Sincronización automática cada 5 minutos.</p></div>
-    <div class="feat"><div class="feat-ico">🔐</div><h3>Seguro y Privado</h3><p>Código de admin protegido, acceso por turno y datos cifrados en la nube.</p></div>
+    <div class="feat"><div class="feat-ico">🛒</div><h3 data-i18n="feat1_title">Punto de Venta Completo</h3><p data-i18n="feat1_desc">Cobra con efectivo, tarjeta o transferencia. Teclado numérico táctil, carrito de compras y recibo imprimible.</p></div>
+    <div class="feat"><div class="feat-ico">📱</div><h3 data-i18n="feat2_title">Dashboard en tu Celular</h3><p data-i18n="feat2_desc">Ve tus ventas en tiempo real desde el celular. Gráficas de ventas diarias, semanales y mensuales.</p></div>
+    <div class="feat"><div class="feat-ico">📦</div><h3 data-i18n="feat3_title">Control de Inventario</h3><p data-i18n="feat3_desc">Gestiona tu stock, recibe alertas de productos bajos y registra facturas de compra que actualizan el inventario.</p></div>
+    <div class="feat"><div class="feat-ico">🧾</div><h3 data-i18n="feat4_title">Recibos Profesionales</h3><p data-i18n="feat4_desc">Imprime recibos con tu logo, nombre del negocio, redes sociales y código QR. Compatible con impresoras térmicas.</p></div>
+    <div class="feat"><div class="feat-ico">👥</div><h3 data-i18n="feat5_title">Multi-Usuario</h3><p data-i18n="feat5_desc">Crea usuarios con roles. Admin con control total o cajero solo para cobrar. Login y cierre de turno con cuadre.</p></div>
+    <div class="feat"><div class="feat-ico">📒</div><h3 data-i18n="feat6_title">Contabilidad Básica</h3><p data-i18n="feat6_desc">Registra gastos, facturas de proveedores y ve gráficas de flujo de caja. Utilidad neta en tiempo real.</p></div>
+    <div class="feat"><div class="feat-ico">☁️</div><h3 data-i18n="feat7_title">Sincronización en la Nube</h3><p data-i18n="feat7_desc">Tus datos siempre seguros y accesibles. Sincronización automática cada 5 minutos.</p></div>
+    <div class="feat"><div class="feat-ico">🔐</div><h3 data-i18n="feat8_title">Seguro y Privado</h3><p data-i18n="feat8_desc">Código de admin protegido, acceso por turno y datos cifrados en la nube.</p></div>
   </div>
 </div>
 
 <div class="screens">
-  <h2>Una app completa</h2>
-  <p class="sub">Todo desde una sola pantalla</p>
+  <h2 data-i18n="screens_h2">Una app completa</h2>
+  <p class="sub" data-i18n="screens_sub">Todo desde una sola pantalla</p>
   <div class="screen-grid">
-    <div class="screen-card"><h4>📋 Lista de Precios</h4><p>Agrega productos con fotos, categorías y códigos de barras</p></div>
-    <div class="screen-card"><h4>🛒 Cobro Rápido</h4><p>Toca el producto, ingresa el efectivo y cobra en segundos</p></div>
-    <div class="screen-card"><h4>📊 Ventas del Día</h4><p>Ve todas las ventas, cancela o procesa devoluciones</p></div>
-    <div class="screen-card"><h4>📱 Dashboard Celular</h4><p>Ingresos, órdenes y productos más vendidos en tu celular</p></div>
-    <div class="screen-card"><h4>📒 Contabilidad</h4><p>Gastos, facturas y gráficas de rentabilidad</p></div>
-    <div class="screen-card"><h4>⚙️ Configurable</h4><p>Tu logo, nombre, mensaje de gracias y redes sociales en el recibo</p></div>
+    <div class="screen-card"><h4 data-i18n="sc1_title">📋 Lista de Precios</h4><p data-i18n="sc1_desc">Agrega productos con fotos, categorías y códigos de barras</p></div>
+    <div class="screen-card"><h4 data-i18n="sc2_title">🛒 Cobro Rápido</h4><p data-i18n="sc2_desc">Toca el producto, ingresa el efectivo y cobra en segundos</p></div>
+    <div class="screen-card"><h4 data-i18n="sc3_title">📊 Ventas del Día</h4><p data-i18n="sc3_desc">Ve todas las ventas, cancela o procesa devoluciones</p></div>
+    <div class="screen-card"><h4 data-i18n="sc4_title">📱 Dashboard Celular</h4><p data-i18n="sc4_desc">Ingresos, órdenes y productos más vendidos en tu celular</p></div>
+    <div class="screen-card"><h4 data-i18n="sc5_title">📒 Contabilidad</h4><p data-i18n="sc5_desc">Gastos, facturas y gráficas de rentabilidad</p></div>
+    <div class="screen-card"><h4 data-i18n="sc6_title">⚙️ Configurable</h4><p data-i18n="sc6_desc">Tu logo, nombre, mensaje de gracias y redes sociales en el recibo</p></div>
   </div>
 </div>
 
 <div class="pricing" id="pricing">
-  <h2>Planes y Precios</h2>
-  <p class="sub">Elige el plan que mejor se adapte a tu negocio</p>
+  <h2 data-i18n="pricing_h2">Planes y Precios</h2>
+  <p class="sub" data-i18n="pricing_sub">Elige el plan que mejor se adapte a tu negocio</p>
   <div class="toggle-wrap">
-    <span class="toggle-lbl" id="lbl-monthly">Mensual</span>
+    <span class="toggle-lbl" id="lbl-monthly" data-i18n="billing_monthly">Mensual</span>
     <div class="toggle" id="billing-toggle" onclick="toggleBilling()"><div class="toggle-dot"></div></div>
-    <span class="toggle-lbl on" id="lbl-lifetime">Pago único</span>
-    <span class="save-badge">Ahorra 50%+</span>
+    <span class="toggle-lbl on" id="lbl-lifetime" data-i18n="billing_lifetime">Pago único</span>
+    <span class="save-badge" data-i18n="save_badge">Ahorra 50%+</span>
   </div>
   <div class="plans">
     <div class="plan">
-      <div class="plan-name">Basico</div>
-      <div class="plan-price" id="basic-price">$99<span> único</span></div>
-      <div class="plan-orig" id="basic-orig">o $15/mes</div>
+      <div class="plan-name" data-i18n="plan_basic_name">Basico</div>
+      <div class="plan-price" id="basic-price">$99<span data-i18n="price_once"> único</span></div>
+      <div class="plan-orig" id="basic-orig" data-i18n="basic_orig_monthly">o $15/mes</div>
       <ul class="plan-features">
-        <li><span class="check">✓</span> 1 dispositivo (PC)</li>
-        <li><span class="check">✓</span> POS completo</li>
-        <li><span class="check">✓</span> Control de inventario</li>
-        <li><span class="check">✓</span> Multi-usuario</li>
-        <li><span class="check">✓</span> Recibos con logo</li>
-        <li><span class="check">✓</span> Contabilidad básica</li>
-        <li><span class="x">✗</span> Dashboard celular</li>
-        <li><span class="x">✗</span> Sincronización nube</li>
+        <li><span class="check">✓</span> <span data-i18n="feat_1_device">1 dispositivo (PC)</span></li>
+        <li><span class="check">✓</span> <span data-i18n="feat_full_pos">POS completo</span></li>
+        <li><span class="check">✓</span> <span data-i18n="feat_inventory">Control de inventario</span></li>
+        <li><span class="check">✓</span> <span data-i18n="feat_multiuser">Multi-usuario</span></li>
+        <li><span class="check">✓</span> <span data-i18n="feat_receipts">Recibos con logo</span></li>
+        <li><span class="check">✓</span> <span data-i18n="feat_accounting">Contabilidad básica</span></li>
+        <li><span class="x">✗</span> <span data-i18n="feat_mobile_dash">Dashboard celular</span></li>
+        <li><span class="x">✗</span> <span data-i18n="feat_cloud_sync">Sincronización nube</span></li>
       </ul>
-      <button class="plan-btn s" onclick="openCheckout('basic')">Comenzar ahora</button>
+      <button class="plan-btn s" onclick="openCheckout('basic')" data-i18n="btn_start_now">Comenzar ahora</button>
     </div>
     <div class="plan featured">
-      <div class="plan-badge">MAS POPULAR</div>
-      <div class="plan-name">Pro</div>
-      <div class="plan-price" id="pro-price">$199<span> único</span></div>
-      <div class="plan-orig" id="pro-orig">o $35/mes</div>
+      <div class="plan-badge" data-i18n="plan_popular">MAS POPULAR</div>
+      <div class="plan-name" data-i18n="plan_pro_name">Pro</div>
+      <div class="plan-price" id="pro-price">$199<span data-i18n="price_once"> único</span></div>
+      <div class="plan-orig" id="pro-orig" data-i18n="pro_orig_monthly">o $35/mes</div>
       <ul class="plan-features">
-        <li><span class="check">✓</span> Hasta 3 dispositivos</li>
-        <li><span class="check">✓</span> POS completo</li>
-        <li><span class="check">✓</span> Control de inventario</li>
-        <li><span class="check">✓</span> Multi-usuario</li>
-        <li><span class="check">✓</span> Recibos con logo</li>
-        <li><span class="check">✓</span> Contabilidad básica</li>
-        <li><span class="check">✓</span> Dashboard celular</li>
-        <li><span class="check">✓</span> Sincronización nube</li>
+        <li><span class="check">✓</span> <span data-i18n="feat_3_devices">Hasta 3 dispositivos</span></li>
+        <li><span class="check">✓</span> <span data-i18n="feat_full_pos">POS completo</span></li>
+        <li><span class="check">✓</span> <span data-i18n="feat_inventory">Control de inventario</span></li>
+        <li><span class="check">✓</span> <span data-i18n="feat_multiuser">Multi-usuario</span></li>
+        <li><span class="check">✓</span> <span data-i18n="feat_receipts">Recibos con logo</span></li>
+        <li><span class="check">✓</span> <span data-i18n="feat_accounting">Contabilidad básica</span></li>
+        <li><span class="check">✓</span> <span data-i18n="feat_mobile_dash">Dashboard celular</span></li>
+        <li><span class="check">✓</span> <span data-i18n="feat_cloud_sync">Sincronización nube</span></li>
       </ul>
-      <button class="plan-btn p" onclick="openCheckout('pro')">Comenzar ahora</button>
+      <button class="plan-btn p" onclick="openCheckout('pro')" data-i18n="btn_start_now">Comenzar ahora</button>
     </div>
   </div>
-  <div style="text-align:center;margin-top:20px;font-size:.8rem;color:rgba(255,255,255,.3)">
+  <div style="text-align:center;margin-top:20px;font-size:.8rem;color:rgba(255,255,255,.3)" data-i18n="payment_footer">
     Pagos seguros procesados por Stripe · Soporte por WhatsApp incluido
   </div>
 </div>
 
 <div class="faq">
-  <h2>Preguntas frecuentes</h2>
+  <h2 data-i18n="faq_h2">Preguntas frecuentes</h2>
   <div class="faq-item" onclick="this.classList.toggle('open')">
-    <div class="faq-q">¿Necesito internet para usarlo? <span>+</span></div>
-    <div class="faq-a">El POS funciona sin internet. La sincronización con la nube y el dashboard del celular requieren conexión, pero puedes cobrar sin problema aunque no tengas internet.</div>
+    <div class="faq-q"><span data-i18n="faq1_q">¿Necesito internet para usarlo?</span> <span>+</span></div>
+    <div class="faq-a" data-i18n="faq1_a">El POS funciona sin internet. La sincronización con la nube y el dashboard del celular requieren conexión, pero puedes cobrar sin problema aunque no tengas internet.</div>
   </div>
   <div class="faq-item" onclick="this.classList.toggle('open')">
-    <div class="faq-q">¿Es compatible con impresoras térmicas? <span>+</span></div>
-    <div class="faq-a">Sí, es compatible con cualquier impresora térmica que funcione en Windows. Conectas la impresora y listo, no necesitas configuración especial.</div>
+    <div class="faq-q"><span data-i18n="faq2_q">¿Es compatible con impresoras térmicas?</span> <span>+</span></div>
+    <div class="faq-a" data-i18n="faq2_a">Sí, es compatible con cualquier impresora térmica que funcione en Windows. Conectas la impresora y listo, no necesitas configuración especial.</div>
   </div>
   <div class="faq-item" onclick="this.classList.toggle('open')">
-    <div class="faq-q">¿Cómo recibo el programa después de pagar? <span>+</span></div>
-    <div class="faq-a">Inmediatamente después del pago recibes tu clave de licencia y el link de descarga directa del instalador. El proceso es automático.</div>
+    <div class="faq-q"><span data-i18n="faq3_q">¿Cómo recibo el programa después de pagar?</span> <span>+</span></div>
+    <div class="faq-a" data-i18n="faq3_a">Inmediatamente después del pago recibes tu clave de licencia y el link de descarga directa del instalador. El proceso es automático.</div>
   </div>
   <div class="faq-item" onclick="this.classList.toggle('open')">
-    <div class="faq-q">¿Puedo cambiar de plan después? <span>+</span></div>
-    <div class="faq-a">Sí, puedes actualizar de Básico a Pro pagando la diferencia. Contáctanos por WhatsApp y lo hacemos en minutos.</div>
+    <div class="faq-q"><span data-i18n="faq4_q">¿Puedo cambiar de plan después?</span> <span>+</span></div>
+    <div class="faq-a" data-i18n="faq4_a">Sí, puedes actualizar de Básico a Pro pagando la diferencia. Contáctanos por WhatsApp y lo hacemos en minutos.</div>
   </div>
   <div class="faq-item" onclick="this.classList.toggle('open')">
-    <div class="faq-q">¿Qué pasa si tengo problemas técnicos? <span>+</span></div>
-    <div class="faq-a">Ofrecemos soporte por WhatsApp. Te ayudamos a instalar, configurar y resolver cualquier problema que tengas.</div>
+    <div class="faq-q"><span data-i18n="faq5_q">¿Qué pasa si tengo problemas técnicos?</span> <span>+</span></div>
+    <div class="faq-a" data-i18n="faq5_a">Ofrecemos soporte por WhatsApp. Te ayudamos a instalar, configurar y resolver cualquier problema que tengas.</div>
   </div>
 </div>
 
 <footer>
   <div class="logo"><span class="c1">4K</span> <span class="c2">P</span><span class="c3">O</span><span class="c4">S</span></div>
-  
   <p style="margin-top:4px;font-size:.76rem"><span style="color:#1e3a8a;font-weight:700">4K</span> <span style="color:#e6b800;font-weight:700">Solutions</span></p>
-  <p style="margin-top:6px">© 2026 4K POS · Todos los derechos reservados</p>
+  <p style="margin-top:6px" data-i18n="footer_copy">© 2026 4K POS · Todos los derechos reservados</p>
 </footer>
 
 <!-- CHECKOUT MODAL -->
 <div class="modal-bg" id="checkout-modal">
   <div class="modal">
     <div class="mh">
-      <h3 id="checkout-title">Completar compra</h3>
+      <h3 id="checkout-title" data-i18n="modal_title">Completar compra</h3>
       <button class="mx" onclick="closeCheckout()">✕</button>
     </div>
     <div class="mb" id="checkout-body">
       <div id="step-info">
         <div class="order-sum" id="order-summary"></div>
-        <div class="fg"><label class="lbl">Nombre completo</label><input type="text" class="fi" id="c-name" placeholder="Tu nombre"></div>
-        <div class="fg"><label class="lbl">Email</label><input type="email" class="fi" id="c-email" placeholder="tu@email.com"></div>
-        <div class="fg"><label class="lbl">Nombre del negocio</label><input type="text" class="fi" id="c-biz" placeholder="Mi Negocio"></div>
-        <div style="font-size:.76rem;color:rgba(255,255,255,.35);margin-bottom:14px">Tu clave de licencia llegará a este email inmediatamente después del pago.</div>
-        <button class="submit-btn" onclick="goToPayment()">Continuar al pago →</button>
+        <div class="fg"><label class="lbl" data-i18n="form_name_lbl">Nombre completo</label><input type="text" class="fi" id="c-name" data-i18n-placeholder="form_name_ph" placeholder="Tu nombre"></div>
+        <div class="fg"><label class="lbl" data-i18n="form_email_lbl">Email</label><input type="email" class="fi" id="c-email" placeholder="tu@email.com"></div>
+        <div class="fg"><label class="lbl" data-i18n="form_biz_lbl">Nombre del negocio</label><input type="text" class="fi" id="c-biz" data-i18n-placeholder="form_biz_ph" placeholder="Mi Negocio"></div>
+        <div style="font-size:.76rem;color:rgba(255,255,255,.35);margin-bottom:14px" data-i18n="form_email_hint">Tu clave de licencia llegará a este email inmediatamente después del pago.</div>
+        <button class="submit-btn" onclick="goToPayment()" data-i18n="btn_continue_payment">Continuar al pago →</button>
       </div>
       <div id="step-payment" style="display:none">
         <div class="order-sum" id="order-summary-2"></div>
-        <div class="lbl" style="margin-bottom:10px">Metodo de pago</div>
+        <div class="lbl" style="margin-bottom:10px" data-i18n="pay_method_lbl">Metodo de pago</div>
         <div class="pay-methods">
-          <div class="pm on" onclick="selPay('card',this)"><div class="pm-ico">💳</div><div class="pm-lbl">Tarjeta</div></div>
+          <div class="pm on" onclick="selPay('card',this)"><div class="pm-ico">💳</div><div class="pm-lbl" data-i18n="pay_card">Tarjeta</div></div>
           <div class="pm" onclick="selPay('paypal',this)"><div class="pm-ico">🅿️</div><div class="pm-lbl">PayPal</div></div>
-          <div class="pm" onclick="selPay('transfer',this)"><div class="pm-ico">🏦</div><div class="pm-lbl">Transfer</div></div>
+          <div class="pm" onclick="selPay('transfer',this)"><div class="pm-ico">🏦</div><div class="pm-lbl" data-i18n="pay_transfer">Transfer</div></div>
         </div>
         <div id="pay-card-form">
-          <div class="fg"><label class="lbl">Numero de tarjeta</label><input type="text" class="fi" id="c-card" placeholder="4242 4242 4242 4242" maxlength="19" oninput="fmtCard(this)"></div>
+          <div class="fg"><label class="lbl" data-i18n="card_number_lbl">Numero de tarjeta</label><input type="text" class="fi" id="c-card" placeholder="4242 4242 4242 4242" maxlength="19" oninput="fmtCard(this)"></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <div class="fg"><label class="lbl">Vencimiento</label><input type="text" class="fi" id="c-exp" placeholder="MM/AA" maxlength="5" oninput="fmtExp(this)"></div>
+            <div class="fg"><label class="lbl" data-i18n="card_exp_lbl">Vencimiento</label><input type="text" class="fi" id="c-exp" placeholder="MM/AA" maxlength="5" oninput="fmtExp(this)"></div>
             <div class="fg"><label class="lbl">CVV</label><input type="text" class="fi" id="c-cvv" placeholder="123" maxlength="4"></div>
           </div>
         </div>
         <div id="pay-paypal-form" style="display:none;text-align:center;padding:20px">
-          <p style="color:rgba(255,255,255,.5);font-size:.84rem">Serás redirigido a PayPal para completar el pago de forma segura.</p>
+          <p style="color:rgba(255,255,255,.5);font-size:.84rem" data-i18n="paypal_redirect">Serás redirigido a PayPal para completar el pago de forma segura.</p>
         </div>
         <div id="pay-transfer-form" style="display:none">
           <div style="background:#0f0f13;border-radius:10px;padding:14px;font-size:.82rem;color:rgba(255,255,255,.6)">
-            <p style="margin-bottom:8px">Realiza la transferencia a:</p>
-            <p><strong style="color:#fff">Banco: </strong>Banco Popular</p>
-            <p><strong style="color:#fff">Cuenta: </strong>000-000000-0</p>
-            <p><strong style="color:#fff">A nombre de: </strong>4K POS</p>
-            <p style="margin-top:10px;color:rgba(255,255,255,.4);font-size:.76rem">Envía el comprobante por WhatsApp y activamos tu licencia en menos de 1 hora.</p>
+            <p style="margin-bottom:8px" data-i18n="transfer_intro">Realiza la transferencia a:</p>
+            <p><strong style="color:#fff" data-i18n="transfer_bank_lbl">Banco: </strong><span data-i18n="transfer_bank_val">Banco Popular</span></p>
+            <p><strong style="color:#fff" data-i18n="transfer_acct_lbl">Cuenta: </strong>000-000000-0</p>
+            <p><strong style="color:#fff" data-i18n="transfer_name_lbl">A nombre de: </strong>4K POS</p>
+            <p style="margin-top:10px;color:rgba(255,255,255,.4);font-size:.76rem" data-i18n="transfer_note">Envía el comprobante por WhatsApp y activamos tu licencia en menos de 1 hora.</p>
           </div>
         </div>
-        <button class="submit-btn" style="margin-top:16px" onclick="processPayment()" id="pay-btn">Pagar ahora</button>
-        <div style="text-align:center;margin-top:10px;font-size:.74rem;color:rgba(255,255,255,.25)">🔒 Pago seguro con Stripe</div>
+        <button class="submit-btn" style="margin-top:16px" onclick="processPayment()" id="pay-btn" data-i18n="btn_pay_now">Pagar ahora</button>
+        <div style="text-align:center;margin-top:10px;font-size:.74rem;color:rgba(255,255,255,.25)" data-i18n="secure_stripe">🔒 Pago seguro con Stripe</div>
       </div>
       <div id="step-success" style="display:none">
         <div class="success-box">
           <div style="font-size:3rem;margin-bottom:14px">🎉</div>
-          <h3 style="font-size:1.1rem;margin-bottom:8px">¡Pago exitoso!</h3>
-          <p style="font-size:.84rem;color:rgba(255,255,255,.5);margin-bottom:16px">Tu licencia ha sido activada. Revisa tu email.</p>
-          <div class="lbl" style="margin-bottom:8px">Tu clave de licencia:</div>
+          <h3 style="font-size:1.1rem;margin-bottom:8px" data-i18n="success_title">¡Pago exitoso!</h3>
+          <p style="font-size:.84rem;color:rgba(255,255,255,.5);margin-bottom:16px" data-i18n="success_subtitle">Tu licencia ha sido activada. Revisa tu email.</p>
+          <div class="lbl" style="margin-bottom:8px" data-i18n="success_key_lbl">Tu clave de licencia:</div>
           <div class="success-key" id="success-key">4K-XXXX-XXXX-XXXX</div>
-          <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin-bottom:20px">Guarda esta clave. También la recibiste por email.</p>
-          <a href="https://github.com/4kpos/4kpos-app/releases/download/latest/4K.POS.Setup.5.0.0.exe" class="dl-btn">⬇️ Descargar 4K POS para Windows</a>
+          <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin-bottom:20px" data-i18n="success_key_note">Guarda esta clave. También la recibiste por email.</p>
+          <a href="https://github.com/4kpos/4kpos-app/releases/download/latest/4K.POS.Setup.5.0.0.exe" class="dl-btn" data-i18n="btn_download_windows">⬇️ Descargar 4K POS para Windows</a>
           <br>
-          <a href="https://4kpos.github.io/4kpos-dashboard/4kpos-dashboard.html" class="btn-sec" style="font-size:.82rem;padding:10px 20px">📱 Ver dashboard en celular</a>
+          <a href="https://4kpos.github.io/4kpos-dashboard/4kpos-dashboard.html" class="btn-sec" style="font-size:.82rem;padding:10px 20px" data-i18n="btn_view_mobile_dash">📱 Ver dashboard en celular</a>
         </div>
       </div>
     </div>
@@ -288,77 +296,388 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
 <script>
 const API = 'https://izalnhluwtyotuxwkqrh.supabase.co/functions/v1/posapi';
 let selectedPlan = null, billingMonthly = false, selectedPayMethod = 'card';
+let currentLang = 'es';
 
+// ─── Translation Object ───────────────────────────────────────────────────────
+const T = {
+  es: {
+    page_title: '4K POS — Sistema de Punto de Venta Profesional',
+    hero_tag: '✨ Sistema Profesional de Punto de Venta',
+    hero_h1: 'Controla tu negocio<br>desde cualquier lugar',
+    hero_p: 'POS completo para Windows con sincronización en la nube, dashboard en tu celular y todo lo que necesitas para vender más.',
+    btn_see_plans: 'Ver planes y precios',
+    btn_see_features: 'Ver funciones',
+    btn_download: '⬇️ Descargar gratis',
+
+    feat_h2: 'Todo lo que necesitas',
+    feat_sub: 'Diseñado para negocios pequeños y medianos en República Dominicana',
+    feat1_title: 'Punto de Venta Completo',
+    feat1_desc: 'Cobra con efectivo, tarjeta o transferencia. Teclado numérico táctil, carrito de compras y recibo imprimible.',
+    feat2_title: 'Dashboard en tu Celular',
+    feat2_desc: 'Ve tus ventas en tiempo real desde el celular. Gráficas de ventas diarias, semanales y mensuales.',
+    feat3_title: 'Control de Inventario',
+    feat3_desc: 'Gestiona tu stock, recibe alertas de productos bajos y registra facturas de compra que actualizan el inventario.',
+    feat4_title: 'Recibos Profesionales',
+    feat4_desc: 'Imprime recibos con tu logo, nombre del negocio, redes sociales y código QR. Compatible con impresoras térmicas.',
+    feat5_title: 'Multi-Usuario',
+    feat5_desc: 'Crea usuarios con roles. Admin con control total o cajero solo para cobrar. Login y cierre de turno con cuadre.',
+    feat6_title: 'Contabilidad Básica',
+    feat6_desc: 'Registra gastos, facturas de proveedores y ve gráficas de flujo de caja. Utilidad neta en tiempo real.',
+    feat7_title: 'Sincronización en la Nube',
+    feat7_desc: 'Tus datos siempre seguros y accesibles. Sincronización automática cada 5 minutos.',
+    feat8_title: 'Seguro y Privado',
+    feat8_desc: 'Código de admin protegido, acceso por turno y datos cifrados en la nube.',
+
+    screens_h2: 'Una app completa',
+    screens_sub: 'Todo desde una sola pantalla',
+    sc1_title: '📋 Lista de Precios',
+    sc1_desc: 'Agrega productos con fotos, categorías y códigos de barras',
+    sc2_title: '🛒 Cobro Rápido',
+    sc2_desc: 'Toca el producto, ingresa el efectivo y cobra en segundos',
+    sc3_title: '📊 Ventas del Día',
+    sc3_desc: 'Ve todas las ventas, cancela o procesa devoluciones',
+    sc4_title: '📱 Dashboard Celular',
+    sc4_desc: 'Ingresos, órdenes y productos más vendidos en tu celular',
+    sc5_title: '📒 Contabilidad',
+    sc5_desc: 'Gastos, facturas y gráficas de rentabilidad',
+    sc6_title: '⚙️ Configurable',
+    sc6_desc: 'Tu logo, nombre, mensaje de gracias y redes sociales en el recibo',
+
+    pricing_h2: 'Planes y Precios',
+    pricing_sub: 'Elige el plan que mejor se adapte a tu negocio',
+    billing_monthly: 'Mensual',
+    billing_lifetime: 'Pago único',
+    save_badge: 'Ahorra 50%+',
+    plan_basic_name: 'Basico',
+    plan_pro_name: 'Pro',
+    plan_popular: 'MAS POPULAR',
+    price_once: ' único',
+    price_month: '/mes',
+    price_once_label: 'pago unico',
+    basic_orig_monthly: 'o $15/mes',
+    pro_orig_monthly: 'o $35/mes',
+    feat_1_device: '1 dispositivo (PC)',
+    feat_3_devices: 'Hasta 3 dispositivos',
+    feat_full_pos: 'POS completo',
+    feat_inventory: 'Control de inventario',
+    feat_multiuser: 'Multi-usuario',
+    feat_receipts: 'Recibos con logo',
+    feat_accounting: 'Contabilidad básica',
+    feat_mobile_dash: 'Dashboard celular',
+    feat_cloud_sync: 'Sincronización nube',
+    btn_start_now: 'Comenzar ahora',
+    payment_footer: 'Pagos seguros procesados por Stripe · Soporte por WhatsApp incluido',
+
+    faq_h2: 'Preguntas frecuentes',
+    faq1_q: '¿Necesito internet para usarlo?',
+    faq1_a: 'El POS funciona sin internet. La sincronización con la nube y el dashboard del celular requieren conexión, pero puedes cobrar sin problema aunque no tengas internet.',
+    faq2_q: '¿Es compatible con impresoras térmicas?',
+    faq2_a: 'Sí, es compatible con cualquier impresora térmica que funcione en Windows. Conectas la impresora y listo, no necesitas configuración especial.',
+    faq3_q: '¿Cómo recibo el programa después de pagar?',
+    faq3_a: 'Inmediatamente después del pago recibes tu clave de licencia y el link de descarga directa del instalador. El proceso es automático.',
+    faq4_q: '¿Puedo cambiar de plan después?',
+    faq4_a: 'Sí, puedes actualizar de Básico a Pro pagando la diferencia. Contáctanos por WhatsApp y lo hacemos en minutos.',
+    faq5_q: '¿Qué pasa si tengo problemas técnicos?',
+    faq5_a: 'Ofrecemos soporte por WhatsApp. Te ayudamos a instalar, configurar y resolver cualquier problema que tengas.',
+
+    footer_copy: '© 2026 4K POS · Todos los derechos reservados',
+
+    modal_title: 'Completar compra',
+    modal_buy: 'Comprar ',
+    form_name_lbl: 'Nombre completo',
+    form_name_ph: 'Tu nombre',
+    form_email_lbl: 'Email',
+    form_biz_lbl: 'Nombre del negocio',
+    form_biz_ph: 'Mi Negocio',
+    form_email_hint: 'Tu clave de licencia llegará a este email inmediatamente después del pago.',
+    btn_continue_payment: 'Continuar al pago →',
+    pay_method_lbl: 'Metodo de pago',
+    pay_card: 'Tarjeta',
+    pay_transfer: 'Transfer',
+    card_number_lbl: 'Numero de tarjeta',
+    card_exp_lbl: 'Vencimiento',
+    paypal_redirect: 'Serás redirigido a PayPal para completar el pago de forma segura.',
+    transfer_intro: 'Realiza la transferencia a:',
+    transfer_bank_lbl: 'Banco: ',
+    transfer_bank_val: 'Banco Popular',
+    transfer_acct_lbl: 'Cuenta: ',
+    transfer_name_lbl: 'A nombre de: ',
+    transfer_note: 'Envía el comprobante por WhatsApp y activamos tu licencia en menos de 1 hora.',
+    btn_pay_now: 'Pagar ahora',
+    btn_send_proof: 'Enviar comprobante',
+    btn_processing: 'Procesando...',
+    secure_stripe: '🔒 Pago seguro con Stripe',
+    success_title: '¡Pago exitoso!',
+    success_subtitle: 'Tu licencia ha sido activada. Revisa tu email.',
+    success_key_lbl: 'Tu clave de licencia:',
+    success_key_note: 'Guarda esta clave. También la recibiste por email.',
+    btn_download_windows: '⬇️ Descargar 4K POS para Windows',
+    btn_view_mobile_dash: '📱 Ver dashboard en celular',
+
+    alert_fill_name_email: 'Por favor completa tu nombre y email.',
+    alert_error: 'Error: ',
+
+    order_devices: 'Dispositivos',
+    order_total: 'Total',
+    order_pc_singular: ' PC',
+    order_pc_plural: ' PCs',
+    order_monthly_suffix: '/mes',
+    order_once_suffix: ' pago unico'
+  },
+
+  en: {
+    page_title: '4K POS — Professional Point of Sale System',
+    hero_tag: '✨ Professional Point of Sale System',
+    hero_h1: 'Control your business<br>from anywhere',
+    hero_p: 'Complete POS for Windows with cloud sync, mobile dashboard and everything you need to sell more.',
+    btn_see_plans: 'See plans & pricing',
+    btn_see_features: 'See features',
+    btn_download: '⬇️ Download free',
+
+    feat_h2: 'Everything you need',
+    feat_sub: 'Designed for small and medium businesses',
+    feat1_title: 'Complete Point of Sale',
+    feat1_desc: 'Accept cash, card or transfer. Touch numeric keypad, shopping cart and printable receipt.',
+    feat2_title: 'Mobile Dashboard',
+    feat2_desc: 'View your sales in real time from your phone. Daily, weekly and monthly sales charts.',
+    feat3_title: 'Inventory Control',
+    feat3_desc: 'Manage your stock, get low-product alerts and log purchase invoices that update inventory.',
+    feat4_title: 'Professional Receipts',
+    feat4_desc: 'Print receipts with your logo, business name, social media and QR code. Compatible with thermal printers.',
+    feat5_title: 'Multi-User',
+    feat5_desc: 'Create users with roles. Admin with full control or cashier for checkout only. Login and shift close with reconciliation.',
+    feat6_title: 'Basic Accounting',
+    feat6_desc: 'Record expenses, supplier invoices and view cash flow charts. Net profit in real time.',
+    feat7_title: 'Cloud Sync',
+    feat7_desc: 'Your data always safe and accessible. Automatic sync every 5 minutes.',
+    feat8_title: 'Secure & Private',
+    feat8_desc: 'Protected admin code, shift-based access and encrypted cloud data.',
+
+    screens_h2: 'A complete app',
+    screens_sub: 'Everything from a single screen',
+    sc1_title: '📋 Price List',
+    sc1_desc: 'Add products with photos, categories and barcodes',
+    sc2_title: '🛒 Quick Checkout',
+    sc2_desc: 'Tap the product, enter cash and charge in seconds',
+    sc3_title: '📊 Daily Sales',
+    sc3_desc: 'View all sales, cancel or process returns',
+    sc4_title: '📱 Mobile Dashboard',
+    sc4_desc: 'Revenue, orders and top-selling products on your phone',
+    sc5_title: '📒 Accounting',
+    sc5_desc: 'Expenses, invoices and profitability charts',
+    sc6_title: '⚙️ Configurable',
+    sc6_desc: 'Your logo, name, thank-you message and social media on the receipt',
+
+    pricing_h2: 'Plans & Pricing',
+    pricing_sub: 'Choose the plan that best fits your business',
+    billing_monthly: 'Monthly',
+    billing_lifetime: 'One-time',
+    save_badge: 'Save 50%+',
+    plan_basic_name: 'Basic',
+    plan_pro_name: 'Pro',
+    plan_popular: 'MOST POPULAR',
+    price_once: ' one-time',
+    price_month: '/mo',
+    price_once_label: 'one-time',
+    basic_orig_monthly: 'or $15/mo',
+    pro_orig_monthly: 'or $35/mo',
+    feat_1_device: '1 device (PC)',
+    feat_3_devices: 'Up to 3 devices',
+    feat_full_pos: 'Full POS',
+    feat_inventory: 'Inventory control',
+    feat_multiuser: 'Multi-user',
+    feat_receipts: 'Receipts with logo',
+    feat_accounting: 'Basic accounting',
+    feat_mobile_dash: 'Mobile dashboard',
+    feat_cloud_sync: 'Cloud sync',
+    btn_start_now: 'Get started',
+    payment_footer: 'Secure payments powered by Stripe · WhatsApp support included',
+
+    faq_h2: 'Frequently asked questions',
+    faq1_q: 'Do I need internet to use it?',
+    faq1_a: 'The POS works offline. Cloud sync and the mobile dashboard require a connection, but you can take payments even without internet.',
+    faq2_q: 'Is it compatible with thermal printers?',
+    faq2_a: 'Yes, it works with any thermal printer that runs on Windows. Plug in the printer and you\'re ready — no special configuration needed.',
+    faq3_q: 'How do I receive the software after paying?',
+    faq3_a: 'Immediately after payment you receive your license key and a direct download link for the installer. The process is automatic.',
+    faq4_q: 'Can I upgrade my plan later?',
+    faq4_a: 'Yes, you can upgrade from Basic to Pro by paying the difference. Contact us on WhatsApp and we\'ll do it in minutes.',
+    faq5_q: 'What if I have technical problems?',
+    faq5_a: 'We offer WhatsApp support. We help you install, configure and resolve any issue you have.',
+
+    footer_copy: '© 2026 4K POS · All rights reserved',
+
+    modal_title: 'Complete purchase',
+    modal_buy: 'Buy ',
+    form_name_lbl: 'Full name',
+    form_name_ph: 'Your name',
+    form_email_lbl: 'Email',
+    form_biz_lbl: 'Business name',
+    form_biz_ph: 'My Business',
+    form_email_hint: 'Your license key will be sent to this email immediately after payment.',
+    btn_continue_payment: 'Continue to payment →',
+    pay_method_lbl: 'Payment method',
+    pay_card: 'Card',
+    pay_transfer: 'Transfer',
+    card_number_lbl: 'Card number',
+    card_exp_lbl: 'Expiry',
+    paypal_redirect: 'You will be redirected to PayPal to complete the payment securely.',
+    transfer_intro: 'Send the transfer to:',
+    transfer_bank_lbl: 'Bank: ',
+    transfer_bank_val: 'Banco Popular',
+    transfer_acct_lbl: 'Account: ',
+    transfer_name_lbl: 'Name: ',
+    transfer_note: 'Send the receipt via WhatsApp and we will activate your license within 1 hour.',
+    btn_pay_now: 'Pay now',
+    btn_send_proof: 'Send receipt',
+    btn_processing: 'Processing...',
+    secure_stripe: '🔒 Secure payment with Stripe',
+    success_title: 'Payment successful!',
+    success_subtitle: 'Your license has been activated. Check your email.',
+    success_key_lbl: 'Your license key:',
+    success_key_note: 'Save this key. You also received it by email.',
+    btn_download_windows: '⬇️ Download 4K POS for Windows',
+    btn_view_mobile_dash: '📱 View mobile dashboard',
+
+    alert_fill_name_email: 'Please fill in your name and email.',
+    alert_error: 'Error: ',
+
+    order_devices: 'Devices',
+    order_total: 'Total',
+    order_pc_singular: ' PC',
+    order_pc_plural: ' PCs',
+    order_monthly_suffix: '/mo',
+    order_once_suffix: ' one-time'
+  }
+};
+
+// ─── Translation helpers ──────────────────────────────────────────────────────
+function t(key) {
+  return (T[currentLang] && T[currentLang][key]) || (T['es'][key]) || key;
+}
+
+function applyLang() {
+  // Update <title>
+  document.title = t('page_title');
+
+  // Update all data-i18n elements (innerHTML for ones that may contain <br>)
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    var val = t(key);
+    // Use innerHTML for keys that might contain HTML tags
+    if (val.indexOf('<') !== -1) {
+      el.innerHTML = val;
+    } else {
+      el.textContent = val;
+    }
+  });
+
+  // Update placeholder attributes
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-placeholder');
+    el.placeholder = t(key);
+  });
+
+  // Update html lang attribute
+  document.documentElement.lang = currentLang;
+
+  // Update lang button active states
+  document.getElementById('btn-es').classList.toggle('on', currentLang === 'es');
+  document.getElementById('btn-en').classList.toggle('on', currentLang === 'en');
+
+  // Re-render dynamic price strings
+  updatePrices();
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  applyLang();
+}
+
+// ─── Plans ────────────────────────────────────────────────────────────────────
 const PLANS = {
-  basic:  { name:'Plan Basico',  monthly:15,  lifetime:99,  devices:1 },
-  pro:    { name:'Plan Pro',     monthly:35,  lifetime:199, devices:3 }
+  basic:  { nameKey:'plan_basic_name', monthly:15,  lifetime:99,  devices:1 },
+  pro:    { nameKey:'plan_pro_name',   monthly:35,  lifetime:199, devices:3 }
 };
 
 function toggleBilling(){
   billingMonthly = !billingMonthly;
-  var t = document.getElementById('billing-toggle');
+  var tog = document.getElementById('billing-toggle');
   var lm = document.getElementById('lbl-monthly');
   var ll = document.getElementById('lbl-lifetime');
-  t.classList.toggle('on', billingMonthly);
+  tog.classList.toggle('on', billingMonthly);
   lm.classList.toggle('on', billingMonthly);
   ll.classList.toggle('on', !billingMonthly);
   updatePrices();
 }
+
 function updatePrices(){
   Object.keys(PLANS).forEach(function(k){
     var p = PLANS[k];
     var priceEl = document.getElementById(k+'-price');
-    var origEl = document.getElementById(k+'-orig');
+    var origEl  = document.getElementById(k+'-orig');
+    if(!priceEl || !origEl) return;
     if(billingMonthly){
-      priceEl.innerHTML = '$'+p.monthly+'<span>/mes</span>';
-      origEl.textContent = 'o $'+p.lifetime+' pago unico';
+      priceEl.innerHTML = '$'+p.monthly+'<span>'+t('price_month')+'</span>';
+      origEl.textContent = (currentLang==='es'?'o ':'or ')+'$'+p.lifetime+' '+t('price_once_label');
     } else {
-      priceEl.innerHTML = '$'+p.lifetime+'<span> unico</span>';
-      origEl.textContent = 'o $'+p.monthly+'/mes';
+      priceEl.innerHTML = '$'+p.lifetime+'<span>'+t('price_once')+'</span>';
+      origEl.textContent = (currentLang==='es'?'o ':'or ')+'$'+p.monthly+t('price_month');
     }
   });
 }
-function openCheckout(plan){
-  selectedPlan = plan;
-  var p = PLANS[plan];
-  var price = billingMonthly ? '$'+p.monthly+'/mes' : '$'+p.lifetime+' pago unico';
-  var sumHtml = '<div class="order-row"><span>'+p.name+'</span><span>'+price+'</span></div><div class="order-row"><span>Dispositivos</span><span>'+p.devices+(p.devices>1?' PCs':' PC')+'</span></div><div class="order-row main"><span>Total</span><span>'+price+'</span></div>';
+
+function openCheckout(planKey){
+  selectedPlan = planKey;
+  var p = PLANS[planKey];
+  var planName = t(p.nameKey);
+  var price = billingMonthly
+    ? '$'+p.monthly+t('order_monthly_suffix')
+    : '$'+p.lifetime+t('order_once_suffix');
+  var devicesLabel = p.devices+(p.devices>1 ? t('order_pc_plural') : t('order_pc_singular'));
+  var sumHtml =
+    '<div class="order-row"><span>'+planName+'</span><span>'+price+'</span></div>'+
+    '<div class="order-row"><span>'+t('order_devices')+'</span><span>'+devicesLabel+'</span></div>'+
+    '<div class="order-row main"><span>'+t('order_total')+'</span><span>'+price+'</span></div>';
   document.getElementById('order-summary').innerHTML = sumHtml;
   document.getElementById('order-summary-2').innerHTML = sumHtml;
-  document.getElementById('checkout-title').textContent = 'Comprar '+p.name;
+  document.getElementById('checkout-title').textContent = t('modal_buy')+planName;
   document.getElementById('step-info').style.display='block';
   document.getElementById('step-payment').style.display='none';
   document.getElementById('step-success').style.display='none';
   document.getElementById('checkout-modal').classList.add('open');
 }
+
 function closeCheckout(){ document.getElementById('checkout-modal').classList.remove('open'); }
 document.getElementById('checkout-modal').addEventListener('click',function(e){ if(e.target===this) closeCheckout(); });
 
 function goToPayment(){
-  var name = document.getElementById('c-name').value.trim();
+  var name  = document.getElementById('c-name').value.trim();
   var email = document.getElementById('c-email').value.trim();
-  if(!name||!email){alert('Por favor completa tu nombre y email.');return;}
+  if(!name||!email){ alert(t('alert_fill_name_email')); return; }
   document.getElementById('step-info').style.display='none';
   document.getElementById('step-payment').style.display='block';
 }
+
 function selPay(method, el){
   selectedPayMethod = method;
   document.querySelectorAll('.pm').forEach(function(p){p.classList.remove('on');});
   el.classList.add('on');
-  document.getElementById('pay-card-form').style.display = method==='card'?'block':'none';
-  document.getElementById('pay-paypal-form').style.display = method==='paypal'?'block':'none';
+  document.getElementById('pay-card-form').style.display     = method==='card'?'block':'none';
+  document.getElementById('pay-paypal-form').style.display   = method==='paypal'?'block':'none';
   document.getElementById('pay-transfer-form').style.display = method==='transfer'?'block':'none';
-  document.getElementById('pay-btn').textContent = method==='transfer'?'Enviar comprobante':'Pagar ahora';
+  document.getElementById('pay-btn').textContent = method==='transfer' ? t('btn_send_proof') : t('btn_pay_now');
 }
+
 function fmtCard(inp){ var v=inp.value.replace(/\D/g,''); var out=''; for(var i=0;i<v.length&&i<16;i++){if(i>0&&i%4===0)out+=' ';out+=v[i];} inp.value=out; }
 function fmtExp(inp){ var v=inp.value.replace(/\D/g,''); if(v.length>=2) v=v.substring(0,2)+'/'+v.substring(2); inp.value=v; }
 
 async function processPayment(){
   var btn = document.getElementById('pay-btn');
-  btn.disabled=true; btn.textContent='Procesando...';
-  var email = document.getElementById('c-email').value.trim();
+  btn.disabled=true; btn.textContent=t('btn_processing');
+  var email   = document.getElementById('c-email').value.trim();
   var bizName = document.getElementById('c-biz').value.trim();
-  var plan = billingMonthly?'monthly':'lifetime';
+  var plan    = billingMonthly?'monthly':'lifetime';
 
   try{
     var r = await fetch(API+'?action=create_license',{
@@ -372,8 +691,8 @@ async function processPayment(){
       document.getElementById('step-payment').style.display='none';
       document.getElementById('step-success').style.display='block';
     } else {
-      alert('Error: '+j.error);
-      btn.disabled=false; btn.textContent='Pagar ahora';
+      alert(t('alert_error')+j.error);
+      btn.disabled=false; btn.textContent = selectedPayMethod==='transfer' ? t('btn_send_proof') : t('btn_pay_now');
     }
   }catch(e){
     var demoKey = '4K-'+Math.random().toString(36).substring(2,6).toUpperCase()+'-'+Math.random().toString(36).substring(2,6).toUpperCase()+'-'+Math.random().toString(36).substring(2,6).toUpperCase();
@@ -386,10 +705,13 @@ async function processPayment(){
 document.querySelectorAll('a[href^="#"]').forEach(function(a){
   a.addEventListener('click',function(e){
     e.preventDefault();
-    var t=document.querySelector(this.getAttribute('href'));
-    if(t) t.scrollIntoView({behavior:'smooth'});
+    var target=document.querySelector(this.getAttribute('href'));
+    if(target) target.scrollIntoView({behavior:'smooth'});
   });
 });
+
+// Apply default language on load
+applyLang();
 </script>
 </body>
 </html>
