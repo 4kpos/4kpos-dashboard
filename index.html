@@ -8,16 +8,17 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;}
 .c1{color:#1e3a8a}.c2{color:#1a7a3a}.c3{color:#e6b800}.c4{color:#cc1111}
-.hero{background:linear-gradient(135deg,#0f0f13 0%,#1a0533 50%,#0f0f13 100%);padding:60px 20px;text-align:center;}
+.hero{background:linear-gradient(135deg,#0f0f13 0%,#0a1628 50%,#0f0f13 100%);padding:60px 20px;text-align:center;}
 .hero-logo{font-size:2.5rem;font-weight:800;margin-bottom:8px;}
-.hero-tag{display:inline-block;background:rgba(167,139,250,.15);border:1.5px solid rgba(167,139,250,.3);border-radius:20px;padding:5px 14px;font-size:.78rem;color:#a78bfa;margin-bottom:20px;}
+.hero-img{width:88px;height:88px;border-radius:18px;margin:0 auto 14px;box-shadow:0 8px 30px rgba(59,130,246,.25);display:block;}
+.hero-tag{display:inline-block;background:rgba(59,130,246,.15);border:1.5px solid rgba(59,130,246,.3);border-radius:20px;padding:5px 14px;font-size:.78rem;color:#3b82f6;margin-bottom:20px;}
 .hero h1{font-size:clamp(1.6rem,5vw,2.8rem);font-weight:800;line-height:1.2;margin-bottom:14px;}
 .hero p{font-size:1rem;color:rgba(255,255,255,.6);max-width:580px;margin:0 auto 30px;}
 .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-.btn-main{background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;border-radius:10px;color:#fff;padding:14px 28px;font-size:.95rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;transition:opacity .2s;}
+.btn-main{background:linear-gradient(135deg,#1e3a8a,#3b82f6);border:none;border-radius:10px;color:#fff;padding:14px 28px;font-size:.95rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;transition:opacity .2s;}
 .btn-main:hover{opacity:.88;}
 .btn-sec{background:none;border:1.5px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;padding:14px 28px;font-size:.95rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;}
-.btn-sec:hover{border-color:#a78bfa;color:#a78bfa;}
+.btn-sec:hover{border-color:#3b82f6;color:#3b82f6;}
 .features{padding:60px 20px;max-width:900px;margin:0 auto;}
 .features h2{text-align:center;font-size:1.6rem;font-weight:800;margin-bottom:8px;}
 .features .sub{text-align:center;color:rgba(255,255,255,.5);font-size:.9rem;margin-bottom:40px;}
@@ -31,7 +32,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;}
 .screens .sub{color:rgba(255,255,255,.5);font-size:.9rem;margin-bottom:30px;}
 .screen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;max-width:900px;margin:0 auto;}
 .screen-card{background:#0f0f13;border:1.5px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;text-align:left;}
-.screen-card h4{font-size:.84rem;font-weight:700;margin-bottom:5px;color:#a78bfa;}
+.screen-card h4{font-size:.84rem;font-weight:700;margin-bottom:5px;color:#3b82f6;}
 .screen-card p{font-size:.76rem;color:rgba(255,255,255,.4);}
 .pricing{padding:60px 20px;max-width:900px;margin:0 auto;}
 .pricing h2{text-align:center;font-size:1.6rem;font-weight:800;margin-bottom:8px;}
@@ -40,18 +41,22 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;}
 .toggle-lbl{font-size:.84rem;color:rgba(255,255,255,.5);}
 .toggle-lbl.on{color:#fff;font-weight:600;}
 .toggle{width:44px;height:24px;background:#22222e;border:1.5px solid rgba(255,255,255,.15);border-radius:12px;cursor:pointer;position:relative;transition:background .2s;}
-.toggle.on{background:#7c3aed;}
+.toggle.on{background:#3b82f6;}
 .toggle-dot{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:left .2s;}
 .toggle.on .toggle-dot{left:22px;}
 .save-badge{background:rgba(52,211,153,.15);border:1.5px solid rgba(52,211,153,.3);border-radius:20px;padding:3px 10px;font-size:.72rem;color:#34d399;font-weight:600;}
 .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
-.plan{background:#1a1a22;border:1.5px solid rgba(255,255,255,.07);border-radius:16px;padding:24px;position:relative;}
-.plan.featured{border-color:#a78bfa;background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(167,139,250,.08));}
-.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#7c3aed,#a78bfa);border-radius:20px;padding:4px 14px;font-size:.72rem;font-weight:700;white-space:nowrap;}
+.plan{background:#1a1a22;border:1.5px solid rgba(255,255,255,.07);border-radius:16px;padding:24px;position:relative;transition:transform .2s;}
+.plan:hover{transform:translateY(-3px);}
+.plan.basic-plan{border-color:#60a5fa;background:linear-gradient(135deg,rgba(96,165,250,.1),rgba(59,130,246,.05));}
+.plan.featured{border-color:#3b82f6;background:linear-gradient(135deg,rgba(30,58,138,.2),rgba(59,130,246,.1));box-shadow:0 0 30px rgba(59,130,246,.2);}
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);border-radius:20px;padding:4px 14px;font-size:.72rem;font-weight:700;white-space:nowrap;color:#fff;}
+.plan-badge.badge-basic{background:linear-gradient(135deg,#3b82f6,#60a5fa);}
+.plan-badge.badge-pro{background:linear-gradient(135deg,#1e3a8a,#3b82f6);}
 .plan-name{font-size:.84rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.5);margin-bottom:8px;}
 .plan-price{font-size:2.2rem;font-weight:800;margin-bottom:4px;}
 .plan-price span{font-size:1rem;font-weight:400;color:rgba(255,255,255,.4);}
-.plan-orig{font-size:.8rem;color:rgba(255,255,255,.35);text-decoration:line-through;margin-bottom:14px;}
+.plan-orig{font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px;}
 .plan-features{list-style:none;margin-bottom:20px;}
 .plan-features li{font-size:.82rem;color:rgba(255,255,255,.65);padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:7px;}
 .plan-features li:last-child{border:none;}
@@ -59,7 +64,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;}
 .plan-features .x{color:#f87171;}
 .plan-btn{width:100%;padding:12px;border:none;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;transition:opacity .2s;}
 .plan-btn:hover{opacity:.88;}
-.plan-btn.p{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;}
+.plan-btn.p{background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;}
+.plan-btn.b{background:linear-gradient(135deg,#3b82f6,#60a5fa);color:#fff;}
 .plan-btn.s{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);color:#fff;}
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;align-items:center;justify-content:center;padding:16px;}
 .modal-bg.open{display:flex;}
@@ -72,21 +78,21 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;}
 .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
 .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.4);}
 .fi{background:#22222e;border:1.5px solid rgba(255,255,255,.08);border-radius:9px;padding:10px 12px;color:#fff;font-size:.88rem;outline:none;width:100%;transition:border-color .2s;}
-.fi:focus{border-color:#a78bfa;}
+.fi:focus{border-color:#3b82f6;}
 .order-sum{background:#0f0f13;border-radius:10px;padding:14px;margin-bottom:16px;}
 .order-row{display:flex;justify-content:space-between;font-size:.84rem;margin-bottom:6px;color:rgba(255,255,255,.6);}
 .order-row.main{font-size:.95rem;font-weight:700;color:#fff;border-top:1px solid rgba(255,255,255,.07);padding-top:8px;margin-top:4px;}
 .pay-methods{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;}
 .pm{background:#22222e;border:1.5px solid rgba(255,255,255,.08);border-radius:9px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s;}
-.pm.on{border-color:#a78bfa;background:rgba(167,139,250,.1);}
+.pm.on{border-color:#3b82f6;background:rgba(59,130,246,.1);}
 .pm-ico{font-size:1.3rem;margin-bottom:4px;}
 .pm-lbl{font-size:.72rem;color:rgba(255,255,255,.5);}
-.pm.on .pm-lbl{color:#a78bfa;}
-.submit-btn{width:100%;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;border-radius:10px;color:#fff;padding:14px;font-size:.95rem;font-weight:700;cursor:pointer;transition:opacity .2s;}
+.pm.on .pm-lbl{color:#3b82f6;}
+.submit-btn{width:100%;background:linear-gradient(135deg,#1e3a8a,#3b82f6);border:none;border-radius:10px;color:#fff;padding:14px;font-size:.95rem;font-weight:700;cursor:pointer;transition:opacity .2s;}
 .submit-btn:hover{opacity:.88;}
 .submit-btn:disabled{opacity:.4;cursor:not-allowed;}
 .success-box{text-align:center;padding:20px 0;}
-.success-key{font-family:'Courier New',monospace;font-size:1.3rem;font-weight:700;color:#a78bfa;background:#0f0f13;border:2px solid rgba(167,139,250,.3);border-radius:10px;padding:14px;margin:14px 0;letter-spacing:2px;}
+.success-key{font-family:'Courier New',monospace;font-size:1.3rem;font-weight:700;color:#3b82f6;background:#0f0f13;border:2px solid rgba(59,130,246,.3);border-radius:10px;padding:14px;margin:14px 0;letter-spacing:2px;}
 .dl-btn{display:inline-block;background:linear-gradient(135deg,#1a7a3a,#34d399);border:none;border-radius:10px;color:#fff;padding:14px 28px;font-size:.95rem;font-weight:700;cursor:pointer;text-decoration:none;margin-bottom:10px;transition:opacity .2s;}
 .dl-btn:hover{opacity:.88;}
 .faq{padding:60px 20px;max-width:700px;margin:0 auto;}
@@ -100,7 +106,7 @@ footer .logo{font-size:1.2rem;font-weight:800;margin-bottom:8px;}
 footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
 .lang-switcher{position:fixed;top:12px;right:14px;z-index:2000;display:flex;gap:6px;}
 .lang-btn{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;color:rgba(255,255,255,.6);padding:4px 10px;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;}
-.lang-btn:hover,.lang-btn.on{border-color:#a78bfa;color:#a78bfa;background:rgba(167,139,250,.1);}
+.lang-btn:hover,.lang-btn.on{border-color:#3b82f6;color:#3b82f6;background:rgba(59,130,246,.1);}
 </style>
 </head>
 <body>
@@ -112,6 +118,7 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
 </div>
 
 <div class="hero">
+  <img src="icon-512.png" alt="4K POS" class="hero-img">
   <div class="hero-logo"><span class="c1">4K</span> <span class="c2">P</span><span class="c3">O</span><span class="c4">S</span></div>
   <div class="hero-tag" data-i18n="hero_tag">✨ Sistema Profesional de Punto de Venta</div>
   <h1 data-i18n="hero_h1">Controla tu negocio<br>desde cualquier lugar</h1>
@@ -119,7 +126,7 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
   <div class="hero-btns">
     <a href="#pricing" class="btn-main" data-i18n="btn_see_plans">Ver planes y precios</a>
     <a href="#features" class="btn-sec" data-i18n="btn_see_features">Ver funciones</a>
-    <a href="https://github.com/4kpos/4kpos-app/releases/download/latest/4K.POS.Setup.5.0.0.exe" class="btn-sec" style="border-color:#34d399;color:#34d399" data-i18n="btn_download">⬇️ Descargar gratis</a>
+    <a href="https://4kpos.github.io/4kpos-downloads/pos/4K-POS-Setup.exe" download="4K-POS-Setup.exe" class="btn-sec" style="border-color:#34d399;color:#34d399" data-i18n="btn_download">⬇️ Descargar gratis</a>
   </div>
 </div>
 
@@ -157,14 +164,15 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
   <div class="toggle-wrap">
     <span class="toggle-lbl" id="lbl-monthly" data-i18n="billing_monthly">Mensual</span>
     <div class="toggle" id="billing-toggle" onclick="toggleBilling()"><div class="toggle-dot"></div></div>
-    <span class="toggle-lbl on" id="lbl-lifetime" data-i18n="billing_lifetime">Pago único</span>
-    <span class="save-badge" data-i18n="save_badge">Ahorra 50%+</span>
+    <span class="toggle-lbl on" id="lbl-lifetime" data-i18n="billing_annual">Anual</span>
+    <span class="save-badge" data-i18n="save_badge">2 meses gratis</span>
   </div>
   <div class="plans">
-    <div class="plan">
+    <div class="plan basic-plan">
+      <div class="plan-badge badge-basic" data-i18n="plan_essential">✓ ESENCIAL</div>
       <div class="plan-name" data-i18n="plan_basic_name">Basico</div>
-      <div class="plan-price" id="basic-price">$99<span data-i18n="price_once"> único</span></div>
-      <div class="plan-orig" id="basic-orig" data-i18n="basic_orig_monthly">o $15/mes</div>
+      <div class="plan-price" id="basic-price">$100<span data-i18n="price_year">/año</span></div>
+      <div class="plan-orig" id="basic-orig">$100/año · ahorras $20</div>
       <ul class="plan-features">
         <li><span class="check">✓</span> <span data-i18n="feat_1_device">1 dispositivo (PC)</span></li>
         <li><span class="check">✓</span> <span data-i18n="feat_full_pos">POS completo</span></li>
@@ -175,13 +183,13 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
         <li><span class="x">✗</span> <span data-i18n="feat_mobile_dash">Dashboard celular</span></li>
         <li><span class="x">✗</span> <span data-i18n="feat_cloud_sync">Sincronización nube</span></li>
       </ul>
-      <button class="plan-btn s" onclick="openCheckout('basic')" data-i18n="btn_start_now">Comenzar ahora</button>
+      <button class="plan-btn b" onclick="openCheckout('basic')" data-i18n="btn_start_now">Comenzar ahora</button>
     </div>
     <div class="plan featured">
-      <div class="plan-badge" data-i18n="plan_popular">MAS POPULAR</div>
+      <div class="plan-badge badge-pro" data-i18n="plan_popular">★ MAS POPULAR</div>
       <div class="plan-name" data-i18n="plan_pro_name">Pro</div>
-      <div class="plan-price" id="pro-price">$199<span data-i18n="price_once"> único</span></div>
-      <div class="plan-orig" id="pro-orig" data-i18n="pro_orig_monthly">o $35/mes</div>
+      <div class="plan-price" id="pro-price">$150<span data-i18n="price_year">/año</span></div>
+      <div class="plan-orig" id="pro-orig">$150/año · ahorras $30</div>
       <ul class="plan-features">
         <li><span class="check">✓</span> <span data-i18n="feat_3_devices">Hasta 3 dispositivos</span></li>
         <li><span class="check">✓</span> <span data-i18n="feat_full_pos">POS completo</span></li>
@@ -287,7 +295,7 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
           <div class="lbl" style="margin-bottom:8px" data-i18n="success_key_lbl">Tu clave de licencia:</div>
           <div class="success-key" id="success-key">4K-XXXX-XXXX-XXXX</div>
           <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin-bottom:20px" data-i18n="success_key_note">Guarda esta clave. También la recibiste por email.</p>
-          <a href="https://github.com/4kpos/4kpos-app/releases/download/latest/4K.POS.Setup.5.0.0.exe" class="dl-btn" data-i18n="btn_download_windows">⬇️ Descargar 4K POS para Windows</a>
+          <a href="https://4kpos.github.io/4kpos-downloads/pos/4K-POS-Setup.exe" download="4K-POS-Setup.exe" class="dl-btn" data-i18n="btn_download_windows">⬇️ Descargar 4K POS para Windows</a>
           <br>
           <a href="https://4kpos.github.io/4kpos-dashboard/4kpos-dashboard.html" class="btn-sec" style="font-size:.82rem;padding:10px 20px" data-i18n="btn_view_mobile_dash">📱 Ver dashboard en celular</a>
         </div>
@@ -349,16 +357,16 @@ const T = {
     pricing_h2: 'Planes y Precios',
     pricing_sub: 'Elige el plan que mejor se adapte a tu negocio',
     billing_monthly: 'Mensual',
-    billing_lifetime: 'Pago único',
-    save_badge: 'Ahorra 50%+',
+    billing_annual: 'Anual',
+    save_badge: '2 meses gratis',
     plan_basic_name: 'Basico',
     plan_pro_name: 'Pro',
-    plan_popular: 'MAS POPULAR',
-    price_once: ' único',
+    plan_popular: '★ MAS POPULAR',
+    plan_essential: '✓ ESENCIAL',
+    price_year: '/año',
     price_month: '/mes',
-    price_once_label: 'pago unico',
-    basic_orig_monthly: 'o $15/mes',
-    pro_orig_monthly: 'o $35/mes',
+    monthly_upsell: '2 meses gratis al pagar anual',
+    saves_prefix: 'ahorras',
     feat_1_device: '1 dispositivo (PC)',
     feat_3_devices: 'Hasta 3 dispositivos',
     feat_full_pos: 'POS completo',
@@ -429,7 +437,7 @@ const T = {
     order_pc_singular: ' PC',
     order_pc_plural: ' PCs',
     order_monthly_suffix: '/mes',
-    order_once_suffix: ' pago unico'
+    order_annual_suffix: '/año'
   },
 
   en: {
@@ -478,16 +486,16 @@ const T = {
     pricing_h2: 'Plans & Pricing',
     pricing_sub: 'Choose the plan that best fits your business',
     billing_monthly: 'Monthly',
-    billing_lifetime: 'One-time',
-    save_badge: 'Save 50%+',
+    billing_annual: 'Annual',
+    save_badge: '2 months free',
     plan_basic_name: 'Basic',
     plan_pro_name: 'Pro',
-    plan_popular: 'MOST POPULAR',
-    price_once: ' one-time',
+    plan_popular: '★ MOST POPULAR',
+    plan_essential: '✓ ESSENTIAL',
+    price_year: '/yr',
     price_month: '/mo',
-    price_once_label: 'one-time',
-    basic_orig_monthly: 'or $15/mo',
-    pro_orig_monthly: 'or $35/mo',
+    monthly_upsell: '2 months free when paying annually',
+    saves_prefix: 'save',
     feat_1_device: '1 device (PC)',
     feat_3_devices: 'Up to 3 devices',
     feat_full_pos: 'Full POS',
@@ -558,7 +566,7 @@ const T = {
     order_pc_singular: ' PC',
     order_pc_plural: ' PCs',
     order_monthly_suffix: '/mo',
-    order_once_suffix: ' one-time'
+    order_annual_suffix: '/yr'
   }
 };
 
@@ -607,8 +615,8 @@ function setLang(lang) {
 
 // ─── Plans ────────────────────────────────────────────────────────────────────
 const PLANS = {
-  basic:  { nameKey:'plan_basic_name', monthly:15,  lifetime:99,  devices:1 },
-  pro:    { nameKey:'plan_pro_name',   monthly:35,  lifetime:199, devices:3 }
+  basic:  { nameKey:'plan_basic_name', monthly:10, annual:100, savings:20, devices:1 },
+  pro:    { nameKey:'plan_pro_name',   monthly:15, annual:150, savings:30, devices:3 }
 };
 
 function toggleBilling(){
@@ -630,10 +638,10 @@ function updatePrices(){
     if(!priceEl || !origEl) return;
     if(billingMonthly){
       priceEl.innerHTML = '$'+p.monthly+'<span>'+t('price_month')+'</span>';
-      origEl.textContent = (currentLang==='es'?'o ':'or ')+'$'+p.lifetime+' '+t('price_once_label');
+      origEl.textContent = t('monthly_upsell');
     } else {
-      priceEl.innerHTML = '$'+p.lifetime+'<span>'+t('price_once')+'</span>';
-      origEl.textContent = (currentLang==='es'?'o ':'or ')+'$'+p.monthly+t('price_month');
+      priceEl.innerHTML = '$'+p.annual+'<span>'+t('price_year')+'</span>';
+      origEl.textContent = '$'+p.annual+t('price_year')+' · '+t('saves_prefix')+' $'+p.savings;
     }
   });
 }
@@ -644,7 +652,7 @@ function openCheckout(planKey){
   var planName = t(p.nameKey);
   var price = billingMonthly
     ? '$'+p.monthly+t('order_monthly_suffix')
-    : '$'+p.lifetime+t('order_once_suffix');
+    : '$'+p.annual+t('order_annual_suffix');
   var devicesLabel = p.devices+(p.devices>1 ? t('order_pc_plural') : t('order_pc_singular'));
   var sumHtml =
     '<div class="order-row"><span>'+planName+'</span><span>'+price+'</span></div>'+
@@ -711,7 +719,7 @@ async function processPayment(){
   btn.disabled=true; btn.textContent=t('btn_processing');
   var email   = document.getElementById('c-email').value.trim();
   var bizName = document.getElementById('c-biz').value.trim();
-  var plan    = billingMonthly?'monthly':'lifetime';
+  var plan    = billingMonthly?'monthly':'annual';
 
   try{
     var r = await fetch(API+'?action=create_license',{
