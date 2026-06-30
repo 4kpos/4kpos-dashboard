@@ -163,7 +163,7 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
   <p class="sub" data-i18n="pricing_sub">Elige el plan que mejor se adapte a tu negocio</p>
   <div class="toggle-wrap">
     <span class="toggle-lbl" id="lbl-monthly" data-i18n="billing_monthly">Mensual</span>
-    <div class="toggle" id="billing-toggle" onclick="toggleBilling()"><div class="toggle-dot"></div></div>
+    <div class="toggle on" id="billing-toggle" onclick="toggleBilling()"><div class="toggle-dot"></div></div>
     <span class="toggle-lbl on" id="lbl-lifetime" data-i18n="billing_annual">Anual</span>
     <span class="save-badge" data-i18n="save_badge">2 meses gratis</span>
   </div>
@@ -624,7 +624,7 @@ function toggleBilling(){
   var tog = document.getElementById('billing-toggle');
   var lm = document.getElementById('lbl-monthly');
   var ll = document.getElementById('lbl-lifetime');
-  tog.classList.toggle('on', billingMonthly);
+  tog.classList.toggle('on', !billingMonthly);
   lm.classList.toggle('on', billingMonthly);
   ll.classList.toggle('on', !billingMonthly);
   updatePrices();
