@@ -241,10 +241,13 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
       <div id="step-info">
         <div class="order-sum" id="order-summary"></div>
         <div class="fg"><label class="lbl" data-i18n="form_name_lbl">Nombre completo</label><input type="text" class="fi" id="c-name" data-i18n-placeholder="form_name_ph" placeholder="Tu nombre"></div>
-        <div class="fg"><label class="lbl" data-i18n="form_email_lbl">Email</label><input type="email" class="fi" id="c-email" placeholder="tu@email.com"></div>
+        <div class="fg"><label class="lbl" data-i18n="form_email_lbl">Email</label><input type="email" class="fi" id="c-email" placeholder="tu@email.com" oninput="checkEmailMatch()"></div>
+        <div class="fg"><label class="lbl" data-i18n="form_email_confirm_lbl">Confirmar Email</label><input type="email" class="fi" id="c-email-confirm" data-i18n-placeholder="form_email_confirm_ph" placeholder="Confirmar tu email" oninput="checkEmailMatch()"></div>
+        <div id="email-mismatch-msg" style="display:none;color:#f87171;font-size:.76rem;margin-top:-8px;margin-bottom:10px" data-i18n="email_mismatch_error">Los emails no coinciden</div>
         <div class="fg"><label class="lbl" data-i18n="form_biz_lbl">Nombre del negocio</label><input type="text" class="fi" id="c-biz" data-i18n-placeholder="form_biz_ph" placeholder="Mi Negocio"></div>
+        <div style="background:rgba(251,191,36,.08);border:1.5px solid rgba(251,191,36,.3);border-radius:9px;padding:10px 12px;font-size:.78rem;color:rgba(251,191,36,.9);margin-bottom:10px;line-height:1.5" data-i18n="form_email_warning">⚠️ Verifica bien tu email. Tu clave de licencia se enviará automáticamente a esta dirección y no podremos reenviarla a otro correo después.</div>
         <div style="font-size:.76rem;color:rgba(255,255,255,.35);margin-bottom:14px" data-i18n="form_email_hint">Tu clave de licencia llegará a este email inmediatamente después del pago.</div>
-        <button class="submit-btn" onclick="goToPayment()" data-i18n="btn_continue_payment">Continuar al pago →</button>
+        <button class="submit-btn" id="btn-continue" onclick="goToPayment()" data-i18n="btn_continue_payment">Continuar al pago →</button>
       </div>
       <div id="step-payment" style="display:none">
         <div class="order-sum" id="order-summary-2"></div>
@@ -387,6 +390,10 @@ const T = {
     form_name_lbl: 'Nombre completo',
     form_name_ph: 'Tu nombre',
     form_email_lbl: 'Email',
+    form_email_confirm_lbl: 'Confirmar Email',
+    form_email_confirm_ph: 'Confirmar tu email',
+    email_mismatch_error: 'Los emails no coinciden',
+    form_email_warning: '⚠️ Verifica bien tu email. Tu clave de licencia se enviará automáticamente a esta dirección y no podremos reenviarla a otro correo después.',
     form_biz_lbl: 'Nombre del negocio',
     form_biz_ph: 'Mi Negocio',
     form_email_hint: 'Tu clave de licencia llegará a este email inmediatamente después del pago.',
@@ -512,6 +519,10 @@ const T = {
     form_name_lbl: 'Full name',
     form_name_ph: 'Your name',
     form_email_lbl: 'Email',
+    form_email_confirm_lbl: 'Confirm Email',
+    form_email_confirm_ph: 'Confirm your email',
+    email_mismatch_error: "Emails don't match",
+    form_email_warning: '⚠️ Please verify your email carefully. Your license key will be sent automatically to this address and we cannot resend it to a different email afterward.',
     form_biz_lbl: 'Business name',
     form_biz_ph: 'My Business',
     form_email_hint: 'Your license key will be sent to this email immediately after payment.',
@@ -642,6 +653,9 @@ function openCheckout(planKey){
   document.getElementById('order-summary').innerHTML = sumHtml;
   document.getElementById('order-summary-2').innerHTML = sumHtml;
   document.getElementById('checkout-title').textContent = t('modal_buy')+planName;
+  document.getElementById('c-email-confirm').value='';
+  document.getElementById('email-mismatch-msg').style.display='none';
+  document.getElementById('btn-continue').disabled=false;
   document.getElementById('step-info').style.display='block';
   document.getElementById('step-payment').style.display='none';
   document.getElementById('step-success').style.display='none';
@@ -651,10 +665,30 @@ function openCheckout(planKey){
 function closeCheckout(){ document.getElementById('checkout-modal').classList.remove('open'); }
 document.getElementById('checkout-modal').addEventListener('click',function(e){ if(e.target===this) closeCheckout(); });
 
+function checkEmailMatch(){
+  var email   = document.getElementById('c-email').value;
+  var confirm = document.getElementById('c-email-confirm').value;
+  var msg = document.getElementById('email-mismatch-msg');
+  var btn = document.getElementById('btn-continue');
+  if(confirm && email !== confirm){
+    msg.style.display='block';
+    btn.disabled=true;
+  } else {
+    msg.style.display='none';
+    btn.disabled=false;
+  }
+}
+
 function goToPayment(){
-  var name  = document.getElementById('c-name').value.trim();
-  var email = document.getElementById('c-email').value.trim();
+  var name         = document.getElementById('c-name').value.trim();
+  var email        = document.getElementById('c-email').value.trim();
+  var emailConfirm = document.getElementById('c-email-confirm').value.trim();
   if(!name||!email){ alert(t('alert_fill_name_email')); return; }
+  if(email !== emailConfirm){
+    document.getElementById('email-mismatch-msg').style.display='block';
+    document.getElementById('btn-continue').disabled=true;
+    return;
+  }
   document.getElementById('step-info').style.display='none';
   document.getElementById('step-payment').style.display='block';
 }
