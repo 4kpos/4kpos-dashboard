@@ -143,6 +143,14 @@ canvas{display:block;image-rendering:-webkit-optimize-contrast;image-rendering:c
 </head>
 <body>
 
+<div id="plan-block" style="display:none;min-height:100vh;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center">
+  <div style="font-size:2.5rem;margin-bottom:12px">🔒</div>
+  <div style="font-size:1.2rem;font-weight:800;margin-bottom:8px;color:var(--tx)">Plan Pro requerido</div>
+  <div style="font-size:.85rem;color:var(--tx3);max-width:280px;margin:0 auto 20px">El Dashboard Móvil está disponible para planes Pro y Lifetime.</div>
+  <a href="https://wa.me/18099416543?text=Hola%2C+quiero+mejorar+mi+plan+a+Pro" target="_blank" style="display:inline-block;background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;padding:13px 28px;border-radius:10px;font-weight:700;text-decoration:none;font-size:.9rem;margin-bottom:12px">⬆ Mejorar a Pro</a>
+  <div><button onclick="localStorage.removeItem('4kpos_key');location.reload()" style="background:none;border:1.5px solid var(--brd2);border-radius:8px;color:var(--tx3);padding:8px 18px;cursor:pointer;font-size:.8rem">Cambiar licencia</button></div>
+</div>
+
 <div id="key-screen" style="display:none">
   <div class="top" style="justify-content:center;padding:24px 16px">
     <div style="text-align:center">
@@ -913,12 +921,34 @@ function closeNoteModal(e){
     document.getElementById('snm-bg').classList.remove('open');
   }
 }
+// ── Plan check ─────────────────────────────────────────
+async function checkPlanAccess(key){
+  try{
+    var r=await fetch(SUPA_URL+'/rest/v1/licenses?key=eq.'+encodeURIComponent(key)+'&select=plan,active,expires_at',
+      {headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Accept':'application/json'}});
+    if(!r.ok)return true; // allow on network error
+    var rows=await r.json();
+    if(!rows||!rows.length)return true; // allow if key not found (will fail at loadData)
+    var lic=rows[0];
+    if(!lic.active)return false;
+    if(lic.expires_at&&new Date(lic.expires_at)<new Date())return false;
+    var plan=(lic.plan||'').toLowerCase();
+    return plan.startsWith('pro')||plan==='lifetime';
+  }catch(e){return true;} // allow on error
+}
 // ── Init ───────────────────────────────────────────────
 async function init(){
   document.getElementById('loading').style.display='block';
   document.getElementById('key-screen').style.display='none';
+  document.getElementById('plan-block').style.display='none';
   document.getElementById('app').style.display='none';
   document.getElementById('botnav').style.display='none';
+  var isPro=await checkPlanAccess(KEY);
+  if(!isPro){
+    document.getElementById('loading').style.display='none';
+    document.getElementById('plan-block').style.display='flex';
+    return;
+  }
   await loadData(false);
   if(DB){
     document.getElementById('loading').style.display='none';
