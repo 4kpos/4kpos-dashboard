@@ -457,7 +457,11 @@ async function loadData(showToast){
   try{
     var r=await fetch(API+'?action=load',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({license_key:KEY})});
     var j=await r.json();
-    if(!j.success)return;
+    if(!j.success){
+      var updEl=document.getElementById('upd-time');
+      if(updEl)updEl.innerHTML='<span style="color:#f87171">⚠ Sin datos — verifica tu clave de licencia o espera que el POS se conecte.</span>';
+      return;
+    }
     var newCount=(j.data&&j.data.sales)?j.data.sales.filter(function(s){return s.status==='active';}).length:0;
     var isNew=DB&&newCount>lastSaleCount;
     DB=j.data||{products:[],sales:[],cfg:{}};
