@@ -924,13 +924,13 @@ function closeNoteModal(e){
 // ── Plan check ─────────────────────────────────────────
 async function checkPlanAccess(key){
   try{
-    var r=await fetch(SUPA_URL+'/rest/v1/licenses?key=eq.'+encodeURIComponent(key)+'&select=plan,active,expires_at',
+    var r=await fetch(SUPA_URL+'/rest/v1/licenses?key=eq.'+encodeURIComponent(key)+'&select=plan,status,expires_at',
       {headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Accept':'application/json'}});
     if(!r.ok)return true; // allow on network error
     var rows=await r.json();
     if(!rows||!rows.length)return true; // allow if key not found (will fail at loadData)
     var lic=rows[0];
-    if(!lic.active)return false;
+    if(lic.status&&lic.status!=='active')return false;
     if(lic.expires_at&&new Date(lic.expires_at)<new Date())return false;
     var plan=(lic.plan||'').toLowerCase();
     return plan.startsWith('pro')||plan==='lifetime';
