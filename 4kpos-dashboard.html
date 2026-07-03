@@ -476,12 +476,15 @@ async function loadData(showToast){
     }else{bizEl.textContent=rawBiz;}
     document.getElementById('upd-time').textContent=j.updated_at?(t('lastSync')+': '+timeAgo(j.updated_at)):'';
     renderToday(isNew);
+    renderCredits();
+    renderShiftStatus();
     if(showToast)showNotif(t('updated'));
   }catch(e){console.error(e);}
 }
 
-function getTodaySales(){var td=new Date().toDateString();return (DB.sales||[]).filter(function(s){return s.status==='active'&&new Date(s.date).toDateString()===td;});}
-function getYesterdaySales(){var y=new Date();y.setDate(y.getDate()-1);var ys=y.toDateString();return (DB.sales||[]).filter(function(s){return s.status==='active'&&new Date(s.date).toDateString()===ys;});}
+function _localDayKey(d){return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function getTodaySales(){var td=_localDayKey(new Date());return (DB.sales||[]).filter(function(s){return s.status==='active'&&_localDayKey(new Date(s.date))===td;});}
+function getYesterdaySales(){var y=new Date();y.setDate(y.getDate()-1);var yd=_localDayKey(y);return (DB.sales||[]).filter(function(s){return s.status==='active'&&_localDayKey(new Date(s.date))===yd;});}
 function getSalesRange(days){var c=new Date();c.setDate(c.getDate()-days);c.setHours(0,0,0,0);return (DB.sales||[]).filter(function(s){return s.status==='active'&&new Date(s.date)>=c;});}
 function buildProdMap(sales){var m={};sales.forEach(function(s){(s.items||[]).forEach(function(i){if(!m[i.name])m[i.name]={qty:0,total:0};m[i.name].qty+=i.qty;m[i.name].total+=i.price*i.qty;});});return Object.entries(m).sort(function(a,b){return b[1].total-a[1].total;});}
 
@@ -958,10 +961,8 @@ async function init(){
     document.getElementById('loading').style.display='none';
     document.getElementById('app').style.display='block';
     document.getElementById('botnav').style.display='flex';
-    renderCredits();
-    renderShiftStatus();
     if(refreshInterval)clearInterval(refreshInterval);
-    refreshInterval=setInterval(function(){loadData(false);renderCredits();renderShiftStatus();},30000);
+    refreshInterval=setInterval(function(){loadData(false);},30000);
   }
 }
 
