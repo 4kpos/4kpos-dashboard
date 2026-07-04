@@ -462,9 +462,11 @@ async function loadData(showToast){
       if(updEl)updEl.innerHTML='<span style="color:#f87171">⚠ Sin datos — verifica tu clave de licencia o espera que el POS se conecte.</span>';
       return;
     }
-    var newCount=(j.data&&j.data.sales)?j.data.sales.filter(function(s){return s.status==='active';}).length:0;
+    // posapi puede devolver data como string (JSONB doble-encoded) → parsear si es necesario
+    var rawData=j.data;if(typeof rawData==='string'){try{rawData=JSON.parse(rawData);}catch(e){rawData=null;}}
+    var newCount=(rawData&&rawData.sales)?rawData.sales.filter(function(s){return s.status==='active';}).length:0;
     var isNew=DB&&newCount>lastSaleCount;
-    DB=j.data||{products:[],sales:[],cfg:{}};
+    DB=rawData||{products:[],sales:[],cfg:{}};
     await loadCategories();
     await loadCreditSummary();
     await loadShiftStatus();
