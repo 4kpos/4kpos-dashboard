@@ -252,8 +252,8 @@ body.light #snm{background:#fff;}
 
   <div class="page on" id="pg-hoy">
     <div class="cards">
-      <div class="card gn"><div class="clbl" data-t="incToday">Ingresos hoy</div><div class="cval" id="h-inc">$0.00</div><div class="csub" id="h-ords">0 ordenes</div><div class="cdiff" id="h-diff"></div></div>
-      <div class="card ac"><div class="clbl" data-t="orders">Ordenes</div><div class="cval" id="h-cnt">0</div><div class="csub" id="h-avg">Prom. $0.00</div></div>
+      <div class="card gn"><div class="clbl" data-t="incToday">Ingresos hoy</div><div class="cval" id="h-inc">$0.00</div><div class="csub" id="h-ords">0 ordenes</div><div class="cdiff" id="h-diff"></div><div id="m-spark-ventas" style="margin-top:8px;line-height:0"></div></div>
+      <div class="card ac"><div class="clbl" data-t="orders">Ordenes</div><div class="cval" id="h-cnt">0</div><div class="csub" id="h-avg">Prom. $0.00</div><div id="m-spark-tx" style="margin-top:8px;line-height:0"></div></div>
       <div class="card am"><div class="clbl" data-t="highTicket">Ticket mayor</div><div class="cval" id="h-max">$0.00</div><div class="csub" data-t="orderHighest">orden mas alta</div></div>
       <div class="card gold" id="cred-card" onclick="toggleCredDetail()" style="cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent"><div class="clbl" data-t="pendingCredits">Créditos pendientes</div><div class="cval" id="h-cred-total">$0.00</div><div class="csub" id="h-cred-count">—</div><div style="font-size:.6rem;color:#f0c040;opacity:.6;margin-top:3px" id="cred-card-hint" data-t="showDetail">▾ ver detalle</div></div>
       <div class="card wide" style="display:flex;justify-content:space-between;align-items:center;border-left:3px solid #a78bfa">
@@ -263,7 +263,7 @@ body.light #snm{background:#fff;}
     </div>
     <div id="cred-detail" style="display:none;margin-bottom:14px"></div>
     <div class="sec-ttl" data-t="payMethod">Metodo de pago</div>
-    <div class="card wide" style="padding:10px 14px"><div id="pay-rows"></div></div>
+    <div class="card wide" style="padding:12px 14px"><div id="m-pay-donut"></div></div>
     <div class="sec-ttl" data-t="topProds">Productos mas vendidos</div>
     <div class="card wide" style="padding:12px 14px"><div id="prod-bars"></div></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px">
@@ -557,6 +557,66 @@ function getSalesRange(days){var c=new Date();c.setDate(c.getDate()-days);c.setH
 function buildProdMap(sales){var m={};sales.forEach(function(s){(s.items||[]).forEach(function(i){if(!m[i.name])m[i.name]={qty:0,total:0};m[i.name].qty+=i.qty;m[i.name].total+=i.price*i.qty;});});return Object.entries(m).sort(function(a,b){return b[1].total-a[1].total;});}
 
 // ── Render helpers ─────────────────────────────────────
+function makeSpark(vals,color){
+  if(!vals||vals.length<2)return '';
+  var max=Math.max.apply(null,vals)||1,min=Math.min.apply(null,vals)||0;
+  var W=72,SH=22,pw=2,range=max-min||1;
+  var pts=vals.map(function(v,i){
+    var x=Math.round(pw+(W-pw*2)/(vals.length-1)*i);
+    var y=Math.round(SH-pw-(SH-pw*2)*((v-min)/range));
+    return x+','+y;
+  }).join(' ');
+  return '<svg viewBox="0 0 '+W+' '+SH+'" width="'+W+'" height="'+SH+'" style="display:block;opacity:.8">'
+    +'<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>'
+    +'</svg>';
+}
+
+function renderSparklines(){
+  if(!DB)return;
+  var now=new Date(),sales=DB.sales||[];
+  var ddays=[];for(var dd=6;dd>=0;dd--){var d=new Date(now);d.setDate(d.getDate()-dd);ddays.push(d.toDateString());}
+  function dayTotals(ds){return sales.filter(function(s){return s.status!=='cancelled'&&s.status!=='returned'&&new Date(s.date).toDateString()===ds;}).reduce(function(a,s){return a+(s.total||0);},0);}
+  function dayCount(ds){return sales.filter(function(s){return s.status!=='cancelled'&&s.status!=='returned'&&new Date(s.date).toDateString()===ds;}).length;}
+  var vV=ddays.map(dayTotals),vT=ddays.map(dayCount);
+  var svEl=document.getElementById('m-spark-ventas');if(svEl)svEl.innerHTML=makeSpark(vV,'#22c55e');
+  var stEl=document.getElementById('m-spark-tx');if(stEl)stEl.innerHTML=makeSpark(vT,'#a78bfa');
+}
+
+function renderPayDonut(ts){
+  var payEl=document.getElementById('m-pay-donut');if(!payEl)return;
+  if(!ts||!ts.length){payEl.innerHTML='<div class="empty">'+t('noSales')+'</div>';return;}
+  var clrs={cash:'#22c55e',card:'#3b82f6',transf:'#60a5fa',credit:'#e6b800',split:'#f87171'};
+  var pNames={cash:t('payEfectivo'),card:t('payTarjeta'),transf:t('payTransf'),credit:t('payCredito'),split:t('payDividido')};
+  var pMap={cash:0,card:0,transf:0,credit:0,split:0};
+  ts.forEach(function(s){var m=s.payMethod||'cash';if(pMap[m]!==undefined)pMap[m]+=s.total||0;else pMap.cash+=s.total||0;});
+  var total=Object.values(pMap).reduce(function(a,v){return a+v;},0)||1;
+  var stops='',cum=0;
+  Object.entries(pMap).forEach(function(e){
+    var pct=e[1]/total*100;
+    if(pct>0.01){stops+=clrs[e[0]]+' '+cum.toFixed(1)+'% '+(cum+pct).toFixed(1)+'%,';cum+=pct;}
+  });
+  var cg='conic-gradient('+stops.replace(/,$/,'')+')';
+  var legend=Object.entries(pMap).filter(function(e){return e[1]>0;}).map(function(e){
+    var pct=Math.round(e[1]/total*100);
+    return '<div style="display:flex;align-items:center;gap:6px;font-size:.74rem;margin-bottom:5px">'
+      +'<div style="width:8px;height:8px;border-radius:50%;background:'+clrs[e[0]]+';flex-shrink:0"></div>'
+      +'<span style="color:var(--tx2);flex:1">'+pNames[e[0]]+'</span>'
+      +'<span style="font-weight:700;color:var(--tx)">'+pct+'%</span>'
+      +'<span style="font-size:.67rem;color:var(--tx3);margin-left:3px">'+dolr(e[1])+'</span>'
+      +'</div>';
+  }).join('');
+  payEl.innerHTML='<div style="display:flex;align-items:center;gap:16px">'
+    +'<div style="flex-shrink:0;position:relative;width:110px;height:110px">'
+    +'<div style="width:110px;height:110px;border-radius:50%;background:'+cg+';box-shadow:0 0 18px rgba(59,130,246,.2)"></div>'
+    +'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">'
+    +'<div style="width:66px;height:66px;border-radius:50%;background:linear-gradient(135deg,#152238,#0f1826);display:flex;flex-direction:column;align-items:center;justify-content:center">'
+    +'<div style="font-size:.52rem;color:var(--tx3);font-weight:600;letter-spacing:.4px">TOTAL</div>'
+    +'<div style="font-size:.8rem;font-weight:800;color:var(--tx)">'+dolr(total)+'</div>'
+    +'</div></div></div>'
+    +'<div style="flex:1;min-width:0">'+legend+'</div>'
+    +'</div>';
+}
+
 function renderProdBars(sales,cid){
   var prods=buildProdMap(sales);
   if(!prods.length){document.getElementById(cid).innerHTML='<div class="empty">'+t('noData')+'</div>';return;}
@@ -578,13 +638,8 @@ function renderToday(isNew){
   document.getElementById('h-max').textContent=dolr(max);
   var diffEl=document.getElementById('h-diff');
   if(yinc>0){var pct=Math.round((inc-yinc)/yinc*100);diffEl.textContent=(pct>=0?'+':'')+pct+t('vsAyer');diffEl.className='cdiff '+(pct>0?'up':pct<0?'dn':'eq');}else diffEl.textContent='';
-  var payMap={cash:0,card:0,transf:0,credit:0,split:0};
-  ts.forEach(function(s){var m=s.payMethod||'credit';if(payMap[m]!==undefined)payMap[m]+=s.total;else payMap.credit+=s.total;});
-  var payTotal=inc||1;
-  var pNames={cash:t('payEfectivo'),card:t('payTarjeta'),transf:t('payTransf'),credit:t('payCredito'),split:t('payDividido')};
-  var payColors={cash:'#22c55e',card:'#3b82f6',transf:'#60a5fa',credit:'#f0c040',split:'#f87171'};
-  var payHtml=Object.entries(payMap).filter(function(e){return e[1]>0;}).map(function(e){var pct=Math.round(e[1]/payTotal*100);return '<div class="pay-row"><span style="font-size:.8rem;min-width:80px;color:var(--tx2)">'+pNames[e[0]]+'</span><div class="pay-bar"><div class="pay-fill" style="width:'+pct+'%;background:'+payColors[e[0]]+'"></div></div><span style="font-size:.78rem;font-family:monospace;color:'+payColors[e[0]]+'">'+dolr(e[1])+'</span></div>';}).join('');
-  document.getElementById('pay-rows').innerHTML=payHtml||'<div class="empty">'+t('noSales')+'</div>';
+  renderPayDonut(ts);
+  renderSparklines();
   renderProdBars(ts,'prod-bars');
   document.getElementById('sale-count').textContent=ts.length+' '+t('salesN');
   var allSales=(DB.sales||[]).filter(function(s){return s.status!=='cancelled'&&s.status!=='returned';});
