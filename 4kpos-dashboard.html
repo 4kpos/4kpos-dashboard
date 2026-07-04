@@ -276,10 +276,10 @@ body.light #snm{background:#fff;}
 
   <div class="page" id="pg-semana">
     <div class="cards">
-      <div class="card gn"><div class="clbl" data-t="thisWeek">Esta semana</div><div class="cval" id="w-inc">$0.00</div><div class="csub" id="w-ords">0 ordenes</div></div>
-      <div class="card ac"><div class="clbl" data-t="avgDay">Promedio/dia</div><div class="cval" id="w-avg">$0.00</div><div class="csub" data-t="last7">ultimos 7 dias</div></div>
-      <div class="card am"><div class="clbl" data-t="bestDay">Mejor dia</div><div class="cval" id="w-best">-</div><div class="csub" id="w-best-amt"></div></div>
-      <div class="card bl"><div class="clbl" data-t="yesterdaySales">Ventas de ayer</div><div class="cval" id="w-yest">$0.00</div><div class="csub" id="w-yest-cnt">0 ordenes</div></div>
+      <div class="card gn"><div class="clbl" data-t="thisWeek">Esta semana</div><div class="cval" id="w-inc">$0.00</div><div class="csub" id="w-ords">0 ordenes</div><div id="w-spark-inc" style="margin-top:8px;line-height:0"></div></div>
+      <div class="card ac"><div class="clbl" data-t="avgDay">Promedio/dia</div><div class="cval" id="w-avg">$0.00</div><div class="csub" data-t="last7">ultimos 7 dias</div><div id="w-spark-avg" style="margin-top:8px;line-height:0"></div></div>
+      <div class="card am"><div class="clbl" data-t="bestDay">Mejor dia</div><div class="cval" id="w-best">-</div><div class="csub" id="w-best-amt"></div><div id="w-spark-best" style="margin-top:8px;line-height:0"></div></div>
+      <div class="card bl"><div class="clbl" data-t="yesterdaySales">Ventas de ayer</div><div class="cval" id="w-yest">$0.00</div><div class="csub" id="w-yest-cnt">0 ordenes</div><div id="w-spark-yest" style="margin-top:8px;line-height:0"></div></div>
     </div>
     <div class="sec-ttl" data-t="salesByDay">Ventas por dia</div>
     <div class="chart-wrap"><canvas id="week-chart"></canvas></div>
@@ -289,8 +289,8 @@ body.light #snm{background:#fff;}
 
   <div class="page" id="pg-mes">
     <div class="cards">
-      <div class="card gn"><div class="clbl" data-t="thisMonth">Este mes</div><div class="cval" id="m-inc">$0.00</div><div class="csub" id="m-ords">0 ordenes</div></div>
-      <div class="card ac"><div class="clbl" data-t="avgDay">Promedio/dia</div><div class="cval" id="m-avg">$0.00</div><div class="csub" data-t="last30">ultimos 30 dias</div></div>
+      <div class="card gn"><div class="clbl" data-t="thisMonth">Este mes</div><div class="cval" id="m-inc">$0.00</div><div class="csub" id="m-ords">0 ordenes</div><div id="m-spark-inc" style="margin-top:8px;line-height:0"></div></div>
+      <div class="card ac"><div class="clbl" data-t="avgDay">Promedio/dia</div><div class="cval" id="m-avg">$0.00</div><div class="csub" data-t="last30">ultimos 30 dias</div><div id="m-spark-avg" style="margin-top:8px;line-height:0"></div></div>
     </div>
     <div class="sec-ttl" data-t="last30Sales">Ventas ultimos 30 dias</div>
     <div class="chart-wrap"><canvas id="month-chart"></canvas></div>
@@ -699,6 +699,15 @@ function renderWeek(){
   var yinc=ys.reduce(function(s,x){return s+x.total;},0);
   document.getElementById('w-yest').textContent=dolr(yinc);
   document.getElementById('w-yest-cnt').textContent=ys.length+' '+t('ordersN');
+  // Sparklines — totales diarios de los últimos 7 días
+  var _sales=DB&&DB.sales||[],_now=new Date();
+  var _d7=[];for(var _i=6;_i>=0;_i--){var _dt=new Date(_now);_dt.setDate(_dt.getDate()-_i);_d7.push(_dt.toDateString());}
+  function _d7tot(ds){return _sales.filter(function(s){return s.status!=='cancelled'&&s.status!=='returned'&&new Date(s.date).toDateString()===ds;}).reduce(function(a,s){return a+(s.total||0);},0);}
+  var _v7=_d7.map(_d7tot);
+  var _si=document.getElementById('w-spark-inc');if(_si)_si.innerHTML=makeSpark(_v7,'#34d399');
+  var _sa=document.getElementById('w-spark-avg');if(_sa)_sa.innerHTML=makeSpark(_v7,'#60a5fa');
+  var _sb=document.getElementById('w-spark-best');if(_sb)_sb.innerHTML=makeSpark(_v7,'#fbbf24');
+  var _sy=document.getElementById('w-spark-yest');if(_sy)_sy.innerHTML=makeSpark(_v7,'#60a5fa');
   setTimeout(function(){drawBarChart('week-chart',7);},50);
   renderProdBars(ws,'week-prods');
 }
@@ -709,6 +718,13 @@ function renderMonth(){
   document.getElementById('m-inc').textContent=dolr(inc);
   document.getElementById('m-ords').textContent=ms.length+' '+t('ordersN');
   document.getElementById('m-avg').textContent=dolr(inc/30);
+  // Sparklines — totales diarios de los últimos 30 días
+  var _sales=DB&&DB.sales||[],_now=new Date();
+  var _d30=[];for(var _i=29;_i>=0;_i--){var _dt=new Date(_now);_dt.setDate(_dt.getDate()-_i);_d30.push(_dt.toDateString());}
+  function _d30tot(ds){return _sales.filter(function(s){return s.status!=='cancelled'&&s.status!=='returned'&&new Date(s.date).toDateString()===ds;}).reduce(function(a,s){return a+(s.total||0);},0);}
+  var _v30=_d30.map(_d30tot);
+  var _mi=document.getElementById('m-spark-inc');if(_mi)_mi.innerHTML=makeSpark(_v30,'#34d399');
+  var _ma=document.getElementById('m-spark-avg');if(_ma)_ma.innerHTML=makeSpark(_v30,'#60a5fa');
   setTimeout(function(){drawBarChart('month-chart',30);},50);
   renderProdBars(ms,'month-prods');
 }
