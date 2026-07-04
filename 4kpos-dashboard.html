@@ -256,6 +256,10 @@ body.light #snm{background:#fff;}
       <div class="card ac"><div class="clbl" data-t="orders">Ordenes</div><div class="cval" id="h-cnt">0</div><div class="csub" id="h-avg">Prom. $0.00</div></div>
       <div class="card am"><div class="clbl" data-t="highTicket">Ticket mayor</div><div class="cval" id="h-max">$0.00</div><div class="csub" data-t="orderHighest">orden mas alta</div></div>
       <div class="card gold" id="cred-card" onclick="toggleCredDetail()" style="cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent"><div class="clbl" data-t="pendingCredits">Créditos pendientes</div><div class="cval" id="h-cred-total">$0.00</div><div class="csub" id="h-cred-count">—</div><div style="font-size:.6rem;color:#f0c040;opacity:.6;margin-top:3px" id="cred-card-hint" data-t="showDetail">▾ ver detalle</div></div>
+      <div class="card wide" style="display:flex;justify-content:space-between;align-items:center;border-left:3px solid #a78bfa">
+        <div><div class="clbl" style="color:#a78bfa">📈 Ventas totales</div><div class="cval" id="h-alltime" style="color:var(--tx)">$0.00</div></div>
+        <div style="text-align:right"><div style="font-size:.7rem;color:var(--tx3)" id="h-alltime-cnt">—</div><div style="font-size:.62rem;color:var(--tx5);margin-top:2px">todo el tiempo</div></div>
+      </div>
     </div>
     <div id="cred-detail" style="display:none;margin-bottom:14px"></div>
     <div class="sec-ttl" data-t="payMethod">Metodo de pago</div>
@@ -583,6 +587,10 @@ function renderToday(isNew){
   document.getElementById('pay-rows').innerHTML=payHtml||'<div class="empty">'+t('noSales')+'</div>';
   renderProdBars(ts,'prod-bars');
   document.getElementById('sale-count').textContent=ts.length+' '+t('salesN');
+  var allSales=(DB.sales||[]).filter(function(s){return s.status!=='cancelled'&&s.status!=='returned';});
+  var allTotal=allSales.reduce(function(sum,s){return sum+(s.total||0);},0);
+  var atEl=document.getElementById('h-alltime');if(atEl)atEl.textContent=dolr(allTotal);
+  var atCntEl=document.getElementById('h-alltime-cnt');if(atCntEl)atCntEl.textContent=allSales.length+' transacciones';
   var credPayHtml='';
   var regularSaleHtml=ts.slice().reverse().map(function(s,i){
     var sid='s'+i;
