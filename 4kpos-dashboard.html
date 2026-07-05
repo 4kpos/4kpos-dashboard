@@ -354,7 +354,7 @@ body.light #snm{background:#fff;}
 const API='https://izalnhluwtyotuxwkqrh.supabase.co/functions/v1/posapi';
 const SUPA_URL='https://izalnhluwtyotuxwkqrh.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6YWxuaGx1d3R5b3R1eHdrcXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNDg2OTEsImV4cCI6MjA5NTkyNDY5MX0.qtaMdroQMP4CIARsStkSWx6vGU-T5id98zczaGKGAvk';
-let DB=null,KEY=null,lastSaleCount=0,refreshInterval=null;
+let DB=null,KEY=null,lastSaleCount=0,refreshInterval=null,shiftPollInterval=null;
 
 // ── Helpers ────────────────────────────────────────────
 function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -1106,6 +1106,9 @@ async function init(){
     document.getElementById('botnav').style.display='flex';
     if(refreshInterval)clearInterval(refreshInterval);
     refreshInterval=setInterval(function(){loadData(false);},30000);
+    // Estado de turno abierto: poll liviano aparte (solo tabla categories, no el blob completo) cada 12s
+    if(shiftPollInterval)clearInterval(shiftPollInterval);
+    shiftPollInterval=setInterval(async function(){await loadShiftStatus();renderShiftStatus();},12000);
   }
 }
 
