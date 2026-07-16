@@ -291,9 +291,13 @@ body.light #snm{background:#fff;}
     <div class="cards">
       <div class="card gn"><div class="clbl" data-t="thisMonth">Este mes</div><div class="cval" id="m-inc">$0.00</div><div class="csub" id="m-ords">0 ordenes</div><div id="m-spark-inc" style="margin-top:8px;line-height:0"></div></div>
       <div class="card ac"><div class="clbl" data-t="avgDay">Promedio/dia</div><div class="cval" id="m-avg">$0.00</div><div class="csub" data-t="last30">ultimos 30 dias</div><div id="m-spark-avg" style="margin-top:8px;line-height:0"></div></div>
+      <div class="card am"><div class="clbl" data-t="bestDay">Mejor dia</div><div class="cval" id="m-best">-</div><div class="csub" id="m-best-amt"></div><div id="m-spark-best" style="margin-top:8px;line-height:0"></div></div>
+      <div class="card bl"><div class="clbl" data-t="orders">Ordenes</div><div class="cval" id="m-cnt">0</div><div class="csub" data-t="last30">ultimos 30 dias</div></div>
     </div>
     <div class="sec-ttl" data-t="last30Sales">Ventas ultimos 30 dias</div>
     <div class="chart-wrap"><canvas id="month-chart"></canvas></div>
+    <div class="sec-ttl" data-t="salesByCategory">Ventas por categoria</div>
+    <div class="card wide" style="padding:12px 14px"><div id="month-cats"></div></div>
     <div class="sec-ttl" data-t="topMonthProds">Top productos este mes</div>
     <div class="card wide" style="padding:12px 14px"><div id="month-prods"></div></div>
   </div>
@@ -301,10 +305,14 @@ body.light #snm{background:#fff;}
   <div class="page" id="pg-inv">
     <div class="cards">
       <div class="card am"><div class="clbl" data-t="totalProds">Total productos</div><div class="cval" id="inv-total">0</div><div class="csub" data-t="inCatalog">en catalogo</div></div>
+      <div class="card gn"><div class="clbl" data-t="invValue">Valor inventario</div><div class="cval" id="inv-value">$0.00</div></div>
       <div class="card rd"><div class="clbl" data-t="lowStock">Stock bajo</div><div class="cval" id="inv-low">0</div><div class="csub" data-t="needReorder">necesitan reorden</div></div>
+      <div class="card bl"><div class="clbl" data-t="outOfStock">Sin stock</div><div class="cval" id="inv-out">0</div><div class="csub" data-t="needReorder">necesitan reorden</div></div>
     </div>
     <div class="sec-ttl" data-t="lowStockItems">Productos con stock bajo</div>
     <div id="low-list"></div>
+    <div class="sec-ttl" data-t="outOfStock">Sin stock</div>
+    <div id="out-list"></div>
     <div class="sec-ttl" data-t="allInventory">Todo el inventario</div>
     <div id="all-prods"></div>
   </div>
@@ -434,6 +442,7 @@ var TR={
     overdueN:'Vencido hace',overdueUnit:'d',
     dueSoon:'Vence en',dueUnit:'d',dueOn:'Vence:',
     newSaleNotif:'Nueva venta:',updated:'Actualizado',
+    invValue:'Valor inventario',outOfStock:'Sin stock',salesByCategory:'Ventas por categoria',
   },
   en:{
     incToday:"Today's income",orders:'Orders',highTicket:'Highest ticket',products:'Products',
@@ -475,6 +484,7 @@ var TR={
     overdueN:'Overdue',overdueUnit:'d ago',
     dueSoon:'Due in',dueUnit:'d',dueOn:'Due:',
     newSaleNotif:'New sale:',updated:'Updated',
+    invValue:'Inventory value',outOfStock:'Out of stock',salesByCategory:'Sales by category',
   }
 };
 function t(k){return (TR[LANG]||TR.es)[k]||k;}
@@ -625,6 +635,29 @@ function renderProdBars(sales,cid){
   document.getElementById(cid).innerHTML=prods.slice(0,8).map(function(e,i){return '<div class="bar-row"><div class="bar-lbl"><span>'+escHtml(e[0])+'</span><span>'+dolr(e[1].total)+' ('+e[1].qty+'u)</span></div><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(e[1].total/maxT*100)+'%;background:'+colors[i%colors.length]+'"></div></div></div>';}).join('');
 }
 
+function buildCatMap(sales){
+  var catMap={};(DB.categories||[]).forEach(function(c){if(c.id&&c.name)catMap[String(c.id)]=c.name;});
+  var prodMap={};(DB.products||[]).forEach(function(p){prodMap[String(p.id)]=p;});
+  var m={};
+  sales.forEach(function(s){
+    (s.items||[]).forEach(function(i){
+      var p=prodMap[String(i.id)];
+      var cid=p&&p.cat?String(p.cat):'__none__';
+      var cname=catMap[cid]||t('uncategorized');
+      if(!m[cname])m[cname]={qty:0,total:0};
+      m[cname].qty+=(i.qty||0);m[cname].total+=(i.price||0)*(i.qty||0);
+    });
+  });
+  return Object.entries(m).sort(function(a,b){return b[1].total-a[1].total;});
+}
+function renderCatBars(sales,cid){
+  var cats=buildCatMap(sales);
+  if(!cats.length){document.getElementById(cid).innerHTML='<div class="empty">'+t('noData')+'</div>';return;}
+  var maxT=cats[0][1].total;
+  var colors=['#3b82f6','#34d399','#fbbf24','#60a5fa','#f87171','#fb923c','#a78bfa','#10b981'];
+  document.getElementById(cid).innerHTML=cats.map(function(e,i){return '<div class="bar-row"><div class="bar-lbl"><span>'+escHtml(e[0])+'</span><span>'+dolr(e[1].total)+' ('+e[1].qty+'u)</span></div><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(e[1].total/maxT*100)+'%;background:'+colors[i%colors.length]+'"></div></div></div>';}).join('');
+}
+
 function renderToday(isNew){
   var ts=getTodaySales(),ys=getYesterdaySales();
   var inc=ts.reduce(function(s,x){return s+x.total;},0);
@@ -718,6 +751,10 @@ function renderMonth(){
   document.getElementById('m-inc').textContent=dolr(inc);
   document.getElementById('m-ords').textContent=ms.length+' '+t('ordersN');
   document.getElementById('m-avg').textContent=dolr(inc/30);
+  document.getElementById('m-cnt').textContent=ms.length;
+  var dayMap={};ms.forEach(function(s){var d=new Date(s.date).toDateString();if(!dayMap[d])dayMap[d]={total:0,date:new Date(s.date)};dayMap[d].total+=s.total;});
+  var days=Object.values(dayMap).sort(function(a,b){return b.total-a.total;});
+  if(days.length>0){document.getElementById('m-best').textContent=fmtDate(days[0].date);document.getElementById('m-best-amt').textContent=dolr(days[0].total);}
   // Sparklines — totales diarios de los últimos 30 días
   var _sales=DB&&DB.sales||[],_now=new Date();
   var _d30=[];for(var _i=29;_i>=0;_i--){var _dt=new Date(_now);_dt.setDate(_dt.getDate()-_i);_d30.push(_dt.toDateString());}
@@ -725,8 +762,10 @@ function renderMonth(){
   var _v30=_d30.map(_d30tot);
   var _mi=document.getElementById('m-spark-inc');if(_mi)_mi.innerHTML=makeSpark(_v30,'#34d399');
   var _ma=document.getElementById('m-spark-avg');if(_ma)_ma.innerHTML=makeSpark(_v30,'#60a5fa');
+  var _mb=document.getElementById('m-spark-best');if(_mb)_mb.innerHTML=makeSpark(_v30,'#fbbf24');
   setTimeout(function(){drawBarChart('month-chart',30);},50);
   renderProdBars(ms,'month-prods');
+  renderCatBars(ms,'month-cats');
 }
 
 async function loadCategories(){
@@ -775,10 +814,16 @@ function renderInventory(){
   var cats=DB.categories||[];
   var catMap={};cats.forEach(function(c){if(c.id&&c.name)catMap[String(c.id)]=c.name;});
   var isLow=function(p){return (p.stock||0)<=(p.minStock!==undefined?p.minStock:5);};
+  var isOut=function(p){return (p.stock||0)<=0;};
   var low=prods.filter(isLow);
+  var out=prods.filter(isOut);
+  var totalValue=prods.reduce(function(s,p){return s+(p.cost||0)*(p.stock||0);},0);
   document.getElementById('inv-total').textContent=prods.length;
   document.getElementById('inv-low').textContent=low.length;
+  document.getElementById('inv-value').textContent=dolr(totalValue);
+  document.getElementById('inv-out').textContent=out.length;
   document.getElementById('low-list').innerHTML=low.length===0?'<div class="empty">'+t('allStockOk')+'</div>':low.map(function(p){return '<div class="low-item"><span style="font-size:.84rem;font-weight:600">'+escHtml(p.name)+'</span><div style="text-align:right"><div style="color:#f87171;font-weight:600">'+(p.stock||0)+' '+t('remaining')+'</div><div style="font-size:.67rem;color:var(--tx3)">'+t('minLbl')+': '+(p.minStock!==undefined?p.minStock:5)+'</div></div></div>';}).join('');
+  document.getElementById('out-list').innerHTML=out.length===0?'<div class="empty">'+t('allStockOk')+'</div>':out.map(function(p){return '<div class="low-item"><span style="font-size:.84rem;font-weight:600">'+escHtml(p.name)+'</span><div style="text-align:right"><div style="color:#f87171;font-weight:600">'+t('outOfStock')+'</div></div></div>';}).join('');
   if(!prods.length){document.getElementById('all-prods').innerHTML='<div class="empty">'+t('noProds')+'</div>';return;}
   var groups={};
   prods.forEach(function(p){
