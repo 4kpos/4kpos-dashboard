@@ -3,106 +3,173 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="page_title">4K Solutions — Software para hacer crecer tu negocio</title>
+<title data-i18n="page_title">4K Solutions — Software que impulsa tu negocio</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#080b12;color:#fff;-webkit-font-smoothing:antialiased;}
 .c1{color:#1e3a8a}.c2{color:#1a7a3a}.c3{color:#e6b800}.c4{color:#cc1111}
+a{color:inherit;}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
 
 /* NAVBAR */
-.navbar{position:sticky;top:0;z-index:1500;background:rgba(15,15,19,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1.5px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;padding:12px 20px;gap:14px;flex-wrap:wrap;}
-.navbar-brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.95rem;text-decoration:none;color:#fff;flex-shrink:0;}
+.navbar{position:sticky;top:0;z-index:1500;background:rgba(8,11,18,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.07);}
+.navbar-inner{max-width:1120px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+.navbar-brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1rem;text-decoration:none;color:#fff;flex-shrink:0;letter-spacing:.2px;}
 .navbar-brand img{width:26px;height:26px;border-radius:7px;display:block;}
-.navbar-right{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
-.navbar-links{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
-.navbar-links a{color:rgba(255,255,255,.6);text-decoration:none;font-size:.83rem;font-weight:600;transition:color .2s;white-space:nowrap;}
-.navbar-links a:hover{color:#3b82f6;}
+.navbar-right{display:flex;align-items:center;gap:22px;flex-wrap:wrap;}
+.navbar-links{display:flex;align-items:center;gap:22px;flex-wrap:wrap;}
+.navbar-links a{color:rgba(255,255,255,.62);text-decoration:none;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;transition:color .2s;white-space:nowrap;}
+.navbar-links a:hover{color:#fff;}
+.navbar-cta-group{display:flex;align-items:center;gap:12px;}
+.btn-pill{border:1.5px solid rgba(59,130,246,.5);border-radius:30px;color:#3b82f6;padding:8px 18px;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;text-decoration:none;cursor:pointer;background:none;transition:all .2s;white-space:nowrap;}
+.btn-pill:hover{background:rgba(59,130,246,.1);}
 .lang-switcher{display:flex;gap:6px;}
-.lang-btn{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;color:rgba(255,255,255,.6);padding:4px 10px;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.lang-btn{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.14);border-radius:7px;color:rgba(255,255,255,.55);padding:4px 9px;font-size:.68rem;font-weight:700;cursor:pointer;transition:all .2s;}
 .lang-btn:hover,.lang-btn.on{border-color:#3b82f6;color:#3b82f6;background:rgba(59,130,246,.1);}
 
-.hero{background:linear-gradient(135deg,#0f0f13 0%,#0a1628 50%,#0f0f13 100%);padding:52px 20px 60px;text-align:center;}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.16);border-radius:20px;padding:6px 16px;font-size:.78rem;font-weight:700;letter-spacing:.4px;color:rgba(255,255,255,.75);margin-bottom:22px;}
-.hero-img{width:64px;height:64px;border-radius:16px;margin:0 auto 14px;box-shadow:0 8px 30px rgba(59,130,246,.25);display:block;}
-.hero-logo{font-size:1.7rem;font-weight:800;margin-bottom:22px;}
-.hero h1{font-size:clamp(1.7rem,5vw,3rem);font-weight:800;line-height:1.2;margin-bottom:14px;}
-.hero p{font-size:1rem;color:rgba(255,255,255,.6);max-width:600px;margin:0 auto 30px;}
-.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-.btn-main{background:linear-gradient(135deg,#1e3a8a,#3b82f6);border:none;border-radius:10px;color:#fff;padding:14px 28px;font-size:.95rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;transition:opacity .2s;}
-.btn-main:hover{opacity:.88;}
-.btn-sec{background:none;border:1.5px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;padding:14px 28px;font-size:.95rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;}
+/* HERO */
+.hero{position:relative;padding:70px 24px 90px;overflow:hidden;background:radial-gradient(ellipse 900px 500px at 78% 30%,rgba(30,64,175,.28),transparent 65%),#080b12;}
+.hero-inner{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center;}
+@media (max-width:860px){.hero-inner{grid-template-columns:1fr;text-align:center;}.hero-visual{margin:0 auto;}}
+.hero-eyebrow{font-size:.78rem;font-weight:800;letter-spacing:1.4px;color:#3b82f6;text-transform:uppercase;margin-bottom:16px;}
+.hero h1{font-size:clamp(2.1rem,4.6vw,3.4rem);font-weight:800;line-height:1.12;letter-spacing:-.5px;margin-bottom:20px;}
+.hero h1 .accent{color:#3b82f6;}
+.hero p{font-size:1.02rem;color:rgba(255,255,255,.58);max-width:460px;margin-bottom:32px;line-height:1.6;}
+@media (max-width:860px){.hero p{max-width:none;margin-left:auto;margin-right:auto;}}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+@media (max-width:860px){.hero-btns{justify-content:center;}}
+.btn-main{background:linear-gradient(135deg,#1e3a8a,#3b82f6);border:none;border-radius:10px;color:#fff;padding:15px 26px;font-size:.88rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:opacity .2s,transform .2s;box-shadow:0 8px 24px rgba(30,64,175,.35);}
+.btn-main:hover{opacity:.9;transform:translateY(-1px);}
+.btn-sec{background:none;border:1.5px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;padding:15px 26px;font-size:.88rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .2s;}
 .btn-sec:hover{border-color:#3b82f6;color:#3b82f6;}
+.hero-visual{position:relative;display:flex;align-items:center;justify-content:center;}
+.hero-visual-panel{position:relative;width:100%;max-width:400px;aspect-ratio:1/.85;border-radius:28px;background:linear-gradient(160deg,#0d1424,#080b12);border:1px solid rgba(59,130,246,.18);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.hero-visual-glow{position:absolute;width:70%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.45),transparent 70%);filter:blur(10px);}
+.hero-visual-panel img{position:relative;width:52%;border-radius:22px;box-shadow:0 20px 60px rgba(59,130,246,.4),0 0 0 1px rgba(255,255,255,.06);}
 
-.section-eyebrow{text-align:center;font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:1.3px;color:#3b82f6;margin-bottom:10px;}
+/* SECTION HEADERS */
+.sec-eyebrow{text-align:center;font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:1.4px;color:#3b82f6;margin-bottom:10px;}
+.sec-h2{text-align:center;font-size:clamp(1.5rem,3vw,2rem);font-weight:800;letter-spacing:-.3px;margin-bottom:14px;}
+.sec-underline{width:52px;height:3px;background:linear-gradient(90deg,#1e3a8a,#3b82f6);border-radius:3px;margin:0 auto 44px;}
 
 /* PRODUCTS CATALOG */
-.products-section{padding:60px 20px 50px;max-width:900px;margin:0 auto;}
-.products-section h2{text-align:center;font-size:1.6rem;font-weight:800;margin-bottom:8px;}
-.products-section .sub{text-align:center;color:rgba(255,255,255,.5);font-size:.9rem;margin-bottom:34px;}
-.product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
-.product-card{background:#1a1a22;border:1.5px solid rgba(255,255,255,.08);border-radius:16px;padding:24px;text-decoration:none;color:#fff;transition:all .2s;display:block;position:relative;}
-.product-card.active{border-color:#3b82f6;background:linear-gradient(135deg,rgba(30,58,138,.18),rgba(59,130,246,.06));cursor:pointer;}
-.product-card.active:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(59,130,246,.18);}
-.product-card.coming-soon{opacity:.55;border-style:dashed;}
-.product-card-icon{font-size:1.8rem;margin-bottom:12px;}
-.product-card h3{font-size:1.05rem;font-weight:800;margin-bottom:6px;}
-.product-card p{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.5;margin-bottom:14px;}
-.product-card-cta{font-size:.82rem;font-weight:700;color:#3b82f6;}
-.product-card-badge{display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:3px 12px;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.55);}
+.products-section{padding:80px 24px 56px;}
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1120px;margin:0 auto;}
+@media (max-width:900px){.product-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:520px){.product-grid{grid-template-columns:1fr;}}
+.product-card{background:#0d1220;border:1.5px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;text-decoration:none;color:#fff;transition:all .25s;display:flex;flex-direction:column;}
+.product-card.active{border-color:rgba(59,130,246,.45);cursor:pointer;}
+.product-card.active:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(59,130,246,.2);border-color:#3b82f6;}
+.product-card-thumb{position:relative;aspect-ratio:16/10;background:#080b12;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.06);}
+.product-card-thumb img{width:100%;height:100%;object-fit:cover;object-position:top left;transform:scale(1.35);transform-origin:top left;}
+.product-card-badge{position:absolute;top:10px;left:10px;background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;font-size:.64rem;font-weight:800;letter-spacing:.5px;padding:4px 10px;border-radius:20px;text-transform:uppercase;}
+.product-card-locked{aspect-ratio:16/10;background:#0a0e18;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(255,255,255,.06);}
+.product-card-locked span{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:rgba(255,255,255,.35);}
+.product-card-body{padding:18px 18px 20px;flex:1;display:flex;flex-direction:column;}
+.product-card-icon{font-size:1.3rem;margin-bottom:6px;}
+.product-card h3{font-size:1.02rem;font-weight:800;margin-bottom:6px;}
+.product-card p{font-size:.8rem;color:rgba(255,255,255,.48);line-height:1.5;margin-bottom:14px;flex:1;}
+.product-card-cta{font-size:.8rem;font-weight:700;color:#3b82f6;}
+.product-card.coming-soon{opacity:.6;}
+.product-card-soon-lbl{font-size:.66rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:4px;}
 
-.features{padding:50px 20px 60px;max-width:900px;margin:0 auto;}
-.features h2{text-align:center;font-size:1.6rem;font-weight:800;margin-bottom:8px;}
-.features .sub{text-align:center;color:rgba(255,255,255,.5);font-size:.9rem;margin-bottom:40px;}
-.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
-.feat{background:#1a1a22;border:1.5px solid rgba(255,255,255,.07);border-radius:14px;padding:20px;transition:all .2s;}
-.feat:hover{border-color:rgba(59,130,246,.35);transform:translateY(-2px);}
-.feat-ico{font-size:1.8rem;margin-bottom:10px;}
-.feat h3{font-size:.95rem;font-weight:700;margin-bottom:6px;}
-.feat p{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.5;}
-.screens{background:#1a1a22;padding:60px 20px;text-align:center;}
-.screens h2{font-size:1.6rem;font-weight:800;margin-bottom:8px;}
-.screens .sub{color:rgba(255,255,255,.5);font-size:.9rem;margin-bottom:30px;}
-.screen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;max-width:900px;margin:0 auto;}
-.screen-card{background:#0f0f13;border:1.5px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;text-align:left;transition:all .2s;}
-.screen-card:hover{border-color:rgba(59,130,246,.3);transform:translateY(-2px);}
-.screen-card h4{font-size:.84rem;font-weight:700;margin-bottom:5px;color:#3b82f6;}
-.screen-card p{font-size:.76rem;color:rgba(255,255,255,.4);}
-.pricing{padding:60px 20px;max-width:900px;margin:0 auto;}
-.pricing h2{text-align:center;font-size:1.6rem;font-weight:800;margin-bottom:8px;}
-.pricing .sub{text-align:center;color:rgba(255,255,255,.5);font-size:.9rem;margin-bottom:14px;}
-.toggle-wrap{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:36px;}
+/* TRUST BAR */
+.trust-bar{max-width:1120px;margin:0 auto 30px;padding:0 24px;}
+.trust-bar-inner{border:1.5px solid rgba(255,255,255,.08);border-radius:16px;background:#0d1220;padding:26px 20px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center;}
+@media (max-width:760px){.trust-bar-inner{grid-template-columns:repeat(2,1fr);}}
+.trust-item{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.trust-item-ico{font-size:1.3rem;}
+.trust-item-num{font-size:1.3rem;font-weight:800;}
+.trust-item-lbl{font-size:.72rem;color:rgba(255,255,255,.45);line-height:1.4;}
+
+/* ABOUT BLURB */
+.about-blurb{max-width:640px;margin:0 auto 20px;padding:0 24px;text-align:center;}
+.about-blurb p{font-size:.92rem;color:rgba(255,255,255,.5);line-height:1.7;}
+
+/* PRODUCT DETAIL HEADER */
+.product-detail-top{padding:76px 24px 0;}
+.breadcrumb{max-width:1120px;margin:0 auto 26px;font-size:.78rem;color:rgba(255,255,255,.4);}
+.breadcrumb a{color:#3b82f6;text-decoration:none;}
+.pd-grid{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;padding-bottom:70px;}
+@media (max-width:900px){.pd-grid{grid-template-columns:1fr;}}
+.pd-icon{font-size:1.6rem;margin-bottom:10px;}
+.pd-title{font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:800;letter-spacing:-.3px;margin-bottom:4px;}
+.pd-subtitle{font-size:.86rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#3b82f6;margin-bottom:18px;}
+.pd-desc{font-size:.96rem;color:rgba(255,255,255,.55);line-height:1.65;margin-bottom:22px;max-width:460px;}
+.pd-checklist{list-style:none;margin-bottom:26px;}
+.pd-checklist li{display:flex;align-items:center;gap:10px;font-size:.88rem;color:rgba(255,255,255,.75);padding:6px 0;}
+.pd-checklist .ck{color:#34d399;font-weight:800;}
+.pd-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.pd-shots{position:relative;}
+.pd-shot-desktop{width:100%;border-radius:14px;border:1px solid rgba(255,255,255,.1);box-shadow:0 24px 60px rgba(0,0,0,.5);display:block;}
+.pd-shot-mobile{position:absolute;right:-6%;bottom:-9%;width:34%;border-radius:16px;border:3px solid #12182a;box-shadow:0 20px 50px rgba(0,0,0,.6);display:block;}
+@media (max-width:900px){.pd-shot-mobile{right:2%;bottom:-6%;}}
+
+/* FUNCTIONS GRID */
+.functions-section{padding:20px 24px 76px;}
+.functions-grid{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:14px 30px;}
+@media (max-width:700px){.functions-grid{grid-template-columns:1fr;}}
+.func-item{display:flex;gap:14px;padding:16px 4px;}
+.func-ico{flex-shrink:0;width:44px;height:44px;border-radius:12px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:center;font-size:1.15rem;}
+.func-item h4{font-size:.92rem;font-weight:700;margin-bottom:4px;}
+.func-item p{font-size:.8rem;color:rgba(255,255,255,.48);line-height:1.5;}
+
+/* PRICING */
+.pricing{padding:20px 24px 80px;}
+.toggle-wrap{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:40px;}
 .toggle-lbl{font-size:.84rem;color:rgba(255,255,255,.5);}
-.toggle-lbl.on{color:#fff;font-weight:600;}
-.toggle{width:44px;height:24px;background:#22222e;border:1.5px solid rgba(255,255,255,.15);border-radius:12px;cursor:pointer;position:relative;transition:background .2s;}
+.toggle-lbl.on{color:#fff;font-weight:700;}
+.toggle{width:44px;height:24px;background:#171e30;border:1.5px solid rgba(255,255,255,.15);border-radius:12px;cursor:pointer;position:relative;transition:background .2s;}
 .toggle.on{background:#3b82f6;}
 .toggle-dot{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:left .2s;}
 .toggle.on .toggle-dot{left:22px;}
-.save-badge{background:rgba(52,211,153,.15);border:1.5px solid rgba(52,211,153,.3);border-radius:20px;padding:3px 10px;font-size:.72rem;color:#34d399;font-weight:600;}
-.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
-.plan{background:#1a1a22;border:1.5px solid rgba(255,255,255,.07);border-radius:16px;padding:24px;position:relative;transition:transform .2s;}
+.save-badge{background:rgba(52,211,153,.15);border:1.5px solid rgba(52,211,153,.3);border-radius:20px;padding:3px 10px;font-size:.72rem;color:#34d399;font-weight:700;}
+.plans{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:680px;margin:0 auto;}
+@media (max-width:620px){.plans{grid-template-columns:1fr;}}
+.plan{background:#0d1220;border:1.5px solid rgba(255,255,255,.09);border-radius:18px;padding:30px 26px;position:relative;transition:transform .2s;}
 .plan:hover{transform:translateY(-3px);}
-.plan.basic-plan{border-color:#60a5fa;background:linear-gradient(135deg,rgba(96,165,250,.1),rgba(59,130,246,.05));}
-.plan.featured{border-color:#3b82f6;background:linear-gradient(135deg,rgba(30,58,138,.2),rgba(59,130,246,.1));box-shadow:0 0 30px rgba(59,130,246,.2);}
-.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);border-radius:20px;padding:4px 14px;font-size:.72rem;font-weight:700;white-space:nowrap;color:#fff;}
-.plan-badge.badge-basic{background:linear-gradient(135deg,#3b82f6,#60a5fa);}
-.plan-badge.badge-pro{background:linear-gradient(135deg,#1e3a8a,#3b82f6);}
-.plan-name{font-size:.84rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.5);margin-bottom:8px;}
-.plan-price{font-size:2.2rem;font-weight:800;margin-bottom:4px;}
+.plan.featured{border-color:#3b82f6;background:linear-gradient(160deg,rgba(30,58,138,.22),rgba(13,18,32,1) 60%);box-shadow:0 0 40px rgba(59,130,246,.18);}
+.plan-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#1e3a8a,#3b82f6);border-radius:20px;padding:5px 16px;font-size:.7rem;font-weight:800;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;color:#fff;}
+.plan-name{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.45);margin-bottom:10px;}
+.plan-price{font-size:2.4rem;font-weight:800;margin-bottom:4px;letter-spacing:-1px;}
 .plan-price span{font-size:1rem;font-weight:400;color:rgba(255,255,255,.4);}
-.plan-orig{font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px;}
-.plan-features{list-style:none;margin-bottom:20px;}
-.plan-features li{font-size:.82rem;color:rgba(255,255,255,.65);padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:7px;}
+.plan-orig{font-size:.78rem;color:rgba(255,255,255,.4);margin-bottom:20px;}
+.plan-features{list-style:none;margin-bottom:24px;}
+.plan-features li{font-size:.83rem;color:rgba(255,255,255,.68);padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:8px;}
 .plan-features li:last-child{border:none;}
 .plan-features .check{color:#34d399;}
 .plan-features .x{color:#f87171;}
-.plan-btn{width:100%;padding:12px;border:none;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;transition:opacity .2s;}
+.plan-btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:.86rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;cursor:pointer;transition:opacity .2s;}
 .plan-btn:hover{opacity:.88;}
 .plan-btn.p{background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;}
-.plan-btn.b{background:linear-gradient(135deg,#3b82f6,#60a5fa);color:#fff;}
-.plan-btn.s{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);color:#fff;}
+.plan-btn.b{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);color:#fff;}
+
+/* FAQ */
+.faq{padding:20px 24px 84px;max-width:700px;margin:0 auto;}
+.faq-item{background:#0d1220;border:1.5px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px;margin-bottom:10px;cursor:pointer;}
+.faq-q{font-size:.87rem;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.faq-a{font-size:.82rem;color:rgba(255,255,255,.5);margin-top:10px;line-height:1.6;display:none;}
+.faq-item.open .faq-a{display:block;}
+
+/* FOOTER */
+footer{background:#0a0e18;border-top:1px solid rgba(255,255,255,.07);padding:56px 24px 26px;}
+.footer-grid{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:36px;margin-bottom:36px;}
+@media (max-width:700px){.footer-grid{grid-template-columns:1fr;gap:28px;text-align:center;}}
+.footer-brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.05rem;margin-bottom:10px;}
+@media (max-width:700px){.footer-brand{justify-content:center;}}
+.footer-brand img{width:24px;height:24px;border-radius:6px;}
+.footer-tagline{font-size:.8rem;color:rgba(255,255,255,.4);max-width:260px;line-height:1.6;}
+@media (max-width:700px){.footer-tagline{margin:0 auto;}}
+.footer-col-title{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);margin-bottom:14px;}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.footer-links a{color:rgba(255,255,255,.6);text-decoration:none;font-size:.83rem;transition:color .2s;}
+.footer-links a:hover{color:#3b82f6;}
+.footer-bottom{max-width:1120px;margin:0 auto;padding-top:22px;border-top:1px solid rgba(255,255,255,.06);text-align:center;font-size:.76rem;color:rgba(255,255,255,.3);}
+
+/* CHECKOUT MODAL */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;align-items:center;justify-content:center;padding:16px;}
 .modal-bg.open{display:flex;}
-.modal{background:#1a1a22;border:1.5px solid rgba(255,255,255,.1);border-radius:18px;width:min(480px,98vw);max-height:90vh;overflow-y:auto;}
+.modal{background:#0d1220;border:1.5px solid rgba(255,255,255,.1);border-radius:18px;width:min(480px,98vw);max-height:90vh;overflow-y:auto;}
 .mh{padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;}
 .mh h3{font-size:.98rem;font-weight:700;}
 .mx{background:none;border:1.5px solid rgba(255,255,255,.1);border-radius:8px;color:rgba(255,255,255,.5);width:28px;height:28px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;}
@@ -110,110 +177,161 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;}
 .mb{padding:20px 22px;}
 .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
 .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.4);}
-.fi{background:#22222e;border:1.5px solid rgba(255,255,255,.08);border-radius:9px;padding:10px 12px;color:#fff;font-size:.88rem;outline:none;width:100%;transition:border-color .2s;}
+.fi{background:#171e30;border:1.5px solid rgba(255,255,255,.08);border-radius:9px;padding:10px 12px;color:#fff;font-size:.88rem;outline:none;width:100%;transition:border-color .2s;}
 .fi:focus{border-color:#3b82f6;}
-.order-sum{background:#0f0f13;border-radius:10px;padding:14px;margin-bottom:16px;}
+.order-sum{background:#080b12;border-radius:10px;padding:14px;margin-bottom:16px;}
 .order-row{display:flex;justify-content:space-between;font-size:.84rem;margin-bottom:6px;color:rgba(255,255,255,.6);}
 .order-row.main{font-size:.95rem;font-weight:700;color:#fff;border-top:1px solid rgba(255,255,255,.07);padding-top:8px;margin-top:4px;}
-.submit-btn{width:100%;background:linear-gradient(135deg,#1a7a3a,#34d399);border:none;border-radius:10px;color:#fff;padding:14px;font-size:.95rem;font-weight:700;cursor:pointer;transition:opacity .2s;text-align:center;text-decoration:none;display:block;}
+.submit-btn{width:100%;background:linear-gradient(135deg,#1a7a3a,#34d399);border:none;border-radius:10px;color:#fff;padding:14px;font-size:.92rem;font-weight:700;cursor:pointer;transition:opacity .2s;text-align:center;text-decoration:none;display:block;}
 .submit-btn:hover{opacity:.88;}
 .submit-btn:disabled{opacity:.4;cursor:not-allowed;}
-.faq{padding:60px 20px;max-width:700px;margin:0 auto;}
-.faq h2{text-align:center;font-size:1.5rem;font-weight:800;margin-bottom:30px;}
-.faq-item{background:#1a1a22;border:1.5px solid rgba(255,255,255,.07);border-radius:12px;padding:16px 18px;margin-bottom:10px;cursor:pointer;}
-.faq-q{font-size:.88rem;font-weight:600;display:flex;justify-content:space-between;align-items:center;}
-.faq-a{font-size:.82rem;color:rgba(255,255,255,.5);margin-top:10px;line-height:1.6;display:none;}
-.faq-item.open .faq-a{display:block;}
-footer{background:#1a1a22;border-top:1.5px solid rgba(255,255,255,.07);padding:36px 20px;text-align:center;}
-footer .logo{font-size:1.2rem;font-weight:800;margin-bottom:8px;}
-footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
 </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <a href="#" class="navbar-brand"><img src="icon-512.png" alt="4K Solutions"><span><span style="color:#1e3a8a">4K</span> <span style="color:#e6b800">Solutions</span></span></a>
-  <div class="navbar-right">
-    <div class="navbar-links">
-      <a href="#products" data-i18n="nav_products">Productos</a>
-      <a href="#pricing" data-i18n="nav_pricing">Precios</a>
-      <a href="#faq" data-i18n="nav_faq">FAQ</a>
-      <a href="#contact" data-i18n="nav_contact">Contacto</a>
-    </div>
-    <div class="lang-switcher">
-      <button class="lang-btn on" id="btn-es" onclick="setLang('es')">ES</button>
-      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+  <div class="navbar-inner">
+    <a href="#top" class="navbar-brand"><img src="icon-512.png" alt="4K Solutions"><span><span style="color:#1e3a8a">4K</span> <span style="color:#e6b800">Solutions</span></span></a>
+    <div class="navbar-right">
+      <div class="navbar-links">
+        <a href="#top" data-i18n="nav_home">Inicio</a>
+        <a href="#products" data-i18n="nav_products">Productos</a>
+        <a href="#about" data-i18n="nav_about">Nosotros</a>
+        <a href="#faq" data-i18n="nav_support">Soporte</a>
+        <a href="#contact" data-i18n="nav_contact">Contacto</a>
+      </div>
+      <div class="navbar-cta-group">
+        <div class="lang-switcher">
+          <button class="lang-btn on" id="btn-es" onclick="setLang('es')">ES</button>
+          <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+        </div>
+        <a href="https://4kpos.github.io/4kpos-dashboard/4kpos-dashboard.html" class="btn-pill" data-i18n="nav_access">Acceder</a>
+      </div>
     </div>
   </div>
 </nav>
 
-<div class="hero">
-  <div class="hero-eyebrow">🏢 <b>4K Solutions</b></div>
-  <img src="icon-512.png" alt="4K Solutions" class="hero-img">
-  <h1 data-i18n="hero_h1">Software que hace crecer<br>tu negocio</h1>
-  <p data-i18n="hero_p">Empezá con 4K POS, nuestro sistema de punto de venta completo para Windows — y sumá más herramientas de 4K Solutions a medida que tu negocio crece.</p>
-  <div class="hero-btns">
-    <a href="#products" class="btn-main" data-i18n="btn_see_products">Ver productos</a>
-    <a href="#pricing" class="btn-sec" data-i18n="btn_see_plans">Ver planes y precios</a>
-    <a href="https://4kpos.github.io/4kpos-downloads/pos/4K-POS-Setup.exe" download="4K-POS-Setup.exe" class="btn-sec" style="border-color:#34d399;color:#34d399" data-i18n="btn_download">⬇️ Descargar gratis</a>
-  </div>
-</div>
-
-<div class="products-section" id="products">
-  <h2 data-i18n="products_h2">Nuestros Productos</h2>
-  <p class="sub" data-i18n="products_sub">Software simple y potente para hacer crecer tu negocio</p>
-  <div class="product-grid">
-    <a href="#product-pos" class="product-card active">
-      <div class="product-card-icon">🛒</div>
-      <h3>4K POS</h3>
-      <p data-i18n="product_pos_desc">Sistema de punto de venta completo: ventas, inventario, contabilidad y dashboard en tu celular.</p>
-      <span class="product-card-cta" data-i18n="btn_view_product">Ver detalles →</span>
-    </a>
-    <div class="product-card coming-soon">
-      <div class="product-card-icon">✨</div>
-      <h3 data-i18n="product_soon_title">Próximamente</h3>
-      <p data-i18n="product_soon_desc">Estamos trabajando en más herramientas para tu negocio.</p>
-      <span class="product-card-badge" data-i18n="badge_coming_soon">Muy pronto</span>
+<div class="hero" id="top">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">4K SOLUTIONS</div>
+      <h1 data-i18n="hero_h1">Software que impulsa<br><span class="accent">tu negocio</span></h1>
+      <p data-i18n="hero_p">Herramientas inteligentes y fáciles de usar para llevar el control total de tu empresa.</p>
+      <div class="hero-btns">
+        <a href="#products" class="btn-main" data-i18n="btn_see_products">Ver productos →</a>
+        <a href="#contact" class="btn-sec" data-i18n="btn_contact_us">💬 Contáctanos</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-visual-panel">
+        <div class="hero-visual-glow"></div>
+        <img src="icon-512.png" alt="4K Solutions">
+      </div>
     </div>
   </div>
 </div>
 
-<section id="product-pos">
-
-<div class="features" id="features">
-  <div class="section-eyebrow">4K POS</div>
-  <h2 data-i18n="feat_h2">Todo lo que necesitas</h2>
-  <p class="sub" data-i18n="feat_sub">Diseñado para negocios pequeños y medianos en República Dominicana</p>
-  <div class="feat-grid">
-    <div class="feat"><div class="feat-ico">🛒</div><h3 data-i18n="feat1_title">Punto de Venta Completo</h3><p data-i18n="feat1_desc">Cobra con efectivo, tarjeta o transferencia. Teclado numérico táctil, carrito de compras y recibo imprimible.</p></div>
-    <div class="feat"><div class="feat-ico">📱</div><h3 data-i18n="feat2_title">Dashboard en tu Celular</h3><p data-i18n="feat2_desc">Ve tus ventas en tiempo real desde el celular. Gráficas de ventas diarias, semanales y mensuales.</p></div>
-    <div class="feat"><div class="feat-ico">📦</div><h3 data-i18n="feat3_title">Control de Inventario</h3><p data-i18n="feat3_desc">Gestiona tu stock, recibe alertas de productos bajos y registra facturas de compra que actualizan el inventario.</p></div>
-    <div class="feat"><div class="feat-ico">🧾</div><h3 data-i18n="feat4_title">Recibos Profesionales</h3><p data-i18n="feat4_desc">Imprime recibos con tu logo, nombre del negocio, redes sociales y código QR. Compatible con impresoras térmicas.</p></div>
-    <div class="feat"><div class="feat-ico">👥</div><h3 data-i18n="feat5_title">Multi-Usuario</h3><p data-i18n="feat5_desc">Crea usuarios con roles. Admin con control total o cajero solo para cobrar. Login y cierre de turno con cuadre.</p></div>
-    <div class="feat"><div class="feat-ico">📒</div><h3 data-i18n="feat6_title">Contabilidad Básica</h3><p data-i18n="feat6_desc">Registra gastos, facturas de proveedores y ve gráficas de flujo de caja. Utilidad neta en tiempo real.</p></div>
-    <div class="feat"><div class="feat-ico">☁️</div><h3 data-i18n="feat7_title">Sincronización en la Nube</h3><p data-i18n="feat7_desc">Tus datos siempre seguros y accesibles. Sincronización automática cada 5 minutos.</p></div>
-    <div class="feat"><div class="feat-ico">🔐</div><h3 data-i18n="feat8_title">Seguro y Privado</h3><p data-i18n="feat8_desc">Código de admin protegido, acceso por turno y datos cifrados en la nube.</p></div>
+<div class="products-section" id="products">
+  <div class="sec-eyebrow" data-i18n="products_eyebrow">Nuestros Productos</div>
+  <div class="sec-h2" data-i18n="products_h2">Soluciones para cada necesidad</div>
+  <div class="sec-underline"></div>
+  <div class="product-grid">
+    <a href="#product-pos" class="product-card active">
+      <div class="product-card-thumb">
+        <span class="product-card-badge" data-i18n="badge_new">Nuevo</span>
+        <img src="assets/screenshot-pos-desktop.png" alt="4K POS">
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-icon">🛒</div>
+        <h3>4K POS</h3>
+        <p data-i18n="product_pos_desc">Sistema de punto de venta moderno, rápido y completo para tu negocio.</p>
+        <span class="product-card-cta" data-i18n="btn_view_product">Ver producto →</span>
+      </div>
+    </a>
+    <div class="product-card coming-soon">
+      <div class="product-card-locked"><span>🔒</span></div>
+      <div class="product-card-body">
+        <div class="product-card-soon-lbl" data-i18n="badge_coming_soon">Próximamente</div>
+        <h3>4K Préstamos</h3>
+      </div>
+    </div>
+    <div class="product-card coming-soon">
+      <div class="product-card-locked"><span>🔒</span></div>
+      <div class="product-card-body">
+        <div class="product-card-soon-lbl" data-i18n="badge_coming_soon">Próximamente</div>
+        <h3>4K Fórmulas</h3>
+      </div>
+    </div>
+    <div class="product-card coming-soon">
+      <div class="product-card-locked"><span>🔒</span></div>
+      <div class="product-card-body">
+        <h3 data-i18n="product_more_soon">Más productos en camino</h3>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="screens">
-  <div class="section-eyebrow">4K POS</div>
-  <h2 data-i18n="screens_h2">Una app completa</h2>
-  <p class="sub" data-i18n="screens_sub">Todo desde una sola pantalla</p>
-  <div class="screen-grid">
-    <div class="screen-card"><h4 data-i18n="sc1_title">📋 Lista de Precios</h4><p data-i18n="sc1_desc">Agrega productos con fotos, categorías y códigos de barras</p></div>
-    <div class="screen-card"><h4 data-i18n="sc2_title">🛒 Cobro Rápido</h4><p data-i18n="sc2_desc">Toca el producto, ingresa el efectivo y cobra en segundos</p></div>
-    <div class="screen-card"><h4 data-i18n="sc3_title">📊 Ventas del Día</h4><p data-i18n="sc3_desc">Ve todas las ventas, cancela o procesa devoluciones</p></div>
-    <div class="screen-card"><h4 data-i18n="sc4_title">📱 Dashboard Celular</h4><p data-i18n="sc4_desc">Ingresos, órdenes y productos más vendidos en tu celular</p></div>
-    <div class="screen-card"><h4 data-i18n="sc5_title">📒 Contabilidad</h4><p data-i18n="sc5_desc">Gastos, facturas y gráficas de rentabilidad</p></div>
-    <div class="screen-card"><h4 data-i18n="sc6_title">⚙️ Configurable</h4><p data-i18n="sc6_desc">Tu logo, nombre, mensaje de gracias y redes sociales en el recibo</p></div>
+<div class="trust-bar">
+  <div class="trust-bar-inner">
+    <div class="trust-item"><span class="trust-item-ico">👥</span><span class="trust-item-num">+500</span><span class="trust-item-lbl" data-i18n="trust1">Negocios confían en nosotros</span></div>
+    <div class="trust-item"><span class="trust-item-ico">🛡️</span><span class="trust-item-num">100%</span><span class="trust-item-lbl" data-i18n="trust2">Seguro y confiable</span></div>
+    <div class="trust-item"><span class="trust-item-ico">🕐</span><span class="trust-item-num">24/7</span><span class="trust-item-lbl" data-i18n="trust3">Soporte técnico</span></div>
+    <div class="trust-item"><span class="trust-item-ico">📈</span><span class="trust-item-lbl" data-i18n="trust4">Actualizaciones constantes</span></div>
+  </div>
+</div>
+
+<div class="about-blurb" id="about">
+  <p data-i18n="about_blurb">Creamos software simple y potente para negocios como el tuyo — sin complicaciones, sin curva de aprendizaje eterna.</p>
+</div>
+
+<section id="product-pos">
+
+<div class="product-detail-top">
+  <div class="breadcrumb"><a href="#products" data-i18n="nav_products">Productos</a> / 4K POS</div>
+  <div class="pd-grid">
+    <div>
+      <div class="pd-icon">🛒</div>
+      <div class="pd-title">4K POS</div>
+      <div class="pd-subtitle" data-i18n="pd_subtitle">Tu negocio, bajo control</div>
+      <p class="pd-desc" data-i18n="pd_desc">El sistema de punto de venta completo que necesitas para vender más y administrar mejor.</p>
+      <ul class="pd-checklist">
+        <li><span class="ck">✓</span> <span data-i18n="pd_check1">Ventas rápidas e intuitivas</span></li>
+        <li><span class="ck">✓</span> <span data-i18n="pd_check2">Control de inventario</span></li>
+        <li><span class="ck">✓</span> <span data-i18n="pd_check3">Múltiples métodos de pago</span></li>
+        <li><span class="ck">✓</span> <span data-i18n="pd_check4">Reportes en tiempo real</span></li>
+        <li><span class="ck">✓</span> <span data-i18n="pd_check5">Cuentas abiertas</span></li>
+        <li><span class="ck">✓</span> <span data-i18n="pd_check6">Y mucho más...</span></li>
+      </ul>
+      <div class="pd-btns">
+        <a href="https://4kpos.github.io/4kpos-downloads/pos/4K-POS-Setup.exe" download="4K-POS-Setup.exe" class="btn-main" data-i18n="btn_try_free">⬇️ Probar gratis</a>
+        <a href="#functions" class="btn-sec" data-i18n="btn_view_demo">▶ Ver demo</a>
+      </div>
+    </div>
+    <div class="pd-shots">
+      <img class="pd-shot-desktop" src="assets/screenshot-pos-desktop.png" alt="4K POS — escritorio">
+      <img class="pd-shot-mobile" src="assets/screenshot-dashboard-mobile.png" alt="4K POS — dashboard móvil">
+    </div>
+  </div>
+</div>
+
+<div class="functions-section" id="functions">
+  <div class="sec-eyebrow" data-i18n="functions_eyebrow">4K POS</div>
+  <div class="sec-h2" data-i18n="functions_h2">Funciones principales</div>
+  <div class="sec-underline"></div>
+  <div class="functions-grid">
+    <div class="func-item"><div class="func-ico">🛒</div><div><h4 data-i18n="func1_title">Ventas Rápidas</h4><p data-i18n="func1_desc">Interfaz intuitiva para cobrar en segundos.</p></div></div>
+    <div class="func-item"><div class="func-ico">📋</div><div><h4 data-i18n="func2_title">Cuentas Abiertas</h4><p data-i18n="func2_desc">Lleva control de tus clientes y sus balances.</p></div></div>
+    <div class="func-item"><div class="func-ico">📦</div><div><h4 data-i18n="func3_title">Inventario Inteligente</h4><p data-i18n="func3_desc">Controla tu stock y recibe alertas de bajo stock.</p></div></div>
+    <div class="func-item"><div class="func-ico">💳</div><div><h4 data-i18n="func4_title">Múltiples Pagos</h4><p data-i18n="func4_desc">Efectivo, tarjeta, transferencia y más.</p></div></div>
+    <div class="func-item"><div class="func-ico">📊</div><div><h4 data-i18n="func5_title">Reportes Avanzados</h4><p data-i18n="func5_desc">Toma decisiones con datos en tiempo real.</p></div></div>
+    <div class="func-item"><div class="func-ico">🔐</div><div><h4 data-i18n="func6_title">100% Seguro</h4><p data-i18n="func6_desc">Tus datos siempre protegidos con respaldo automático.</p></div></div>
   </div>
 </div>
 
 <div class="pricing" id="pricing">
-  <div class="section-eyebrow">4K POS</div>
-  <h2 data-i18n="pricing_h2">Planes y Precios</h2>
-  <p class="sub" data-i18n="pricing_sub">Elige el plan que mejor se adapte a tu negocio</p>
+  <div class="sec-eyebrow" data-i18n="functions_eyebrow">4K POS</div>
+  <div class="sec-h2" data-i18n="pricing_h2">Planes y Precios</div>
+  <div class="sec-underline"></div>
   <div class="toggle-wrap">
     <span class="toggle-lbl" id="lbl-monthly" data-i18n="billing_monthly">Mensual</span>
     <div class="toggle on" id="billing-toggle" onclick="toggleBilling()"><div class="toggle-dot"></div></div>
@@ -221,9 +339,8 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
     <span class="save-badge" data-i18n="save_badge">2 meses gratis</span>
   </div>
   <div class="plans">
-    <div class="plan basic-plan">
-      <div class="plan-badge badge-basic" data-i18n="plan_essential">✓ ESENCIAL</div>
-      <div class="plan-name" data-i18n="plan_basic_name">Basico</div>
+    <div class="plan">
+      <div class="plan-name" data-i18n="plan_basic_name">Básico</div>
       <div class="plan-price" id="basic-price">$100<span data-i18n="price_year">/año</span></div>
       <div class="plan-orig" id="basic-orig">$100/año · ahorras $20</div>
       <ul class="plan-features">
@@ -239,7 +356,7 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
       <button class="plan-btn b" onclick="openCheckout('basic')" data-i18n="btn_start_now">Comenzar ahora</button>
     </div>
     <div class="plan featured">
-      <div class="plan-badge badge-pro" data-i18n="plan_popular">★ MAS POPULAR</div>
+      <div class="plan-badge" data-i18n="plan_popular">★ Más popular</div>
       <div class="plan-name" data-i18n="plan_pro_name">Pro</div>
       <div class="plan-price" id="pro-price">$150<span data-i18n="price_year">/año</span></div>
       <div class="plan-orig" id="pro-orig">$150/año · ahorras $30</div>
@@ -256,14 +373,15 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
       <button class="plan-btn p" onclick="openCheckout('pro')" data-i18n="btn_start_now">Comenzar ahora</button>
     </div>
   </div>
-  <div style="text-align:center;margin-top:20px;font-size:.8rem;color:rgba(255,255,255,.3)" data-i18n="payment_footer">
+  <div style="text-align:center;margin-top:24px;font-size:.8rem;color:rgba(255,255,255,.3)" data-i18n="payment_footer">
     Te contactamos por email para completar el pago y activar tu licencia
   </div>
 </div>
 
 <div class="faq" id="faq">
-  <div class="section-eyebrow">4K POS</div>
-  <h2 data-i18n="faq_h2">Preguntas frecuentes</h2>
+  <div class="sec-eyebrow" data-i18n="nav_support">Soporte</div>
+  <div class="sec-h2" data-i18n="faq_h2">Preguntas frecuentes</div>
+  <div class="sec-underline"></div>
   <div class="faq-item" onclick="this.classList.toggle('open')">
     <div class="faq-q"><span data-i18n="faq1_q">¿Necesito internet para usarlo?</span> <span>+</span></div>
     <div class="faq-a" data-i18n="faq1_a">El POS funciona sin internet. La sincronización con la nube y el dashboard del celular requieren conexión, pero puedes cobrar sin problema aunque no tengas internet.</div>
@@ -289,11 +407,29 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
 </section>
 
 <footer id="contact">
-  <div class="logo"><span class="c1">4K</span> <span class="c2">P</span><span class="c3">O</span><span class="c4">S</span></div>
-  <p style="margin-top:4px;font-size:.76rem"><span style="color:#1e3a8a;font-weight:700">4K</span> <span style="color:#e6b800;font-weight:700">Solutions</span></p>
-  <p style="margin-top:16px;font-size:.84rem" data-i18n="footer_contact_lead">¿Preguntas? Escríbenos:</p>
-  <p style="margin-top:6px"><a href="mailto:get4ksupport@gmail.com" style="color:#3b82f6;font-weight:700;text-decoration:none;font-size:.92rem">get4ksupport@gmail.com</a></p>
-  <p style="margin-top:16px" data-i18n="footer_copy">© 2026 4K Solutions · Todos los derechos reservados</p>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand"><img src="icon-512.png" alt="4K Solutions"><span><span style="color:#1e3a8a">4K</span> <span style="color:#e6b800">Solutions</span></span></div>
+      <p class="footer-tagline" data-i18n="footer_tagline">Software que impulsa tu negocio.</p>
+    </div>
+    <div>
+      <div class="footer-col-title" data-i18n="footer_links_title">Enlaces</div>
+      <ul class="footer-links">
+        <li><a href="#top" data-i18n="nav_home">Inicio</a></li>
+        <li><a href="#products" data-i18n="nav_products">Productos</a></li>
+        <li><a href="#about" data-i18n="nav_about">Nosotros</a></li>
+        <li><a href="#faq" data-i18n="nav_support">Soporte</a></li>
+        <li><a href="#contact" data-i18n="nav_contact">Contacto</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title" data-i18n="footer_contact_title">Contacto</div>
+      <ul class="footer-links">
+        <li><a href="mailto:get4ksupport@gmail.com">📧 get4ksupport@gmail.com</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom" data-i18n="footer_copy">© 2026 4K Solutions. Todos los derechos reservados.</div>
 </footer>
 
 <!-- CHECKOUT MODAL -->
@@ -312,7 +448,7 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
         <div id="email-mismatch-msg" style="display:none;color:#f87171;font-size:.76rem;margin-top:-8px;margin-bottom:10px" data-i18n="email_mismatch_error">Los emails no coinciden</div>
         <div class="fg"><label class="lbl" data-i18n="form_biz_lbl">Nombre del negocio</label><input type="text" class="fi" id="c-biz" data-i18n-placeholder="form_biz_ph" placeholder="Mi Negocio"></div>
         <div style="font-size:.76rem;color:rgba(255,255,255,.35);margin-bottom:14px" data-i18n="form_email_hint">Te contactaremos a este email para coordinar el pago y enviarte tu clave de licencia.</div>
-        <button class="btn-main" style="width:100%;border:none" id="btn-continue" onclick="goToContact()" data-i18n="btn_continue">Continuar →</button>
+        <button class="btn-main" style="width:100%;border:none;justify-content:center" id="btn-continue" onclick="goToContact()" data-i18n="btn_continue">Continuar →</button>
       </div>
       <div id="step-contact" style="display:none">
         <div class="order-sum" id="order-summary-2"></div>
@@ -333,68 +469,66 @@ let currentLang = 'es';
 // ─── Translation Object ───────────────────────────────────────────────────────
 const T = {
   es: {
-    page_title: '4K Solutions — Software para hacer crecer tu negocio',
+    page_title: '4K Solutions — Software que impulsa tu negocio',
+    nav_home: 'Inicio',
     nav_products: 'Productos',
-    nav_pricing: 'Precios',
-    nav_faq: 'FAQ',
+    nav_about: 'Nosotros',
+    nav_support: 'Soporte',
     nav_contact: 'Contacto',
-    hero_h1: 'Software que hace crecer<br>tu negocio',
-    hero_p: 'Empezá con 4K POS, nuestro sistema de punto de venta completo para Windows — y sumá más herramientas de 4K Solutions a medida que tu negocio crece.',
-    btn_see_products: 'Ver productos',
-    btn_see_plans: 'Ver planes y precios',
-    btn_download: '⬇️ Descargar gratis',
+    nav_access: 'Acceder',
+    hero_h1: 'Software que impulsa<br><span class="accent">tu negocio</span>',
+    hero_p: 'Herramientas inteligentes y fáciles de usar para llevar el control total de tu empresa.',
+    btn_see_products: 'Ver productos →',
+    btn_contact_us: '💬 Contáctanos',
 
-    products_h2: 'Nuestros Productos',
-    products_sub: 'Software simple y potente para hacer crecer tu negocio',
-    product_pos_desc: 'Sistema de punto de venta completo: ventas, inventario, contabilidad y dashboard en tu celular.',
-    btn_view_product: 'Ver detalles →',
-    product_soon_title: 'Próximamente',
-    product_soon_desc: 'Estamos trabajando en más herramientas para tu negocio.',
-    badge_coming_soon: 'Muy pronto',
+    products_eyebrow: 'Nuestros Productos',
+    products_h2: 'Soluciones para cada necesidad',
+    badge_new: 'Nuevo',
+    badge_coming_soon: 'Próximamente',
+    product_pos_desc: 'Sistema de punto de venta moderno, rápido y completo para tu negocio.',
+    btn_view_product: 'Ver producto →',
+    product_more_soon: 'Más productos en camino',
 
-    feat_h2: 'Todo lo que necesitas',
-    feat_sub: 'Diseñado para negocios pequeños y medianos en República Dominicana',
-    feat1_title: 'Punto de Venta Completo',
-    feat1_desc: 'Cobra con efectivo, tarjeta o transferencia. Teclado numérico táctil, carrito de compras y recibo imprimible.',
-    feat2_title: 'Dashboard en tu Celular',
-    feat2_desc: 'Ve tus ventas en tiempo real desde el celular. Gráficas de ventas diarias, semanales y mensuales.',
-    feat3_title: 'Control de Inventario',
-    feat3_desc: 'Gestiona tu stock, recibe alertas de productos bajos y registra facturas de compra que actualizan el inventario.',
-    feat4_title: 'Recibos Profesionales',
-    feat4_desc: 'Imprime recibos con tu logo, nombre del negocio, redes sociales y código QR. Compatible con impresoras térmicas.',
-    feat5_title: 'Multi-Usuario',
-    feat5_desc: 'Crea usuarios con roles. Admin con control total o cajero solo para cobrar. Login y cierre de turno con cuadre.',
-    feat6_title: 'Contabilidad Básica',
-    feat6_desc: 'Registra gastos, facturas de proveedores y ve gráficas de flujo de caja. Utilidad neta en tiempo real.',
-    feat7_title: 'Sincronización en la Nube',
-    feat7_desc: 'Tus datos siempre seguros y accesibles. Sincronización automática cada 5 minutos.',
-    feat8_title: 'Seguro y Privado',
-    feat8_desc: 'Código de admin protegido, acceso por turno y datos cifrados en la nube.',
+    trust1: 'Negocios confían en nosotros',
+    trust2: 'Seguro y confiable',
+    trust3: 'Soporte técnico',
+    trust4: 'Actualizaciones constantes',
 
-    screens_h2: 'Una app completa',
-    screens_sub: 'Todo desde una sola pantalla',
-    sc1_title: '📋 Lista de Precios',
-    sc1_desc: 'Agrega productos con fotos, categorías y códigos de barras',
-    sc2_title: '🛒 Cobro Rápido',
-    sc2_desc: 'Toca el producto, ingresa el efectivo y cobra en segundos',
-    sc3_title: '📊 Ventas del Día',
-    sc3_desc: 'Ve todas las ventas, cancela o procesa devoluciones',
-    sc4_title: '📱 Dashboard Celular',
-    sc4_desc: 'Ingresos, órdenes y productos más vendidos en tu celular',
-    sc5_title: '📒 Contabilidad',
-    sc5_desc: 'Gastos, facturas y gráficas de rentabilidad',
-    sc6_title: '⚙️ Configurable',
-    sc6_desc: 'Tu logo, nombre, mensaje de gracias y redes sociales en el recibo',
+    about_blurb: 'Creamos software simple y potente para negocios como el tuyo — sin complicaciones, sin curva de aprendizaje eterna.',
+
+    pd_subtitle: 'Tu negocio, bajo control',
+    pd_desc: 'El sistema de punto de venta completo que necesitas para vender más y administrar mejor.',
+    pd_check1: 'Ventas rápidas e intuitivas',
+    pd_check2: 'Control de inventario',
+    pd_check3: 'Múltiples métodos de pago',
+    pd_check4: 'Reportes en tiempo real',
+    pd_check5: 'Cuentas abiertas',
+    pd_check6: 'Y mucho más...',
+    btn_try_free: '⬇️ Probar gratis',
+    btn_view_demo: '▶ Ver demo',
+
+    functions_eyebrow: '4K POS',
+    functions_h2: 'Funciones principales',
+    func1_title: 'Ventas Rápidas',
+    func1_desc: 'Interfaz intuitiva para cobrar en segundos.',
+    func2_title: 'Cuentas Abiertas',
+    func2_desc: 'Lleva control de tus clientes y sus balances.',
+    func3_title: 'Inventario Inteligente',
+    func3_desc: 'Controla tu stock y recibe alertas de bajo stock.',
+    func4_title: 'Múltiples Pagos',
+    func4_desc: 'Efectivo, tarjeta, transferencia y más.',
+    func5_title: 'Reportes Avanzados',
+    func5_desc: 'Toma decisiones con datos en tiempo real.',
+    func6_title: '100% Seguro',
+    func6_desc: 'Tus datos siempre protegidos con respaldo automático.',
 
     pricing_h2: 'Planes y Precios',
-    pricing_sub: 'Elige el plan que mejor se adapte a tu negocio',
     billing_monthly: 'Mensual',
     billing_annual: 'Anual',
     save_badge: '2 meses gratis',
-    plan_basic_name: 'Basico',
+    plan_basic_name: 'Básico',
     plan_pro_name: 'Pro',
-    plan_popular: '★ MAS POPULAR',
-    plan_essential: '✓ ESENCIAL',
+    plan_popular: '★ Más popular',
     price_year: '/año',
     price_month: '/mes',
     monthly_upsell: '2 meses gratis al pagar anual',
@@ -423,8 +557,10 @@ const T = {
     faq5_q: '¿Qué pasa si tengo problemas técnicos?',
     faq5_a: 'Ofrecemos soporte por email. Te ayudamos a instalar, configurar y resolver cualquier problema que tengas.',
 
-    footer_contact_lead: '¿Preguntas? Escríbenos:',
-    footer_copy: '© 2026 4K Solutions · Todos los derechos reservados',
+    footer_tagline: 'Software que impulsa tu negocio.',
+    footer_links_title: 'Enlaces',
+    footer_contact_title: 'Contacto',
+    footer_copy: '© 2026 4K Solutions. Todos los derechos reservados.',
 
     modal_title: 'Completar compra',
     modal_buy: 'Comprar ',
@@ -453,68 +589,66 @@ const T = {
   },
 
   en: {
-    page_title: '4K Solutions — Software to grow your business',
+    page_title: '4K Solutions — Software that powers your business',
+    nav_home: 'Home',
     nav_products: 'Products',
-    nav_pricing: 'Pricing',
-    nav_faq: 'FAQ',
+    nav_about: 'About',
+    nav_support: 'Support',
     nav_contact: 'Contact',
-    hero_h1: 'Software that grows<br>your business',
-    hero_p: 'Start with 4K POS, our complete point-of-sale system for Windows — and add more 4K Solutions tools as your business grows.',
-    btn_see_products: 'See products',
-    btn_see_plans: 'See plans & pricing',
-    btn_download: '⬇️ Download free',
+    nav_access: 'Sign in',
+    hero_h1: 'Software that powers<br><span class="accent">your business</span>',
+    hero_p: 'Smart, easy-to-use tools to take full control of your business.',
+    btn_see_products: 'See products →',
+    btn_contact_us: '💬 Contact us',
 
-    products_h2: 'Our Products',
-    products_sub: 'Simple, powerful software to grow your business',
-    product_pos_desc: 'Complete point of sale system: sales, inventory, accounting and mobile dashboard.',
-    btn_view_product: 'View details →',
-    product_soon_title: 'Coming soon',
-    product_soon_desc: "We're working on more tools for your business.",
+    products_eyebrow: 'Our Products',
+    products_h2: 'Solutions for every need',
+    badge_new: 'New',
     badge_coming_soon: 'Coming soon',
+    product_pos_desc: 'Modern, fast and complete point of sale system for your business.',
+    btn_view_product: 'View product →',
+    product_more_soon: 'More products on the way',
 
-    feat_h2: 'Everything you need',
-    feat_sub: 'Designed for small and medium businesses',
-    feat1_title: 'Complete Point of Sale',
-    feat1_desc: 'Accept cash, card or transfer. Touch numeric keypad, shopping cart and printable receipt.',
-    feat2_title: 'Mobile Dashboard',
-    feat2_desc: 'View your sales in real time from your phone. Daily, weekly and monthly sales charts.',
-    feat3_title: 'Inventory Control',
-    feat3_desc: 'Manage your stock, get low-product alerts and log purchase invoices that update inventory.',
-    feat4_title: 'Professional Receipts',
-    feat4_desc: 'Print receipts with your logo, business name, social media and QR code. Compatible with thermal printers.',
-    feat5_title: 'Multi-User',
-    feat5_desc: 'Create users with roles. Admin with full control or cashier for checkout only. Login and shift close with reconciliation.',
-    feat6_title: 'Basic Accounting',
-    feat6_desc: 'Record expenses, supplier invoices and view cash flow charts. Net profit in real time.',
-    feat7_title: 'Cloud Sync',
-    feat7_desc: 'Your data always safe and accessible. Automatic sync every 5 minutes.',
-    feat8_title: 'Secure & Private',
-    feat8_desc: 'Protected admin code, shift-based access and encrypted cloud data.',
+    trust1: 'Businesses trust us',
+    trust2: 'Secure and reliable',
+    trust3: 'Technical support',
+    trust4: 'Constant updates',
 
-    screens_h2: 'A complete app',
-    screens_sub: 'Everything from a single screen',
-    sc1_title: '📋 Price List',
-    sc1_desc: 'Add products with photos, categories and barcodes',
-    sc2_title: '🛒 Quick Checkout',
-    sc2_desc: 'Tap the product, enter cash and charge in seconds',
-    sc3_title: '📊 Daily Sales',
-    sc3_desc: 'View all sales, cancel or process returns',
-    sc4_title: '📱 Mobile Dashboard',
-    sc4_desc: 'Revenue, orders and top-selling products on your phone',
-    sc5_title: '📒 Accounting',
-    sc5_desc: 'Expenses, invoices and profitability charts',
-    sc6_title: '⚙️ Configurable',
-    sc6_desc: 'Your logo, name, thank-you message and social media on the receipt',
+    about_blurb: 'We build simple, powerful software for businesses like yours — no complications, no endless learning curve.',
+
+    pd_subtitle: 'Your business, under control',
+    pd_desc: 'The complete point of sale system you need to sell more and manage better.',
+    pd_check1: 'Fast, intuitive sales',
+    pd_check2: 'Inventory control',
+    pd_check3: 'Multiple payment methods',
+    pd_check4: 'Real-time reports',
+    pd_check5: 'Open accounts',
+    pd_check6: 'And much more...',
+    btn_try_free: '⬇️ Try for free',
+    btn_view_demo: '▶ View demo',
+
+    functions_eyebrow: '4K POS',
+    functions_h2: 'Main features',
+    func1_title: 'Fast Sales',
+    func1_desc: 'Intuitive interface to check out in seconds.',
+    func2_title: 'Open Accounts',
+    func2_desc: 'Keep track of your customers and their balances.',
+    func3_title: 'Smart Inventory',
+    func3_desc: 'Control your stock and get low-stock alerts.',
+    func4_title: 'Multiple Payments',
+    func4_desc: 'Cash, card, transfer and more.',
+    func5_title: 'Advanced Reports',
+    func5_desc: 'Make decisions with real-time data.',
+    func6_title: '100% Secure',
+    func6_desc: 'Your data always protected with automatic backup.',
 
     pricing_h2: 'Plans & Pricing',
-    pricing_sub: 'Choose the plan that best fits your business',
     billing_monthly: 'Monthly',
     billing_annual: 'Annual',
     save_badge: '2 months free',
     plan_basic_name: 'Basic',
     plan_pro_name: 'Pro',
-    plan_popular: '★ MOST POPULAR',
-    plan_essential: '✓ ESSENTIAL',
+    plan_popular: '★ Most popular',
     price_year: '/yr',
     price_month: '/mo',
     monthly_upsell: '2 months free when paying annually',
@@ -543,8 +677,10 @@ const T = {
     faq5_q: 'What if I have technical problems?',
     faq5_a: 'We offer email support. We help you install, configure and resolve any issue you have.',
 
-    footer_contact_lead: 'Questions? Email us:',
-    footer_copy: '© 2026 4K Solutions · All rights reserved',
+    footer_tagline: 'Software that powers your business.',
+    footer_links_title: 'Links',
+    footer_contact_title: 'Contact',
+    footer_copy: '© 2026 4K Solutions. All rights reserved.',
 
     modal_title: 'Complete purchase',
     modal_buy: 'Buy ',
