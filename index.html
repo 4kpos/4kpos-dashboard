@@ -3,27 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="page_title">4K POS — Sistema de Punto de Venta Profesional</title>
+<title data-i18n="page_title">4K Solutions — Software para hacer crecer tu negocio</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;}
 .c1{color:#1e3a8a}.c2{color:#1a7a3a}.c3{color:#e6b800}.c4{color:#cc1111}
-.hero{background:linear-gradient(135deg,#0f0f13 0%,#0a1628 50%,#0f0f13 100%);padding:60px 20px;text-align:center;}
-.hero-logo{font-size:2.5rem;font-weight:800;margin-bottom:8px;}
-.hero-img{width:88px;height:88px;border-radius:18px;margin:0 auto 14px;box-shadow:0 8px 30px rgba(59,130,246,.25);display:block;}
-.hero-tag{display:inline-block;background:rgba(59,130,246,.15);border:1.5px solid rgba(59,130,246,.3);border-radius:20px;padding:5px 14px;font-size:.78rem;color:#3b82f6;margin-bottom:20px;}
-.hero h1{font-size:clamp(1.6rem,5vw,2.8rem);font-weight:800;line-height:1.2;margin-bottom:14px;}
-.hero p{font-size:1rem;color:rgba(255,255,255,.6);max-width:580px;margin:0 auto 30px;}
+
+/* NAVBAR */
+.navbar{position:sticky;top:0;z-index:1500;background:rgba(15,15,19,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1.5px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;padding:12px 20px;gap:14px;flex-wrap:wrap;}
+.navbar-brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.95rem;text-decoration:none;color:#fff;flex-shrink:0;}
+.navbar-brand img{width:26px;height:26px;border-radius:7px;display:block;}
+.navbar-right{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.navbar-links{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.navbar-links a{color:rgba(255,255,255,.6);text-decoration:none;font-size:.83rem;font-weight:600;transition:color .2s;white-space:nowrap;}
+.navbar-links a:hover{color:#3b82f6;}
+.lang-switcher{display:flex;gap:6px;}
+.lang-btn{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;color:rgba(255,255,255,.6);padding:4px 10px;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.lang-btn:hover,.lang-btn.on{border-color:#3b82f6;color:#3b82f6;background:rgba(59,130,246,.1);}
+
+.hero{background:linear-gradient(135deg,#0f0f13 0%,#0a1628 50%,#0f0f13 100%);padding:52px 20px 60px;text-align:center;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.16);border-radius:20px;padding:6px 16px;font-size:.78rem;font-weight:700;letter-spacing:.4px;color:rgba(255,255,255,.75);margin-bottom:22px;}
+.hero-img{width:64px;height:64px;border-radius:16px;margin:0 auto 14px;box-shadow:0 8px 30px rgba(59,130,246,.25);display:block;}
+.hero-logo{font-size:1.7rem;font-weight:800;margin-bottom:22px;}
+.hero h1{font-size:clamp(1.7rem,5vw,3rem);font-weight:800;line-height:1.2;margin-bottom:14px;}
+.hero p{font-size:1rem;color:rgba(255,255,255,.6);max-width:600px;margin:0 auto 30px;}
 .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
 .btn-main{background:linear-gradient(135deg,#1e3a8a,#3b82f6);border:none;border-radius:10px;color:#fff;padding:14px 28px;font-size:.95rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;transition:opacity .2s;}
 .btn-main:hover{opacity:.88;}
 .btn-sec{background:none;border:1.5px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;padding:14px 28px;font-size:.95rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;}
 .btn-sec:hover{border-color:#3b82f6;color:#3b82f6;}
-.features{padding:60px 20px;max-width:900px;margin:0 auto;}
+
+.section-eyebrow{text-align:center;font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:1.3px;color:#3b82f6;margin-bottom:10px;}
+
+/* PRODUCTS CATALOG */
+.products-section{padding:60px 20px 50px;max-width:900px;margin:0 auto;}
+.products-section h2{text-align:center;font-size:1.6rem;font-weight:800;margin-bottom:8px;}
+.products-section .sub{text-align:center;color:rgba(255,255,255,.5);font-size:.9rem;margin-bottom:34px;}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+.product-card{background:#1a1a22;border:1.5px solid rgba(255,255,255,.08);border-radius:16px;padding:24px;text-decoration:none;color:#fff;transition:all .2s;display:block;position:relative;}
+.product-card.active{border-color:#3b82f6;background:linear-gradient(135deg,rgba(30,58,138,.18),rgba(59,130,246,.06));cursor:pointer;}
+.product-card.active:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(59,130,246,.18);}
+.product-card.coming-soon{opacity:.55;border-style:dashed;}
+.product-card-icon{font-size:1.8rem;margin-bottom:12px;}
+.product-card h3{font-size:1.05rem;font-weight:800;margin-bottom:6px;}
+.product-card p{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.5;margin-bottom:14px;}
+.product-card-cta{font-size:.82rem;font-weight:700;color:#3b82f6;}
+.product-card-badge{display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:3px 12px;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.55);}
+
+.features{padding:50px 20px 60px;max-width:900px;margin:0 auto;}
 .features h2{text-align:center;font-size:1.6rem;font-weight:800;margin-bottom:8px;}
 .features .sub{text-align:center;color:rgba(255,255,255,.5);font-size:.9rem;margin-bottom:40px;}
 .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
-.feat{background:#1a1a22;border:1.5px solid rgba(255,255,255,.07);border-radius:14px;padding:20px;}
+.feat{background:#1a1a22;border:1.5px solid rgba(255,255,255,.07);border-radius:14px;padding:20px;transition:all .2s;}
+.feat:hover{border-color:rgba(59,130,246,.35);transform:translateY(-2px);}
 .feat-ico{font-size:1.8rem;margin-bottom:10px;}
 .feat h3{font-size:.95rem;font-weight:700;margin-bottom:6px;}
 .feat p{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.5;}
@@ -31,7 +63,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;}
 .screens h2{font-size:1.6rem;font-weight:800;margin-bottom:8px;}
 .screens .sub{color:rgba(255,255,255,.5);font-size:.9rem;margin-bottom:30px;}
 .screen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;max-width:900px;margin:0 auto;}
-.screen-card{background:#0f0f13;border:1.5px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;text-align:left;}
+.screen-card{background:#0f0f13;border:1.5px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;text-align:left;transition:all .2s;}
+.screen-card:hover{border-color:rgba(59,130,246,.3);transform:translateY(-2px);}
 .screen-card h4{font-size:.84rem;font-weight:700;margin-bottom:5px;color:#3b82f6;}
 .screen-card p{font-size:.76rem;color:rgba(255,255,255,.4);}
 .pricing{padding:60px 20px;max-width:900px;margin:0 auto;}
@@ -67,7 +100,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;}
 .plan-btn.p{background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;}
 .plan-btn.b{background:linear-gradient(135deg,#3b82f6,#60a5fa);color:#fff;}
 .plan-btn.s{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);color:#fff;}
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;align-items:center;justify-content:center;padding:16px;}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;align-items:center;justify-content:center;padding:16px;}
 .modal-bg.open{display:flex;}
 .modal{background:#1a1a22;border:1.5px solid rgba(255,255,255,.1);border-radius:18px;width:min(480px,98vw);max-height:90vh;overflow-y:auto;}
 .mh{padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;}
@@ -82,55 +115,73 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f13;color:#fff;}
 .order-sum{background:#0f0f13;border-radius:10px;padding:14px;margin-bottom:16px;}
 .order-row{display:flex;justify-content:space-between;font-size:.84rem;margin-bottom:6px;color:rgba(255,255,255,.6);}
 .order-row.main{font-size:.95rem;font-weight:700;color:#fff;border-top:1px solid rgba(255,255,255,.07);padding-top:8px;margin-top:4px;}
-.pay-methods{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;}
-.pm{background:#22222e;border:1.5px solid rgba(255,255,255,.08);border-radius:9px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s;}
-.pm.on{border-color:#3b82f6;background:rgba(59,130,246,.1);}
-.pm-ico{font-size:1.3rem;margin-bottom:4px;}
-.pm-lbl{font-size:.72rem;color:rgba(255,255,255,.5);}
-.pm.on .pm-lbl{color:#3b82f6;}
-.submit-btn{width:100%;background:linear-gradient(135deg,#1e3a8a,#3b82f6);border:none;border-radius:10px;color:#fff;padding:14px;font-size:.95rem;font-weight:700;cursor:pointer;transition:opacity .2s;}
+.submit-btn{width:100%;background:linear-gradient(135deg,#1a7a3a,#34d399);border:none;border-radius:10px;color:#fff;padding:14px;font-size:.95rem;font-weight:700;cursor:pointer;transition:opacity .2s;text-align:center;text-decoration:none;display:block;}
 .submit-btn:hover{opacity:.88;}
 .submit-btn:disabled{opacity:.4;cursor:not-allowed;}
-.success-box{text-align:center;padding:20px 0;}
-.success-key{font-family:'Courier New',monospace;font-size:1.3rem;font-weight:700;color:#3b82f6;background:#0f0f13;border:2px solid rgba(59,130,246,.3);border-radius:10px;padding:14px;margin:14px 0;letter-spacing:2px;}
-.dl-btn{display:inline-block;background:linear-gradient(135deg,#1a7a3a,#34d399);border:none;border-radius:10px;color:#fff;padding:14px 28px;font-size:.95rem;font-weight:700;cursor:pointer;text-decoration:none;margin-bottom:10px;transition:opacity .2s;}
-.dl-btn:hover{opacity:.88;}
 .faq{padding:60px 20px;max-width:700px;margin:0 auto;}
 .faq h2{text-align:center;font-size:1.5rem;font-weight:800;margin-bottom:30px;}
 .faq-item{background:#1a1a22;border:1.5px solid rgba(255,255,255,.07);border-radius:12px;padding:16px 18px;margin-bottom:10px;cursor:pointer;}
 .faq-q{font-size:.88rem;font-weight:600;display:flex;justify-content:space-between;align-items:center;}
 .faq-a{font-size:.82rem;color:rgba(255,255,255,.5);margin-top:10px;line-height:1.6;display:none;}
 .faq-item.open .faq-a{display:block;}
-footer{background:#1a1a22;border-top:1.5px solid rgba(255,255,255,.07);padding:30px 20px;text-align:center;}
+footer{background:#1a1a22;border-top:1.5px solid rgba(255,255,255,.07);padding:36px 20px;text-align:center;}
 footer .logo{font-size:1.2rem;font-weight:800;margin-bottom:8px;}
 footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
-.lang-switcher{position:fixed;top:12px;right:14px;z-index:2000;display:flex;gap:6px;}
-.lang-btn{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;color:rgba(255,255,255,.6);padding:4px 10px;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;}
-.lang-btn:hover,.lang-btn.on{border-color:#3b82f6;color:#3b82f6;background:rgba(59,130,246,.1);}
 </style>
 </head>
 <body>
 
-<!-- Language Switcher -->
-<div class="lang-switcher">
-  <button class="lang-btn on" id="btn-es" onclick="setLang('es')">ES</button>
-  <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
-</div>
+<nav class="navbar">
+  <a href="#" class="navbar-brand"><img src="icon-512.png" alt="4K Solutions"><span><span style="color:#1e3a8a">4K</span> <span style="color:#e6b800">Solutions</span></span></a>
+  <div class="navbar-right">
+    <div class="navbar-links">
+      <a href="#products" data-i18n="nav_products">Productos</a>
+      <a href="#pricing" data-i18n="nav_pricing">Precios</a>
+      <a href="#faq" data-i18n="nav_faq">FAQ</a>
+      <a href="#contact" data-i18n="nav_contact">Contacto</a>
+    </div>
+    <div class="lang-switcher">
+      <button class="lang-btn on" id="btn-es" onclick="setLang('es')">ES</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
 
 <div class="hero">
-  <img src="icon-512.png" alt="4K POS" class="hero-img">
-  <div class="hero-logo"><span class="c1">4K</span> <span class="c2">P</span><span class="c3">O</span><span class="c4">S</span></div>
-  <div class="hero-tag" data-i18n="hero_tag">✨ Sistema Profesional de Punto de Venta</div>
-  <h1 data-i18n="hero_h1">Controla tu negocio<br>desde cualquier lugar</h1>
-  <p data-i18n="hero_p">POS completo para Windows con sincronización en la nube, dashboard en tu celular y todo lo que necesitas para vender más.</p>
+  <div class="hero-eyebrow">🏢 <b>4K Solutions</b></div>
+  <img src="icon-512.png" alt="4K Solutions" class="hero-img">
+  <h1 data-i18n="hero_h1">Software que hace crecer<br>tu negocio</h1>
+  <p data-i18n="hero_p">Empezá con 4K POS, nuestro sistema de punto de venta completo para Windows — y sumá más herramientas de 4K Solutions a medida que tu negocio crece.</p>
   <div class="hero-btns">
-    <a href="#pricing" class="btn-main" data-i18n="btn_see_plans">Ver planes y precios</a>
-    <a href="#features" class="btn-sec" data-i18n="btn_see_features">Ver funciones</a>
+    <a href="#products" class="btn-main" data-i18n="btn_see_products">Ver productos</a>
+    <a href="#pricing" class="btn-sec" data-i18n="btn_see_plans">Ver planes y precios</a>
     <a href="https://4kpos.github.io/4kpos-downloads/pos/4K-POS-Setup.exe" download="4K-POS-Setup.exe" class="btn-sec" style="border-color:#34d399;color:#34d399" data-i18n="btn_download">⬇️ Descargar gratis</a>
   </div>
 </div>
 
+<div class="products-section" id="products">
+  <h2 data-i18n="products_h2">Nuestros Productos</h2>
+  <p class="sub" data-i18n="products_sub">Software simple y potente para hacer crecer tu negocio</p>
+  <div class="product-grid">
+    <a href="#product-pos" class="product-card active">
+      <div class="product-card-icon">🛒</div>
+      <h3>4K POS</h3>
+      <p data-i18n="product_pos_desc">Sistema de punto de venta completo: ventas, inventario, contabilidad y dashboard en tu celular.</p>
+      <span class="product-card-cta" data-i18n="btn_view_product">Ver detalles →</span>
+    </a>
+    <div class="product-card coming-soon">
+      <div class="product-card-icon">✨</div>
+      <h3 data-i18n="product_soon_title">Próximamente</h3>
+      <p data-i18n="product_soon_desc">Estamos trabajando en más herramientas para tu negocio.</p>
+      <span class="product-card-badge" data-i18n="badge_coming_soon">Muy pronto</span>
+    </div>
+  </div>
+</div>
+
+<section id="product-pos">
+
 <div class="features" id="features">
+  <div class="section-eyebrow">4K POS</div>
   <h2 data-i18n="feat_h2">Todo lo que necesitas</h2>
   <p class="sub" data-i18n="feat_sub">Diseñado para negocios pequeños y medianos en República Dominicana</p>
   <div class="feat-grid">
@@ -146,6 +197,7 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
 </div>
 
 <div class="screens">
+  <div class="section-eyebrow">4K POS</div>
   <h2 data-i18n="screens_h2">Una app completa</h2>
   <p class="sub" data-i18n="screens_sub">Todo desde una sola pantalla</p>
   <div class="screen-grid">
@@ -159,6 +211,7 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
 </div>
 
 <div class="pricing" id="pricing">
+  <div class="section-eyebrow">4K POS</div>
   <h2 data-i18n="pricing_h2">Planes y Precios</h2>
   <p class="sub" data-i18n="pricing_sub">Elige el plan que mejor se adapte a tu negocio</p>
   <div class="toggle-wrap">
@@ -204,11 +257,12 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
     </div>
   </div>
   <div style="text-align:center;margin-top:20px;font-size:.8rem;color:rgba(255,255,255,.3)" data-i18n="payment_footer">
-    Pagos seguros procesados por Stripe · Soporte por WhatsApp incluido
+    Te contactamos por email para completar el pago y activar tu licencia
   </div>
 </div>
 
-<div class="faq">
+<div class="faq" id="faq">
+  <div class="section-eyebrow">4K POS</div>
   <h2 data-i18n="faq_h2">Preguntas frecuentes</h2>
   <div class="faq-item" onclick="this.classList.toggle('open')">
     <div class="faq-q"><span data-i18n="faq1_q">¿Necesito internet para usarlo?</span> <span>+</span></div>
@@ -220,22 +274,26 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
   </div>
   <div class="faq-item" onclick="this.classList.toggle('open')">
     <div class="faq-q"><span data-i18n="faq3_q">¿Cómo recibo el programa después de pagar?</span> <span>+</span></div>
-    <div class="faq-a" data-i18n="faq3_a">Inmediatamente después del pago recibes tu clave de licencia y el link de descarga directa del instalador. El proceso es automático.</div>
+    <div class="faq-a" data-i18n="faq3_a">Al elegir un plan te pedimos tus datos y te escribimos por email para coordinar el pago. Una vez confirmado, recibes tu clave de licencia y el link de descarga del instalador por email.</div>
   </div>
   <div class="faq-item" onclick="this.classList.toggle('open')">
     <div class="faq-q"><span data-i18n="faq4_q">¿Puedo cambiar de plan después?</span> <span>+</span></div>
-    <div class="faq-a" data-i18n="faq4_a">Sí, puedes actualizar de Básico a Pro pagando la diferencia. Contáctanos por WhatsApp y lo hacemos en minutos.</div>
+    <div class="faq-a" data-i18n="faq4_a">Sí, puedes actualizar de Básico a Pro pagando la diferencia. Escríbenos por email y lo hacemos en minutos.</div>
   </div>
   <div class="faq-item" onclick="this.classList.toggle('open')">
     <div class="faq-q"><span data-i18n="faq5_q">¿Qué pasa si tengo problemas técnicos?</span> <span>+</span></div>
-    <div class="faq-a" data-i18n="faq5_a">Ofrecemos soporte por WhatsApp. Te ayudamos a instalar, configurar y resolver cualquier problema que tengas.</div>
+    <div class="faq-a" data-i18n="faq5_a">Ofrecemos soporte por email. Te ayudamos a instalar, configurar y resolver cualquier problema que tengas.</div>
   </div>
 </div>
 
-<footer>
+</section>
+
+<footer id="contact">
   <div class="logo"><span class="c1">4K</span> <span class="c2">P</span><span class="c3">O</span><span class="c4">S</span></div>
   <p style="margin-top:4px;font-size:.76rem"><span style="color:#1e3a8a;font-weight:700">4K</span> <span style="color:#e6b800;font-weight:700">Solutions</span></p>
-  <p style="margin-top:6px" data-i18n="footer_copy">© 2026 4K POS · Todos los derechos reservados</p>
+  <p style="margin-top:16px;font-size:.84rem" data-i18n="footer_contact_lead">¿Preguntas? Escríbenos:</p>
+  <p style="margin-top:6px"><a href="mailto:get4ksupport@gmail.com" style="color:#3b82f6;font-weight:700;text-decoration:none;font-size:.92rem">get4ksupport@gmail.com</a></p>
+  <p style="margin-top:16px" data-i18n="footer_copy">© 2026 4K Solutions · Todos los derechos reservados</p>
 </footer>
 
 <!-- CHECKOUT MODAL -->
@@ -253,72 +311,46 @@ footer p{font-size:.78rem;color:rgba(255,255,255,.35);}
         <div class="fg"><label class="lbl" data-i18n="form_email_confirm_lbl">Confirmar Email</label><input type="email" class="fi" id="c-email-confirm" data-i18n-placeholder="form_email_confirm_ph" placeholder="Confirmar tu email" oninput="checkEmailMatch()"></div>
         <div id="email-mismatch-msg" style="display:none;color:#f87171;font-size:.76rem;margin-top:-8px;margin-bottom:10px" data-i18n="email_mismatch_error">Los emails no coinciden</div>
         <div class="fg"><label class="lbl" data-i18n="form_biz_lbl">Nombre del negocio</label><input type="text" class="fi" id="c-biz" data-i18n-placeholder="form_biz_ph" placeholder="Mi Negocio"></div>
-        <div style="background:rgba(251,191,36,.08);border:1.5px solid rgba(251,191,36,.3);border-radius:9px;padding:10px 12px;font-size:.78rem;color:rgba(251,191,36,.9);margin-bottom:10px;line-height:1.5" data-i18n="form_email_warning">⚠️ Verifica bien tu email. Tu clave de licencia se enviará automáticamente a esta dirección y no podremos reenviarla a otro correo después.</div>
-        <div style="font-size:.76rem;color:rgba(255,255,255,.35);margin-bottom:14px" data-i18n="form_email_hint">Tu clave de licencia llegará a este email inmediatamente después del pago.</div>
-        <button class="submit-btn" id="btn-continue" onclick="goToPayment()" data-i18n="btn_continue_payment">Continuar al pago →</button>
+        <div style="font-size:.76rem;color:rgba(255,255,255,.35);margin-bottom:14px" data-i18n="form_email_hint">Te contactaremos a este email para coordinar el pago y enviarte tu clave de licencia.</div>
+        <button class="btn-main" style="width:100%;border:none" id="btn-continue" onclick="goToContact()" data-i18n="btn_continue">Continuar →</button>
       </div>
-      <div id="step-payment" style="display:none">
+      <div id="step-contact" style="display:none">
         <div class="order-sum" id="order-summary-2"></div>
-        <div class="lbl" style="margin-bottom:10px" data-i18n="pay_method_lbl">Metodo de pago</div>
-        <div class="pay-methods">
-          <div class="pm on" onclick="selPay('card',this)"><div class="pm-ico">💳</div><div class="pm-lbl" data-i18n="pay_card">Tarjeta</div></div>
-          <div class="pm" onclick="selPay('paypal',this)"><div class="pm-ico">🅿️</div><div class="pm-lbl">PayPal</div></div>
-          <div class="pm" onclick="selPay('transfer',this)"><div class="pm-ico">🏦</div><div class="pm-lbl" data-i18n="pay_transfer">Transfer</div></div>
-        </div>
-        <div id="pay-card-form">
-          <div class="fg"><label class="lbl" data-i18n="card_number_lbl">Numero de tarjeta</label><input type="text" class="fi" id="c-card" placeholder="4242 4242 4242 4242" maxlength="19" oninput="fmtCard(this)"></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <div class="fg"><label class="lbl" data-i18n="card_exp_lbl">Vencimiento</label><input type="text" class="fi" id="c-exp" placeholder="MM/AA" maxlength="5" oninput="fmtExp(this)"></div>
-            <div class="fg"><label class="lbl">CVV</label><input type="text" class="fi" id="c-cvv" placeholder="123" maxlength="4"></div>
-          </div>
-        </div>
-        <div id="pay-paypal-form" style="display:none;text-align:center;padding:20px">
-          <p style="color:rgba(255,255,255,.5);font-size:.84rem" data-i18n="paypal_redirect">Serás redirigido a PayPal para completar el pago de forma segura.</p>
-        </div>
-        <div id="pay-transfer-form" style="display:none">
-          <div style="background:#0f0f13;border-radius:10px;padding:14px;font-size:.82rem;color:rgba(255,255,255,.6)">
-            <p style="margin-bottom:8px" data-i18n="transfer_intro">Realiza la transferencia a:</p>
-            <p><strong style="color:#fff" data-i18n="transfer_bank_lbl">Banco: </strong><span data-i18n="transfer_bank_val">Banco Popular</span></p>
-            <p><strong style="color:#fff" data-i18n="transfer_acct_lbl">Cuenta: </strong>000-000000-0</p>
-            <p><strong style="color:#fff" data-i18n="transfer_name_lbl">A nombre de: </strong>4K POS</p>
-            <p style="margin-top:10px;color:rgba(255,255,255,.4);font-size:.76rem" data-i18n="transfer_note">Envía el comprobante por WhatsApp y activamos tu licencia en menos de 1 hora.</p>
-          </div>
-        </div>
-        <button class="submit-btn" style="margin-top:16px" onclick="processPayment()" id="pay-btn" data-i18n="btn_pay_now">Pagar ahora</button>
-        <div style="text-align:center;margin-top:10px;font-size:.74rem;color:rgba(255,255,255,.25)" data-i18n="secure_stripe">🔒 Pago seguro con Stripe</div>
-      </div>
-      <div id="step-success" style="display:none">
-        <div class="success-box">
-          <div style="font-size:3rem;margin-bottom:14px">🎉</div>
-          <h3 style="font-size:1.1rem;margin-bottom:8px" data-i18n="success_title">¡Pago exitoso!</h3>
-          <p style="font-size:.84rem;color:rgba(255,255,255,.5);margin-bottom:16px" data-i18n="success_subtitle">Tu licencia ha sido activada. Revisa tu email.</p>
-          <div class="lbl" style="margin-bottom:8px" data-i18n="success_key_lbl">Tu clave de licencia:</div>
-          <div class="success-key" id="success-key">4K-XXXX-XXXX-XXXX</div>
-          <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin-bottom:20px" data-i18n="success_key_note">Guarda esta clave. También la recibiste por email.</p>
-          <a href="https://4kpos.github.io/4kpos-downloads/pos/4K-POS-Setup.exe" download="4K-POS-Setup.exe" class="dl-btn" data-i18n="btn_download_windows">⬇️ Descargar 4K POS para Windows</a>
-          <br>
-          <a href="https://4kpos.github.io/4kpos-dashboard/4kpos-dashboard.html" class="btn-sec" style="font-size:.82rem;padding:10px 20px" data-i18n="btn_view_mobile_dash">📱 Ver dashboard en celular</a>
-        </div>
+        <p style="font-size:.86rem;color:rgba(255,255,255,.65);line-height:1.65;margin-bottom:18px" data-i18n="contact_step_desc">Para completar tu compra, escríbenos con estos datos. Te contestamos a la brevedad con las instrucciones de pago, y una vez confirmado recibís tu clave de licencia por email.</p>
+        <a href="#" id="mailto-btn" class="submit-btn" data-i18n="btn_email_us">📧 Escribinos para completar la compra</a>
+        <p style="text-align:center;margin-top:14px;font-size:.78rem;color:rgba(255,255,255,.35)">
+          <span data-i18n="contact_direct_note">O escríbenos directo a</span> <a href="mailto:get4ksupport@gmail.com" style="color:#3b82f6">get4ksupport@gmail.com</a>
+        </p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const API = 'https://izalnhluwtyotuxwkqrh.supabase.co/functions/v1/posapi';
-let selectedPlan = null, billingMonthly = false, selectedPayMethod = 'card';
+let selectedPlan = null, billingMonthly = false;
 let currentLang = 'es';
 
 // ─── Translation Object ───────────────────────────────────────────────────────
 const T = {
   es: {
-    page_title: '4K POS — Sistema de Punto de Venta Profesional',
-    hero_tag: '✨ Sistema Profesional de Punto de Venta',
-    hero_h1: 'Controla tu negocio<br>desde cualquier lugar',
-    hero_p: 'POS completo para Windows con sincronización en la nube, dashboard en tu celular y todo lo que necesitas para vender más.',
+    page_title: '4K Solutions — Software para hacer crecer tu negocio',
+    nav_products: 'Productos',
+    nav_pricing: 'Precios',
+    nav_faq: 'FAQ',
+    nav_contact: 'Contacto',
+    hero_h1: 'Software que hace crecer<br>tu negocio',
+    hero_p: 'Empezá con 4K POS, nuestro sistema de punto de venta completo para Windows — y sumá más herramientas de 4K Solutions a medida que tu negocio crece.',
+    btn_see_products: 'Ver productos',
     btn_see_plans: 'Ver planes y precios',
-    btn_see_features: 'Ver funciones',
     btn_download: '⬇️ Descargar gratis',
+
+    products_h2: 'Nuestros Productos',
+    products_sub: 'Software simple y potente para hacer crecer tu negocio',
+    product_pos_desc: 'Sistema de punto de venta completo: ventas, inventario, contabilidad y dashboard en tu celular.',
+    btn_view_product: 'Ver detalles →',
+    product_soon_title: 'Próximamente',
+    product_soon_desc: 'Estamos trabajando en más herramientas para tu negocio.',
+    badge_coming_soon: 'Muy pronto',
 
     feat_h2: 'Todo lo que necesitas',
     feat_sub: 'Diseñado para negocios pequeños y medianos en República Dominicana',
@@ -377,7 +409,7 @@ const T = {
     feat_mobile_dash: 'Dashboard celular',
     feat_cloud_sync: 'Sincronización nube',
     btn_start_now: 'Comenzar ahora',
-    payment_footer: 'Pagos seguros procesados por Stripe · Soporte por WhatsApp incluido',
+    payment_footer: 'Te contactamos por email para completar el pago y activar tu licencia',
 
     faq_h2: 'Preguntas frecuentes',
     faq1_q: '¿Necesito internet para usarlo?',
@@ -385,13 +417,14 @@ const T = {
     faq2_q: '¿Es compatible con impresoras térmicas?',
     faq2_a: 'Sí, es compatible con cualquier impresora térmica que funcione en Windows. Conectas la impresora y listo, no necesitas configuración especial.',
     faq3_q: '¿Cómo recibo el programa después de pagar?',
-    faq3_a: 'Inmediatamente después del pago recibes tu clave de licencia y el link de descarga directa del instalador. El proceso es automático.',
+    faq3_a: 'Al elegir un plan te pedimos tus datos y te escribimos por email para coordinar el pago. Una vez confirmado, recibes tu clave de licencia y el link de descarga del instalador por email.',
     faq4_q: '¿Puedo cambiar de plan después?',
-    faq4_a: 'Sí, puedes actualizar de Básico a Pro pagando la diferencia. Contáctanos por WhatsApp y lo hacemos en minutos.',
+    faq4_a: 'Sí, puedes actualizar de Básico a Pro pagando la diferencia. Escríbenos por email y lo hacemos en minutos.',
     faq5_q: '¿Qué pasa si tengo problemas técnicos?',
-    faq5_a: 'Ofrecemos soporte por WhatsApp. Te ayudamos a instalar, configurar y resolver cualquier problema que tengas.',
+    faq5_a: 'Ofrecemos soporte por email. Te ayudamos a instalar, configurar y resolver cualquier problema que tengas.',
 
-    footer_copy: '© 2026 4K POS · Todos los derechos reservados',
+    footer_contact_lead: '¿Preguntas? Escríbenos:',
+    footer_copy: '© 2026 4K Solutions · Todos los derechos reservados',
 
     modal_title: 'Completar compra',
     modal_buy: 'Comprar ',
@@ -401,36 +434,15 @@ const T = {
     form_email_confirm_lbl: 'Confirmar Email',
     form_email_confirm_ph: 'Confirmar tu email',
     email_mismatch_error: 'Los emails no coinciden',
-    form_email_warning: '⚠️ Verifica bien tu email. Tu clave de licencia se enviará automáticamente a esta dirección y no podremos reenviarla a otro correo después.',
     form_biz_lbl: 'Nombre del negocio',
     form_biz_ph: 'Mi Negocio',
-    form_email_hint: 'Tu clave de licencia llegará a este email inmediatamente después del pago.',
-    btn_continue_payment: 'Continuar al pago →',
-    pay_method_lbl: 'Metodo de pago',
-    pay_card: 'Tarjeta',
-    pay_transfer: 'Transfer',
-    card_number_lbl: 'Numero de tarjeta',
-    card_exp_lbl: 'Vencimiento',
-    paypal_redirect: 'Serás redirigido a PayPal para completar el pago de forma segura.',
-    transfer_intro: 'Realiza la transferencia a:',
-    transfer_bank_lbl: 'Banco: ',
-    transfer_bank_val: 'Banco Popular',
-    transfer_acct_lbl: 'Cuenta: ',
-    transfer_name_lbl: 'A nombre de: ',
-    transfer_note: 'Envía el comprobante por WhatsApp y activamos tu licencia en menos de 1 hora.',
-    btn_pay_now: 'Pagar ahora',
-    btn_send_proof: 'Enviar comprobante',
-    btn_processing: 'Procesando...',
-    secure_stripe: '🔒 Pago seguro con Stripe',
-    success_title: '¡Pago exitoso!',
-    success_subtitle: 'Tu licencia ha sido activada. Revisa tu email.',
-    success_key_lbl: 'Tu clave de licencia:',
-    success_key_note: 'Guarda esta clave. También la recibiste por email.',
-    btn_download_windows: '⬇️ Descargar 4K POS para Windows',
-    btn_view_mobile_dash: '📱 Ver dashboard en celular',
+    form_email_hint: 'Te contactaremos a este email para coordinar el pago y enviarte tu clave de licencia.',
+    btn_continue: 'Continuar →',
+    contact_step_desc: 'Para completar tu compra, escríbenos con estos datos. Te contestamos a la brevedad con las instrucciones de pago, y una vez confirmado recibís tu clave de licencia por email.',
+    btn_email_us: '📧 Escribinos para completar la compra',
+    contact_direct_note: 'O escríbenos directo a',
 
     alert_fill_name_email: 'Por favor completa tu nombre y email.',
-    alert_error: 'Error: ',
 
     order_devices: 'Dispositivos',
     order_total: 'Total',
@@ -441,13 +453,24 @@ const T = {
   },
 
   en: {
-    page_title: '4K POS — Professional Point of Sale System',
-    hero_tag: '✨ Professional Point of Sale System',
-    hero_h1: 'Control your business<br>from anywhere',
-    hero_p: 'Complete POS for Windows with cloud sync, mobile dashboard and everything you need to sell more.',
+    page_title: '4K Solutions — Software to grow your business',
+    nav_products: 'Products',
+    nav_pricing: 'Pricing',
+    nav_faq: 'FAQ',
+    nav_contact: 'Contact',
+    hero_h1: 'Software that grows<br>your business',
+    hero_p: 'Start with 4K POS, our complete point-of-sale system for Windows — and add more 4K Solutions tools as your business grows.',
+    btn_see_products: 'See products',
     btn_see_plans: 'See plans & pricing',
-    btn_see_features: 'See features',
     btn_download: '⬇️ Download free',
+
+    products_h2: 'Our Products',
+    products_sub: 'Simple, powerful software to grow your business',
+    product_pos_desc: 'Complete point of sale system: sales, inventory, accounting and mobile dashboard.',
+    btn_view_product: 'View details →',
+    product_soon_title: 'Coming soon',
+    product_soon_desc: "We're working on more tools for your business.",
+    badge_coming_soon: 'Coming soon',
 
     feat_h2: 'Everything you need',
     feat_sub: 'Designed for small and medium businesses',
@@ -506,7 +529,7 @@ const T = {
     feat_mobile_dash: 'Mobile dashboard',
     feat_cloud_sync: 'Cloud sync',
     btn_start_now: 'Get started',
-    payment_footer: 'Secure payments powered by Stripe · WhatsApp support included',
+    payment_footer: "We'll email you to complete payment and activate your license",
 
     faq_h2: 'Frequently asked questions',
     faq1_q: 'Do I need internet to use it?',
@@ -514,13 +537,14 @@ const T = {
     faq2_q: 'Is it compatible with thermal printers?',
     faq2_a: 'Yes, it works with any thermal printer that runs on Windows. Plug in the printer and you\'re ready — no special configuration needed.',
     faq3_q: 'How do I receive the software after paying?',
-    faq3_a: 'Immediately after payment you receive your license key and a direct download link for the installer. The process is automatic.',
+    faq3_a: "When you pick a plan we ask for your details and email you to coordinate payment. Once confirmed, you'll receive your license key and the installer download link by email.",
     faq4_q: 'Can I upgrade my plan later?',
-    faq4_a: 'Yes, you can upgrade from Basic to Pro by paying the difference. Contact us on WhatsApp and we\'ll do it in minutes.',
+    faq4_a: 'Yes, you can upgrade from Basic to Pro by paying the difference. Email us and we\'ll do it in minutes.',
     faq5_q: 'What if I have technical problems?',
-    faq5_a: 'We offer WhatsApp support. We help you install, configure and resolve any issue you have.',
+    faq5_a: 'We offer email support. We help you install, configure and resolve any issue you have.',
 
-    footer_copy: '© 2026 4K POS · All rights reserved',
+    footer_contact_lead: 'Questions? Email us:',
+    footer_copy: '© 2026 4K Solutions · All rights reserved',
 
     modal_title: 'Complete purchase',
     modal_buy: 'Buy ',
@@ -530,36 +554,15 @@ const T = {
     form_email_confirm_lbl: 'Confirm Email',
     form_email_confirm_ph: 'Confirm your email',
     email_mismatch_error: "Emails don't match",
-    form_email_warning: '⚠️ Please verify your email carefully. Your license key will be sent automatically to this address and we cannot resend it to a different email afterward.',
     form_biz_lbl: 'Business name',
     form_biz_ph: 'My Business',
-    form_email_hint: 'Your license key will be sent to this email immediately after payment.',
-    btn_continue_payment: 'Continue to payment →',
-    pay_method_lbl: 'Payment method',
-    pay_card: 'Card',
-    pay_transfer: 'Transfer',
-    card_number_lbl: 'Card number',
-    card_exp_lbl: 'Expiry',
-    paypal_redirect: 'You will be redirected to PayPal to complete the payment securely.',
-    transfer_intro: 'Send the transfer to:',
-    transfer_bank_lbl: 'Bank: ',
-    transfer_bank_val: 'Banco Popular',
-    transfer_acct_lbl: 'Account: ',
-    transfer_name_lbl: 'Name: ',
-    transfer_note: 'Send the receipt via WhatsApp and we will activate your license within 1 hour.',
-    btn_pay_now: 'Pay now',
-    btn_send_proof: 'Send receipt',
-    btn_processing: 'Processing...',
-    secure_stripe: '🔒 Secure payment with Stripe',
-    success_title: 'Payment successful!',
-    success_subtitle: 'Your license has been activated. Check your email.',
-    success_key_lbl: 'Your license key:',
-    success_key_note: 'Save this key. You also received it by email.',
-    btn_download_windows: '⬇️ Download 4K POS for Windows',
-    btn_view_mobile_dash: '📱 View mobile dashboard',
+    form_email_hint: "We'll contact you at this email to coordinate payment and send your license key.",
+    btn_continue: 'Continue →',
+    contact_step_desc: "To complete your purchase, email us with these details. We'll get back to you shortly with payment instructions, and once confirmed you'll receive your license key by email.",
+    btn_email_us: '📧 Email us to complete your purchase',
+    contact_direct_note: 'Or email us directly at',
 
     alert_fill_name_email: 'Please fill in your name and email.',
-    alert_error: 'Error: ',
 
     order_devices: 'Devices',
     order_total: 'Total',
@@ -576,14 +579,11 @@ function t(key) {
 }
 
 function applyLang() {
-  // Update <title>
   document.title = t('page_title');
 
-  // Update all data-i18n elements (innerHTML for ones that may contain <br>)
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var key = el.getAttribute('data-i18n');
     var val = t(key);
-    // Use innerHTML for keys that might contain HTML tags
     if (val.indexOf('<') !== -1) {
       el.innerHTML = val;
     } else {
@@ -591,20 +591,16 @@ function applyLang() {
     }
   });
 
-  // Update placeholder attributes
   document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
     var key = el.getAttribute('data-i18n-placeholder');
     el.placeholder = t(key);
   });
 
-  // Update html lang attribute
   document.documentElement.lang = currentLang;
 
-  // Update lang button active states
   document.getElementById('btn-es').classList.toggle('on', currentLang === 'es');
   document.getElementById('btn-en').classList.toggle('on', currentLang === 'en');
 
-  // Re-render dynamic price strings
   updatePrices();
 }
 
@@ -646,6 +642,7 @@ function updatePrices(){
   });
 }
 
+// ─── Checkout (honesto: no procesa pagos, deriva a email para completar a mano) ──
 function openCheckout(planKey){
   selectedPlan = planKey;
   var p = PLANS[planKey];
@@ -661,12 +658,14 @@ function openCheckout(planKey){
   document.getElementById('order-summary').innerHTML = sumHtml;
   document.getElementById('order-summary-2').innerHTML = sumHtml;
   document.getElementById('checkout-title').textContent = t('modal_buy')+planName;
+  document.getElementById('c-name').value='';
+  document.getElementById('c-email').value='';
   document.getElementById('c-email-confirm').value='';
+  document.getElementById('c-biz').value='';
   document.getElementById('email-mismatch-msg').style.display='none';
   document.getElementById('btn-continue').disabled=false;
   document.getElementById('step-info').style.display='block';
-  document.getElementById('step-payment').style.display='none';
-  document.getElementById('step-success').style.display='none';
+  document.getElementById('step-contact').style.display='none';
   document.getElementById('checkout-modal').classList.add('open');
 }
 
@@ -687,61 +686,32 @@ function checkEmailMatch(){
   }
 }
 
-function goToPayment(){
+// En vez de "procesar el pago", arma un mailto pre-llenado con todo lo que
+// necesitamos para completar la venta a mano (nombre/email/negocio/plan) y
+// pasa al paso de contacto. Nunca se inventa ni se muestra una licencia falsa.
+function goToContact(){
   var name         = document.getElementById('c-name').value.trim();
   var email        = document.getElementById('c-email').value.trim();
   var emailConfirm = document.getElementById('c-email-confirm').value.trim();
+  var biz          = document.getElementById('c-biz').value.trim();
   if(!name||!email){ alert(t('alert_fill_name_email')); return; }
   if(email !== emailConfirm){
     document.getElementById('email-mismatch-msg').style.display='block';
     document.getElementById('btn-continue').disabled=true;
     return;
   }
+
+  var p = PLANS[selectedPlan];
+  var planName = t(p.nameKey);
+  var price = billingMonthly
+    ? '$'+p.monthly+t('order_monthly_suffix')
+    : '$'+p.annual+t('order_annual_suffix');
+  var subject = 'Compra 4K POS — Plan '+planName;
+  var body = 'Nombre: '+name+'\nEmail: '+email+'\nNegocio: '+(biz||'-')+'\nPlan: '+planName+' ('+price+')\n\nQuiero completar mi compra.';
+  document.getElementById('mailto-btn').href = 'mailto:get4ksupport@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+
   document.getElementById('step-info').style.display='none';
-  document.getElementById('step-payment').style.display='block';
-}
-
-function selPay(method, el){
-  selectedPayMethod = method;
-  document.querySelectorAll('.pm').forEach(function(p){p.classList.remove('on');});
-  el.classList.add('on');
-  document.getElementById('pay-card-form').style.display     = method==='card'?'block':'none';
-  document.getElementById('pay-paypal-form').style.display   = method==='paypal'?'block':'none';
-  document.getElementById('pay-transfer-form').style.display = method==='transfer'?'block':'none';
-  document.getElementById('pay-btn').textContent = method==='transfer' ? t('btn_send_proof') : t('btn_pay_now');
-}
-
-function fmtCard(inp){ var v=inp.value.replace(/\D/g,''); var out=''; for(var i=0;i<v.length&&i<16;i++){if(i>0&&i%4===0)out+=' ';out+=v[i];} inp.value=out; }
-function fmtExp(inp){ var v=inp.value.replace(/\D/g,''); if(v.length>=2) v=v.substring(0,2)+'/'+v.substring(2); inp.value=v; }
-
-async function processPayment(){
-  var btn = document.getElementById('pay-btn');
-  btn.disabled=true; btn.textContent=t('btn_processing');
-  var email   = document.getElementById('c-email').value.trim();
-  var bizName = document.getElementById('c-biz').value.trim();
-  var plan    = billingMonthly?'monthly':'annual';
-
-  try{
-    var r = await fetch(API+'?action=create_license',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({email,business_name:bizName,plan:plan+'_'+selectedPlan})
-    });
-    var j = await r.json();
-    if(j.success){
-      document.getElementById('success-key').textContent = j.key;
-      document.getElementById('step-payment').style.display='none';
-      document.getElementById('step-success').style.display='block';
-    } else {
-      alert(t('alert_error')+j.error);
-      btn.disabled=false; btn.textContent = selectedPayMethod==='transfer' ? t('btn_send_proof') : t('btn_pay_now');
-    }
-  }catch(e){
-    var demoKey = '4K-'+Math.random().toString(36).substring(2,6).toUpperCase()+'-'+Math.random().toString(36).substring(2,6).toUpperCase()+'-'+Math.random().toString(36).substring(2,6).toUpperCase();
-    document.getElementById('success-key').textContent = demoKey;
-    document.getElementById('step-payment').style.display='none';
-    document.getElementById('step-success').style.display='block';
-  }
+  document.getElementById('step-contact').style.display='block';
 }
 
 document.querySelectorAll('a[href^="#"]').forEach(function(a){
