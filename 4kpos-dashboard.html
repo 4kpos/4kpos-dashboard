@@ -42,7 +42,9 @@ body.light .top{background:#1e3a8a;}
 .logo{font-size:1.15rem;font-weight:800;letter-spacing:.2px;}
 .biz{font-size:.82rem;color:rgba(255,255,255,.6);margin-top:2px;}
 .live-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(52,211,153,.12);border:1.5px solid rgba(52,211,153,.35);border-radius:20px;padding:4px 10px;font-size:.72rem;color:#34d399;font-weight:600;}
+.live-badge.off{background:rgba(248,113,113,.12);border-color:rgba(248,113,113,.35);color:#f87171;}
 .live-dot{width:7px;height:7px;border-radius:50%;background:#34d399;animation:pulse 1.5s ease infinite;}
+.live-badge.off .live-dot{background:#f87171;animation:none;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
 .upd{font-size:.68rem;color:rgba(255,255,255,.36);margin-top:4px;}
 .ttl-btn{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;color:rgba(255,255,255,.85);padding:7px 11px;font-size:1.1rem;line-height:1;cursor:pointer;font-weight:700;}
@@ -236,12 +238,13 @@ body.light #snm{background:#fff;}
       <div class="biz" id="biz-name" data-t-default="myBusiness">Mi Negocio</div>
       <div id="shift-inline" style="font-size:.72rem;margin-top:2px;color:rgba(255,255,255,.85)"></div>
       <div id="shift-note-inline" style="display:none"></div>
+      <div id="pos-conn-inline" style="font-size:.7rem;margin-top:2px;color:rgba(255,255,255,.75)"></div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
       <div style="display:flex;align-items:center;gap:10px">
         <button id="theme-btn" class="ttl-btn" onclick="toggleTheme()">🌙</button>
         <button id="lang-btn" class="ttl-btn" onclick="toggleLang()">EN</button>
-        <div class="live-badge"><div class="live-dot"></div><span data-t="connected">Conectado</span></div>
+        <div class="live-badge" id="live-badge"><div class="live-dot"></div><span data-t="connected">Conectado</span></div>
       </div>
       <div style="display:flex;align-items:center;gap:5px;justify-content:flex-end">
         <div class="upd" id="upd-time"></div>
@@ -412,7 +415,7 @@ var TR={
     last30Sales:'Ventas ultimos 30 dias',topMonthProds:'Top productos este mes',
     lowStockItems:'Productos con stock bajo',allInventory:'Todo el inventario',
     today:'Hoy',week:'Semana',month:'Mes',inventory:'Inventario',refresh:'Actualizar',
-    connected:'Conectado',lastSync:'Última sincronización',
+    connected:'Conectado',disconnected:'Desconectado',lastSync:'Última sincronización',
     noSalesYet:'Sin ventas hoy todavía',noSales:'Sin ventas hoy',noProds:'Sin productos',
     noData:'Sin datos',allStockOk:'Todo el stock esta bien',
     ordersN:'ordenes',salesN:'ventas',avg2:'Prom.',minLbl:'Mín',inStock:'en stock',
@@ -454,7 +457,7 @@ var TR={
     last30Sales:'Sales last 30 days',topMonthProds:'Top products this month',
     lowStockItems:'Low stock products',allInventory:'All inventory',
     today:'Today',week:'Week',month:'Month',inventory:'Inventory',refresh:'Refresh',
-    connected:'Connected',lastSync:'Last sync',
+    connected:'Connected',disconnected:'Disconnected',lastSync:'Last sync',
     noSalesYet:'No sales yet today',noSales:'No sales today',noProds:'No products',
     noData:'No data',allStockOk:'All stock is fine',
     ordersN:'orders',salesN:'sales',avg2:'Avg.',minLbl:'Min',inStock:'in stock',
@@ -511,6 +514,7 @@ function applyLang(){
     renderToday(false);
     renderCredits();
     renderShiftStatus();
+    renderConnStatus();
     if(pg){if(pg.id==='pg-semana')renderWeek();else if(pg.id==='pg-mes')renderMonth();else if(pg.id==='pg-inv')renderInventory();}
   }
 }
@@ -546,6 +550,7 @@ async function loadData(showToast){
     await loadCategories();
     await loadCreditSummary();
     await loadShiftStatus();
+    await loadPosAlive();
     lastSaleCount=newCount;
     var rawBiz=(DB.cfg&&DB.cfg.bizName)||'';
     var bizEl=document.getElementById('biz-name');
@@ -556,6 +561,7 @@ async function loadData(showToast){
     renderToday(isNew);
     renderCredits();
     renderShiftStatus();
+    renderConnStatus();
     if(showToast)showNotif(t('updated'));
   }catch(e){console.error(e);}
 }
@@ -804,6 +810,24 @@ async function loadShiftStatus(){
     if(Array.isArray(rows)&&DB){
       DB.shiftStatuses=rows
         .filter(function(row){return row.id&&row.id.startsWith('shift_status')&&row.name;})
+        .map(function(row){try{var s=JSON.parse(row.name);s._pcRow=row.id;return s;}catch(e){return null;}})
+        .filter(Boolean);
+    }
+  }catch(e){}
+}
+// Latido "POS vivo" (independiente de si hay turno abierto — ver
+// pos_alive_<deviceId> en index.html/syncPosAliveDirect). Fila aparte de
+// shift_status_*, mismo patrón de lectura.
+async function loadPosAlive(){
+  if(!KEY)return;
+  try{
+    var r=await fetch(SUPA_URL+'/rest/v1/categories?id=like.pos_alive%25&license_key=eq.'+encodeURIComponent(KEY),{
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
+    });
+    var rows=await r.json();
+    if(Array.isArray(rows)&&DB){
+      DB.posAliveStatuses=rows
+        .filter(function(row){return row.id&&row.id.startsWith('pos_alive')&&row.name;})
         .map(function(row){try{var s=JSON.parse(row.name);s._pcRow=row.id;return s;}catch(e){return null;}})
         .filter(Boolean);
     }
@@ -1069,6 +1093,37 @@ function renderShiftStatus(){
     }
   }
 }
+// Badge global + detalle por PC de conectividad real (independiente del
+// turno — una PC puede estar conectada sin nadie fichado, o viceversa).
+// Regla: badge verde si AL MENOS una PC está online (<=5 min sin latido),
+// rojo si TODAS están offline. Si no hay ninguna fila pos_alive_* (licencia
+// vieja sin la Fase 1 instalada) no se toca nada — el badge queda con su
+// "Conectado" verde fijo original, sin romper nada.
+function renderConnStatus(){
+  var listEl=document.getElementById('pos-conn-inline');
+  var badgeEl=document.getElementById('live-badge');
+  var rows=(DB&&DB.posAliveStatuses)||[];
+  if(!rows.length){if(listEl)listEl.innerHTML='';return;}
+  var _onlineMs=5*60*1000,_now=Date.now();
+  var withState=rows.map(function(ss){
+    var pcId=ss.pcId||(ss._pcRow?ss._pcRow.replace('pos_alive_',''):'');
+    var online=!!(ss.lastSeen&&(_now-new Date(ss.lastSeen).getTime())<=_onlineMs);
+    return {pcId:pcId,lastSeen:ss.lastSeen,online:online};
+  });
+  var anyOnline=withState.some(function(w){return w.online;});
+  if(badgeEl){
+    badgeEl.classList.toggle('off',!anyOnline);
+    var lbl=badgeEl.querySelector('span[data-t]');
+    if(lbl){var k=anyOnline?'connected':'disconnected';lbl.setAttribute('data-t',k);lbl.textContent=t(k);}
+  }
+  if(listEl){
+    listEl.innerHTML=withState.map(function(w,i){
+      var dot=w.online?'🟢':'🔴';
+      var detail=w.online?t('connected'):(t('disconnected')+' · '+t('shiftLastSeen')+' '+timeAgo(w.lastSeen));
+      return '<div'+(i>0?' style="margin-top:1px"':'')+'>'+dot+' PC '+escHtml((w.pcId||'').slice(-4))+' · '+detail+'</div>';
+    }).join('');
+  }
+}
 
 // ── Week range ─────────────────────────────────────────
 function getWeekRange(){
@@ -1153,7 +1208,7 @@ async function init(){
     refreshInterval=setInterval(function(){loadData(false);},30000);
     // Estado de turno abierto: poll liviano aparte (solo tabla categories, no el blob completo) cada 12s
     if(shiftPollInterval)clearInterval(shiftPollInterval);
-    shiftPollInterval=setInterval(async function(){await loadShiftStatus();renderShiftStatus();},12000);
+    shiftPollInterval=setInterval(async function(){await loadShiftStatus();renderShiftStatus();await loadPosAlive();renderConnStatus();},12000);
   }
 }
 
